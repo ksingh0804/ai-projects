@@ -22,6 +22,7 @@ Catalog of all wiki pages. Updated by the agent on every change.
 | Page | Summary |
 |------|---------|
 | [concepts/llm-wiki-pattern.md](concepts/llm-wiki-pattern.md) | Andrej Karpathy's LLM wiki pattern — persistent, compounding knowledge base |
+| [concepts/keep-mac-awake.md](concepts/keep-mac-awake.md) | `scripts/keep-on.sh` — prevent Mac sleep via caffeinate |
 
 ## Sources
 
@@ -33,4 +34,4 @@ Catalog of all wiki pages. Updated by the agent on every change.
 
 | Page | Summary |
 |------|---------|
-| *(none yet)* | — |
+| [projects/voxforge.md](projects/voxforge.md) | VoxForge — voice-driven game maker studio |

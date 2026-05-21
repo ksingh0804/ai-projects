@@ -87,6 +87,15 @@ Check for: contradictions, stale claims, orphan pages, missing cross-references,
 - Push after meaningful wiki or project changes unless the user says otherwise.
 - New projects: create subfolder under `projects/`, document in wiki, commit and push.
 
+## User commands
+
+| User says | Agent action |
+|-----------|--------------|
+| **"keep it on"** | Run `scripts/keep-on.sh &` (runs `caffeinate -d`) |
+| **"let it sleep"** / **"stop keeping on"** | Run `pkill caffeinate` |
+
+See [wiki/concepts/keep-mac-awake.md](wiki/concepts/keep-mac-awake.md).
+
 ## Session startup
 
 1. Read `wiki/overview.md` and `wiki/index.md`.

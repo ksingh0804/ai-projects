@@ -1,10 +1,15 @@
 .DS_Store
 .env
 .env.*
+!.env.example
+!**/.env.example
 *.pem
 credentials.json
 __pycache__/
 node_modules/
+.env
+projects/voxforge/.env
+projects/voxforge/.cache/
 .venv/
 venv/
 *.pyc

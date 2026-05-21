@@ -20,4 +20,4 @@ See [wiki/overview.md](wiki/overview.md) for the knowledge base. The agent updat
 
 | Project | Path | Status |
 |---------|------|--------|
-| *(none yet)* | — | — |
+| [VoxForge](projects/voxforge.md) | `projects/voxforge/` | Voice UI live — game generation next |
