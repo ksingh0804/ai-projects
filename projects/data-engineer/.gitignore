@@ -1,0 +1,6 @@
+# Generated artifacts (recreate with the scripts)
+__pycache__/
+*.pyc
+data/warehouse.db
+data/last_run.json
+.DS_Store

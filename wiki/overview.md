@@ -3,7 +3,7 @@ title: Workspace Overview
 type: overview
 tags: [workspace, meta]
 created: 2026-05-20
-updated: 2026-05-20
+updated: 2026-05-29
 ---
 
 # AI Projects Workspace
@@ -17,7 +17,7 @@ A monorepo-style workspace where each project lives in `projects/<name>/`. An [L
 ## Current state
 
 - **Created:** 2026-05-20
-- **Projects:** 0 (ready for first project)
+- **Projects:** 2 — [VoxForge](projects/voxforge.md) (voice game studio) and [Data Engineer](projects/data-engineer.md) (finance data-engineering simulation)
 - **Wiki pages:** See [index.md](index.md)
 
 ## Key links

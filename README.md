@@ -21,3 +21,4 @@ See [wiki/overview.md](wiki/overview.md) for the knowledge base. The agent updat
 | Project | Path | Status |
 |---------|------|--------|
 | [VoxForge](projects/voxforge.md) | `projects/voxforge/` | Voice UI live — game generation next |
+| [Data Engineer](wiki/projects/data-engineer.md) | `projects/data-engineer/` | Month-long junior data engineer simulation (finance) — complete |

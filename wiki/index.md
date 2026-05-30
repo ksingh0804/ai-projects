@@ -3,7 +3,7 @@ title: Wiki Index
 type: overview
 tags: [index, meta]
 created: 2026-05-20
-updated: 2026-05-20
+updated: 2026-05-29
 ---
 
 # Wiki Index
@@ -35,3 +35,4 @@ Catalog of all wiki pages. Updated by the agent on every change.
 | Page | Summary |
 |------|---------|
 | [projects/voxforge.md](projects/voxforge.md) | VoxForge — voice-driven game maker studio |
+| [projects/data-engineer.md](projects/data-engineer.md) | Data Engineer — month-long junior data engineer simulation (finance) with manager, daily reports & visual coach review |
