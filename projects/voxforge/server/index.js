@@ -60,8 +60,11 @@ async function listGames() {
     games.push({
       id: entry.name,
       name: meta?.name || entry.name,
-      description: meta?.description || "",
+      description: meta?.buildSummary || meta?.description || "",
       updatedAt: meta?.updatedAt || null,
+      lastBuild: meta?.lastBuild || null,
+      lastBuildLabel: meta?.lastBuildLabel || null,
+      buildSummary: meta?.buildSummary || null,
     });
   }
 
@@ -101,7 +104,13 @@ async function chatWithOllama(messages) {
 }
 
 async function generateReply(message, activeGame, history) {
-  const built = await tryBuildGame(message, activeGame, GAMES_DIR);
+  const hasOllama = await ollamaAvailable();
+  const built = await tryBuildGame(message, activeGame, GAMES_DIR, {
+    openai,
+    ollamaUrl: OLLAMA_URL,
+    ollamaModel: OLLAMA_MODEL,
+    ollamaAvailable: hasOllama,
+  });
   if (built) return built;
 
   if (!activeGame) {
@@ -135,7 +144,7 @@ async function generateReply(message, activeGame, history) {
   }
 
   return {
-    reply: `I'm not sure how to build that yet. Try: "make it a jump game", "build a shooter", or "create snake game".`,
+    reply: `I heard you, but couldn't match a game type. Try being specific: "flappy bird game", "archery with targets", "jump platformer", "snake", "racing car", or "coin collector". Check the transcript above — if it's wrong, speak again more clearly.`,
     gameUpdated: false,
   };
 }
@@ -247,8 +256,11 @@ app.post("/api/chat", async (req, res) => {
   }
 });
 
-// Serve generated games for preview
-app.use("/games", express.static(GAMES_DIR));
+// Serve generated games for preview (no cache — always show latest build)
+app.use("/games", (_req, res, next) => {
+  res.setHeader("Cache-Control", "no-store");
+  next();
+}, express.static(GAMES_DIR));
 
 // Serve built client in production
 const clientDist = path.join(ROOT, "client", "dist");

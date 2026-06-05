@@ -1,0 +1,16 @@
+{
+  "id": "or-a-little-kid",
+  "name": "or a little kid?",
+  "description": "create a fun jump game for a little kid in a garden",
+  "createdAt": "2026-05-30T01:41:18.611Z",
+  "updatedAt": "2026-05-30T01:44:12.039Z",
+  "lastBuild": "platformer",
+  "lastPrompt": "create a fun jump game for a little kid in a garden",
+  "buildSummary": "create a fun jump game for a little kid in a garden",
+  "lastBuildLabel": "jump platformer",
+  "theme": {
+    "hero": "kid",
+    "setting": "forest",
+    "kidFriendly": true
+  }
+}

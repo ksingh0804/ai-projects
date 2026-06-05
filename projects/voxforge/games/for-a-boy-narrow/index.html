@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>for a boy narrow</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #0a0a12; color: #e8e8ff; font-family: system-ui, sans-serif;
+      display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 1rem; }
+    h1 { margin: 0 0 0.25rem; font-size: 1.25rem; }
+    p { margin: 0 0 0.75rem; opacity: 0.65; font-size: 0.85rem; }
+    .wrap { position: relative; }
+    canvas { border: 2px solid #7c5cff44; border-radius: 8px; background: #111; max-width: 100%; display: block; cursor: pointer; }
+    #start { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(0,0,0,0.75);
+      border-radius: 8px; cursor: pointer; z-index: 2; font-size: 1.1rem; font-weight: 600; color: #e8e8ff; }
+    #start span { padding: 0.75rem 1.25rem; border: 2px solid #7c5cff; border-radius: 8px; background: #7c5cff33; }
+  </style>
+</head>
+<body>
+  <h1>for a boy narrow</h1>
+  <p>Up/down to aim, hold Space for power, release to shoot.</p>
+  <div class="wrap">
+    <div id="start"><span>Click to play</span></div>
+    <canvas id="c" width="640" height="400" tabindex="0"></canvas>
+  </div>
+  <script>
+function activateGame() {
+  const start = document.getElementById('start');
+  const canvas = document.getElementById('c');
+  if (start) start.style.display = 'none';
+  canvas.focus();
+  window.focus();
+}
+document.getElementById('start').onclick = activateGame;
+document.getElementById('c').onclick = activateGame;
+
+const c = document.getElementById('c'), x = c.getContext('2d');
+let aim = 0.5, power = 0, charging = false, arrows = [], targets = [], score = 0, tick = 0;
+const keys = {};
+addEventListener('keydown', e => {
+  keys[e.code] = true;
+  if (e.code === 'Space') { e.preventDefault(); charging = true; }
+});
+addEventListener('keyup', e => {
+  keys[e.code] = false;
+  if (e.code === 'Space' && charging) {
+    charging = false;
+    const speed = 6 + power * 10;
+    arrows.push({ x: 80, y: 340, vx: Math.cos(aim) * speed, vy: Math.sin(aim) * speed, life: 120 });
+    power = 0;
+  }
+});
+function loop() {
+  tick++;
+  if (keys['ArrowUp'] || keys['KeyW']) aim -= 0.03;
+  if (keys['ArrowDown'] || keys['KeyS']) aim += 0.03;
+  aim = Math.max(-1.2, Math.min(-0.2, aim));
+  if (charging) power = Math.min(1, power + 0.02);
+  if (tick % 90 === 0) targets.push({ x: 400 + Math.random() * 180, y: 80 + Math.random() * 200, r: 22 + Math.random() * 16 });
+  targets = targets.filter(t => !t.dead);
+  arrows.forEach(a => { a.x += a.vx; a.y += a.vy; a.vy += 0.15; a.life--; });
+  for (const a of arrows) for (const t of targets) {
+    if (Math.hypot(a.x - t.x, a.y - t.y) < t.r && !t.dead) { t.dead = true; a.dead = true; score += Math.round(50 - t.r); }
+  }
+  arrows = arrows.filter(a => !a.dead && a.life > 0 && a.x < 640 && a.y < 400);
+  x.fillStyle='#1a2e1a'; x.fillRect(0,0,640,400);
+  x.fillStyle='#8B4513'; x.fillRect(0,350,640,50);
+  targets.forEach(t => {
+    x.strokeStyle='#fff'; x.lineWidth=2;
+    x.beginPath(); x.arc(t.x,t.y,t.r,0,7); x.stroke();
+    x.fillStyle='#ff4d6d'; x.beginPath(); x.arc(t.x,t.y,t.r*0.35,0,7); x.fill();
+  });
+  x.strokeStyle='#ccc'; x.lineWidth=3;
+  x.beginPath(); x.moveTo(80,340); x.lineTo(80+Math.cos(aim)*60,340+Math.sin(aim)*60); x.stroke();
+  if (charging) { x.fillStyle='#ffc857'; x.fillRect(80,320,power*80,8); }
+  x.fillStyle='#aaa'; arrows.forEach(a => { x.beginPath(); x.moveTo(a.x,a.y); x.lineTo(a.x-a.vx*3,a.y-a.vy*3); x.stroke(); });
+  x.fillStyle='#fff'; x.fillText('Score: '+score, 12, 24);
+  requestAnimationFrame(loop);
+}
+loop();
+  </script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kaiha</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #0a0a12; color: #e8e8ff; font-family: system-ui, sans-serif;
+      display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 1rem; }
+    header { text-align: center; max-width: 640px; width: 100%; margin-bottom: 0.5rem; }
+    h1 { margin: 0 0 0.35rem; font-size: 1.25rem; }
+    .type-badge { display: inline-block; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em;
+      padding: 0.2rem 0.55rem; border-radius: 999px; background: #7c5cff33; border: 1px solid #7c5cff66; color: #c4b5ff; }
+    .brief { margin: 0.35rem 0 0.25rem; opacity: 0.75; font-size: 0.8rem; line-height: 1.35; font-style: italic; }
+    .controls { margin: 0 0 0.75rem; opacity: 0.55; font-size: 0.75rem; }
+    .wrap { position: relative; }
+    canvas { border: 2px solid #7c5cff44; border-radius: 8px; background: #111; max-width: 100%; display: block; cursor: pointer; }
+    #start { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(0,0,0,0.75);
+      border-radius: 8px; cursor: pointer; z-index: 2; font-size: 1.1rem; font-weight: 600; color: #e8e8ff; }
+    #start span { padding: 0.75rem 1.25rem; border: 2px solid #7c5cff; border-radius: 8px; background: #7c5cff33; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>kaiha</h1>
+    <span class="type-badge">jump platformer</span>
+    <p class="brief">"Make the game workable and save the game to my folder."</p>
+    <p class="controls">Arrow keys to move, Space to jump.</p>
+  </header>
+  <div class="wrap">
+    <div id="start"><span>Click to play</span></div>
+    <canvas id="c" width="640" height="400" tabindex="0"></canvas>
+  </div>
+  <script>
+function activateGame() {
+  const start = document.getElementById('start');
+  const canvas = document.getElementById('c');
+  if (start) start.style.display = 'none';
+  canvas.focus();
+  window.focus();
+}
+document.getElementById('start').onclick = activateGame;
+document.getElementById('c').onclick = activateGame;
+
+const T = {"summary":"Make the game workable and save the game to my folder.","typeLabel":"jump platformer","hero":"default","setting":"default","kidFriendly":false,"playerColor":"#00e5c0","accentColor":"#7c5cff","bgColor":"#0a0a12","collectLabel":"coins","speed":1};
+function drawBackground(x) {
+  x.fillStyle = T.bgColor;
+  x.fillRect(0, 0, 640, 400);
+  if (T.setting === 'sky') {
+    const g = x.createLinearGradient(0, 0, 0, 400);
+    g.addColorStop(0, '#4facfe'); g.addColorStop(1, '#a8edea');
+    x.fillStyle = g; x.fillRect(0, 0, 640, 400);
+    x.fillStyle = '#ffffff88';
+    [[60,50,50,14],[220,90,60,16],[420,60,45,12],[540,110,55,14]].forEach(c => x.fillRect(c[0], c[1], c[2], c[3]));
+  } else if (T.setting === 'space') {
+    x.fillStyle = '#050510'; x.fillRect(0, 0, 640, 400);
+    x.fillStyle = '#ffffffcc';
+    for (let i = 0; i < 45; i++) x.fillRect((i * 137) % 640, (i * 89) % 400, 2, 2);
+  } else if (T.setting === 'forest') {
+    x.fillStyle = '#87ceeb'; x.fillRect(0, 0, 640, 180);
+    x.fillStyle = '#2d5a27'; x.fillRect(0, 180, 640, 220);
+    x.fillStyle = '#6bcb4a'; x.fillRect(0, 360, 640, 40);
+  } else if (T.setting === 'ocean') {
+    const g = x.createLinearGradient(0, 0, 0, 400);
+    g.addColorStop(0, '#0077b6'); g.addColorStop(1, '#023e8a');
+    x.fillStyle = g; x.fillRect(0, 0, 640, 400);
+  } else if (T.setting === 'city') {
+    x.fillStyle = '#2b2d42'; x.fillRect(0, 0, 640, 400);
+    x.fillStyle = '#1a1a2e';
+    for (let i = 0; i < 9; i++) x.fillRect(i * 72, 100 + (i % 3) * 25, 56, 300);
+  }
+  if (T.kidFriendly) {
+    x.fillStyle = '#ffd700';
+    x.font = '14px serif';
+    for (let i = 0; i < 6; i++) x.fillText('★', 30 + i * 100, 28);
+  }
+}
+function drawPlayer(x, px, py, w, h) {
+  x.fillStyle = T.playerColor;
+  if (T.hero === 'kid') {
+    x.beginPath(); x.arc(px + w / 2, py + h / 2, Math.min(w, h) / 2 + 3, 0, Math.PI * 2); x.fill();
+    x.fillStyle = '#333';
+    x.fillRect(px + w / 2 - 7, py + h / 2 - 3, 4, 4);
+    x.fillRect(px + w / 2 + 3, py + h / 2 - 3, 4, 4);
+    x.strokeStyle = '#333'; x.beginPath(); x.arc(px + w / 2, py + h / 2 + 5, 7, 0, Math.PI); x.stroke();
+  } else if (T.hero === 'bird') {
+    x.beginPath(); x.arc(px + w / 2, py + h / 2, 14, 0, Math.PI * 2); x.fill();
+    x.fillStyle = '#ff6b35'; x.fillRect(px + w / 2 + 8, py + h / 2 - 4, 10, 8);
+  } else if (T.hero === 'car') {
+    x.fillRect(px, py + h - 14, w, 14);
+    x.fillStyle = '#222';
+    x.fillRect(px + 5, py + h - 5, 12, 8);
+    x.fillRect(px + w - 17, py + h - 5, 12, 8);
+  } else if (T.hero === 'robot') {
+    x.fillRect(px, py, w, h);
+    x.fillStyle = '#fff';
+    x.fillRect(px + 5, py + 6, 7, 7); x.fillRect(px + w - 12, py + 6, 7, 7);
+  } else {
+    x.fillRect(px, py, w, h);
+  }
+}
+function drawCollectible(x, cx, cy, r) {
+  if (T.collectLabel === 'stars') {
+    x.fillStyle = '#ffd700'; x.font = '18px serif'; x.fillText('★', cx - 6, cy + 6);
+  } else if (T.collectLabel === 'candy') {
+    x.fillStyle = '#ff9ff3'; x.fillRect(cx - r, cy - r, r * 2, r * 2);
+  } else if (T.collectLabel === 'fruit') {
+    x.fillStyle = '#ff6b6b'; x.beginPath(); x.arc(cx, cy, r, 0, Math.PI * 2); x.fill();
+  } else {
+    x.fillStyle = T.accentColor;
+    x.beginPath(); x.arc(cx, cy, r, 0, Math.PI * 2); x.fill();
+  }
+}
+
+
+const c = document.getElementById('c'), x = c.getContext('2d');
+const spd = 4 * T.speed;
+let px = 80, py = 300, vy = 0, grounded = false, score = 0, stars = [];
+const keys = {};
+addEventListener('keydown', e => keys[e.code] = true);
+addEventListener('keyup', e => keys[e.code] = false);
+const platforms = [[0,360,640,40],[120,280,120,16],[320,220,140,16],[500,160,100,16]];
+function loop() {
+  if (keys['ArrowLeft'] || keys['KeyA']) px -= spd;
+  if (keys['ArrowRight'] || keys['KeyD']) px += spd;
+  if ((keys['Space'] || keys['ArrowUp'] || keys['KeyW']) && grounded) { vy = -11 * T.speed; grounded = false; }
+  vy += 0.45 * T.speed; py += vy; grounded = false;
+  for (const [ox,oy,w,h] of platforms) {
+    if (px+20>ox && px<ox+w && py+24>oy && py+24<oy+h+8 && vy>=0) { py = oy-24; vy = 0; grounded = true; }
+  }
+  px = Math.max(0, Math.min(620, px));
+  if (py > 400) { px = 80; py = 300; vy = 0; }
+  if (grounded && Math.random() < 0.015) stars.push({x: px + Math.random()*200, y: py - 40 - Math.random()*80});
+  stars.forEach(s => s.y -= 1.5); stars = stars.filter(s => s.y > 0);
+  drawBackground(x);
+  x.fillStyle = T.accentColor; platforms.forEach(p=>x.fillRect(p[0],p[1],p[2],p[3]));
+  stars.forEach(s => drawCollectible(x, s.x, s.y, 8));
+  drawPlayer(x, px, py, 20, 24);
+  x.fillStyle='#fff'; x.fillText('Score: '+score, 12, 24);
+  if (stars.length && Math.abs(stars[0].x - px) < 24 && Math.abs(stars[0].y - py) < 24) { score++; stars.shift(); }
+  requestAnimationFrame(loop);
+}
+loop();
+  </script>
+</body>
+</html>

@@ -3,6 +3,9 @@ export interface Game {
   name: string;
   description: string;
   updatedAt: string | null;
+  lastBuild?: string | null;
+  lastBuildLabel?: string | null;
+  buildSummary?: string | null;
 }
 
 export interface ChatMessage {
@@ -61,6 +64,7 @@ export interface ChatResult {
   reply: string;
   gameUpdated?: boolean;
   activeGameId?: string;
+  gameType?: string;
 }
 
 export async function chat(

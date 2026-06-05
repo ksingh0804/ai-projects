@@ -1,0 +1,16 @@
+{
+  "id": "kaiha",
+  "name": "kaiha",
+  "description": "Make the game workable and save the game to my folder.",
+  "createdAt": "2026-05-30T01:44:54.411Z",
+  "updatedAt": "2026-05-30T01:46:35.442Z",
+  "lastBuild": "platformer",
+  "lastBuildLabel": "jump platformer",
+  "lastPrompt": "Make the game workable and save the game to my folder.",
+  "buildSummary": "Make the game workable and save the game to my folder.",
+  "theme": {
+    "hero": "default",
+    "setting": "default",
+    "kidFriendly": false
+  }
+}

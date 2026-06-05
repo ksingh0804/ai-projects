@@ -1,0 +1,9 @@
+{
+  "id": "test-hop",
+  "name": "test-hop",
+  "createdAt": "2026-05-21T05:02:10.748Z",
+  "description": "jump game",
+  "updatedAt": "2026-05-21T05:02:10.748Z",
+  "lastBuild": "platformer",
+  "lastPrompt": "jump game"
+}

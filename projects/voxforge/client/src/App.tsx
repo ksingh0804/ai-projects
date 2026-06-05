@@ -23,6 +23,11 @@ export default function App() {
     }
   }, []);
 
+  const handleSelectGame = useCallback((id: string | null) => {
+    setActiveGameId(id);
+    setPreviewKey((k) => k + 1);
+  }, []);
+
   const handleGameBuilt = useCallback(
     async (gameId: string) => {
       setActiveGameId(gameId);
@@ -46,7 +51,7 @@ export default function App() {
       <ControlPanel
         games={games}
         activeGameId={activeGameId}
-        onSelectGame={setActiveGameId}
+        onSelectGame={handleSelectGame}
         onGamesChange={setGames}
         phase={phase}
         statusHint={statusHint || readyHint}

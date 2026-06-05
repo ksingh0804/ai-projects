@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Game</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #0a0a12; color: #e8e8ff; font-family: system-ui, sans-serif;
+      display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 1rem; }
+    h1 { margin: 0 0 0.25rem; font-size: 1.25rem; }
+    p { margin: 0 0 0.75rem; opacity: 0.65; font-size: 0.85rem; }
+    .wrap { position: relative; }
+    canvas { border: 2px solid #7c5cff44; border-radius: 8px; background: #111; max-width: 100%; display: block; cursor: pointer; }
+    #start { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(0,0,0,0.75);
+      border-radius: 8px; cursor: pointer; z-index: 2; font-size: 1.1rem; font-weight: 600; color: #e8e8ff; }
+    #start span { padding: 0.75rem 1.25rem; border: 2px solid #7c5cff; border-radius: 8px; background: #7c5cff33; }
+  </style>
+</head>
+<body>
+  <h1>My Game</h1>
+  <p>Arrows to move, Space to shoot.</p>
+  <div class="wrap">
+    <div id="start"><span>Click to play</span></div>
+    <canvas id="c" width="640" height="400" tabindex="0"></canvas>
+  </div>
+  <script>
+function activateGame() {
+  const start = document.getElementById('start');
+  const canvas = document.getElementById('c');
+  if (start) start.style.display = 'none';
+  canvas.focus();
+  window.focus();
+}
+document.getElementById('start').onclick = activateGame;
+document.getElementById('c').onclick = activateGame;
+
+const c = document.getElementById('c'), x = c.getContext('2d');
+let px = 300, py = 200, targets = [], score = 0, tick = 0;
+const keys = {};
+addEventListener('keydown', e => { keys[e.code]=true; if(e.code==='Space'){e.preventDefault(); targets.push({x:px,y:py,vx:(Math.random()-0.5)*6,vy:-6,life:60});} });
+addEventListener('keyup', e => keys[e.code]=false);
+function loop() {
+  tick++;
+  if (keys['ArrowLeft']||keys['KeyA']) px -= 5;
+  if (keys['ArrowRight']||keys['KeyD']) px += 5;
+  if (keys['ArrowUp']||keys['KeyW']) py -= 5;
+  if (keys['ArrowDown']||keys['KeyS']) py += 5;
+  if (tick % 50 === 0) targets.push({x:Math.random()*600+20,y:-10,vx:0,vy:2+Math.random()*2,life:999,enemy:true});
+  targets.forEach(t => { t.x+=t.vx; t.y+=t.vy; if(t.life) t.life--; });
+  targets = targets.filter(t => t.y<420 && t.life!==0);
+  for (const t of targets.filter(t=>t.enemy))
+    for (const s of targets.filter(t=>!t.enemy))
+      if (Math.hypot(t.x-s.x,t.y-s.y)<20) { t.dead=true; s.dead=true; score+=15; }
+  targets = targets.filter(t=>!t.dead);
+  x.fillStyle='#0a0a12'; x.fillRect(0,0,640,400);
+  x.fillStyle='#00e5c0'; x.fillRect(px-12,py-12,24,24);
+  targets.forEach(t => { x.fillStyle = t.enemy ? '#ff4d6d' : '#ffc857'; x.fillRect(t.x-6,t.y-6,12,12); });
+  x.fillStyle='#fff'; x.fillText('Score: '+score, 12, 24);
+  requestAnimationFrame(loop);
+}
+loop();
+  </script>
+</body>
+</html>

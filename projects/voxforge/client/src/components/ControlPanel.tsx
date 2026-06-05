@@ -111,7 +111,9 @@ export default function ControlPanel({
                 onClick={() => onSelectGame(g.id)}
               >
                 <span className="game-item__name">{g.name}</span>
-                <span className="game-item__meta">{g.id}</span>
+                <span className="game-item__meta">
+                  {g.lastBuildLabel || g.id}
+                </span>
               </button>
             </li>
           ))}
