@@ -1,0 +1,19 @@
+{
+  "dataset": "orders",
+  "owner": "oms-team",
+  "description": "Customer orders from the Order Management System.",
+  "primary_key": ["order_id"],
+  "freshness_sla_hours": 24,
+  "columns": [
+    {"name": "order_id", "type": "VARCHAR", "required": true, "unique": true},
+    {"name": "customer_id", "type": "VARCHAR", "required": true},
+    {"name": "fc_id", "type": "VARCHAR", "required": true, "max_null_rate": 0.001},
+    {"name": "order_ts", "type": "TIMESTAMP", "required": true},
+    {"name": "promised_delivery_ts", "type": "TIMESTAMP", "required": true},
+    {"name": "status", "type": "VARCHAR", "required": true,
+     "accepted_values": ["DELIVERED", "CANCELLED", "RETURNED"]},
+    {"name": "channel", "type": "VARCHAR", "required": true},
+    {"name": "order_total", "type": "DOUBLE", "required": true, "min": 0},
+    {"name": "n_items", "type": "INTEGER", "required": true, "min": 1}
+  ]
+}
