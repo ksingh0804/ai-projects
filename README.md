@@ -20,4 +20,5 @@ See [wiki/overview.md](wiki/overview.md) for the knowledge base. The agent updat
 
 | Project | Path | Status |
 |---------|------|--------|
-| *(none yet)* | — | — |
+| FreshCart (Grocery + Logistics DE) | `projects/grocery-logistics-de/` | Runnable end-to-end data engineering project (lakehouse, batch ELT, streaming, orchestration, ML features) plus 30-day AWS curriculum |
+| Stutter Coach | `projects/stutter-coach/` | Free browser voice-practice app — Web Speech API, live coaching, Small Talk + drills, 7-day plan, 4-hour auto-improvement cycle (v1.7.0) |

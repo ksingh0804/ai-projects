@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stutter Coach — Voice Practice</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎙</text></svg>" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <div class="setup-banner" id="setupBanner" hidden>
+      <div class="setup-banner__content">
+        <p class="setup-banner__title" id="setupBannerTitle">Checking browser…</p>
+        <p class="setup-banner__body" id="setupBannerBody"></p>
+      </div>
+      <button type="button" id="enableMicBtn" class="btn btn--primary" hidden>Allow microphone</button>
+      <button type="button" id="openChromeUrlBtn" class="btn btn--secondary" hidden>Open correct URL</button>
+    </div>
+
+    <header class="header">
+      <div class="header__brand">
+        <span class="header__logo" aria-hidden="true">🎙</span>
+        <div>
+          <h1>Stutter Coach</h1>
+          <p class="header__tagline">Free voice practice with real-time AI feedback</p>
+        </div>
+      </div>
+      <div class="header__stats" id="headerStats" aria-live="polite">
+        <div class="stat-pill"><span class="stat-pill__label">Sessions</span><span class="stat-pill__value" id="totalSessions">0</span></div>
+        <div class="stat-pill"><span class="stat-pill__label">Avg score</span><span class="stat-pill__value" id="avgScore">—</span></div>
+      </div>
+    </header>
+
+    <main class="main">
+      <aside class="sidebar">
+        <section class="panel">
+          <h2>Exercises</h2>
+          <div class="exercise-list" id="exerciseList" role="tablist" aria-label="Exercise types"></div>
+        </section>
+
+        <section class="panel">
+          <h2>Your challenge words</h2>
+          <p class="panel__hint">Words you stutter on most — we'll drill them.</p>
+          <div class="challenge-input">
+            <input type="text" id="challengeWordInput" placeholder="e.g. presentation" maxlength="30" />
+            <button type="button" id="addChallengeWord" class="btn btn--small">Add</button>
+          </div>
+          <ul class="challenge-tags" id="challengeTags"></ul>
+        </section>
+
+        <section class="panel panel--pulse">
+          <h2>4-hour pulse</h2>
+          <p class="panel__hint" id="pulseCountdown">Next pulse in —</p>
+          <ul class="pulse-slots" id="pulseSlots" aria-label="Today's 4-hour slots"></ul>
+          <button type="button" id="startPulseBtn" class="btn btn--primary btn--block">Do this pulse (5 min)</button>
+          <p class="pulse-streak" id="pulseStreak">🔥 Streak: 0 days</p>
+          <p class="pulse-adaptation" id="pulseAdaptation"></p>
+        </section>
+
+        <section class="panel panel--week">
+          <h2>Kosta's week</h2>
+          <p class="panel__hint" id="weekRangeLabel">This week</p>
+          <ul class="week-checklist" id="weekChecklist" aria-label="Weekly day checklist"></ul>
+          <button type="button" id="jumpTodayPlanBtn" class="btn btn--ghost btn--block">Today's schedule ↓</button>
+        </section>
+
+        <section class="panel panel--compact">
+          <h2>Settings</h2>
+          <label class="toggle">
+            <input type="checkbox" id="speakPrompts" checked />
+            <span>Coach speaks aloud (TTS)</span>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" id="showInterim" checked />
+            <span>Show live transcription</span>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" id="realtimeCoach" checked />
+            <span>Real-time coaching while speaking</span>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" id="speakLiveTips" />
+            <span>Coach speaks live tips (TTS)</span>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" id="autoContinue" checked />
+            <span>Auto-continue after feedback</span>
+          </label>
+        </section>
+      </aside>
+
+      <section class="practice" aria-live="polite">
+        <div class="practice__top">
+          <div>
+            <p class="practice__label" id="exerciseLabel">Exercise</p>
+            <h2 class="practice__title" id="exerciseTitle">Select an exercise</h2>
+          </div>
+          <div class="practice__meta">
+            <span class="badge" id="promptCounter">—</span>
+            <button type="button" id="hearPromptBtn" class="btn btn--ghost" title="Hear this prompt">🔊 Hear prompt</button>
+          </div>
+        </div>
+
+        <div class="daily-mission" id="dailyMission" hidden>
+          <div class="daily-mission__badge" id="dailyMissionBadge">Today</div>
+          <div>
+            <h3 class="daily-mission__title" id="dailyMissionTitle">Foundation Monday</h3>
+            <p class="daily-mission__text" id="dailyMissionText"></p>
+          </div>
+          <span class="daily-mission__slot" id="dailyMissionSlot"></span>
+        </div>
+
+        <p class="practice__instruction" id="exerciseInstruction"></p>
+
+        <div class="quick-start" id="quickStart">
+          <strong>Quick start:</strong>
+          <span id="quickStartText">Pick an exercise → tap the green mic → speak → tap again for feedback.</span>
+        </div>
+
+        <div class="conversation-panel" id="conversationPanel" hidden>
+          <div class="conversation-panel__header">
+            <div>
+              <h3>Live conversation</h3>
+              <p id="conversationStatus">Coach will speak first — then it's your turn.</p>
+            </div>
+            <div class="conversation-panel__actions">
+              <select id="scenarioSelect" class="scenario-select" aria-label="Conversation scenario"></select>
+              <button type="button" id="startRoundBtn" class="btn btn--primary">Start round</button>
+            </div>
+          </div>
+          <ul class="chat-thread" id="chatThread" aria-live="polite"></ul>
+        </div>
+
+        <div class="drill-panel" id="drillPanel">
+        <div class="target-card">
+          <p class="target-card__label">Say this:</p>
+          <p class="target-card__text" id="targetText">Choose an exercise to begin.</p>
+          <p class="target-card__tip" id="targetTip"></p>
+        </div>
+        </div>
+
+        <div class="mic-zone">
+          <button type="button" id="micBtn" class="mic-btn" disabled aria-label="Hold to speak">
+            <span class="mic-btn__ring" aria-hidden="true"></span>
+            <span class="mic-btn__icon" aria-hidden="true">🎤</span>
+            <span class="mic-btn__label">Tap to speak</span>
+          </button>
+          <p class="mic-zone__status" id="micStatus">Checking microphone support…</p>
+        </div>
+
+        <div class="live-coach" id="liveCoachPanel" hidden aria-live="polite">
+          <div class="live-coach__header">
+            <div>
+              <h3>Live coach</h3>
+              <p class="live-coach__status" id="liveCoachStatus">Analyzing your speech…</p>
+            </div>
+            <div class="live-coach__score-wrap">
+              <span class="live-coach__score-label">Live score</span>
+              <span class="live-coach__score" id="liveCoachScore">—</span>
+            </div>
+          </div>
+          <div class="live-coach__meters">
+            <div class="live-meter">
+              <div class="live-meter__label"><span>Progress</span><span id="liveProgressPct">0%</span></div>
+              <div class="live-meter__track"><div class="live-meter__fill" id="liveProgressBar"></div></div>
+            </div>
+            <div class="live-meter live-meter--pace">
+              <div class="live-meter__label"><span>Pace</span><span id="livePaceLabel">—</span></div>
+              <div class="live-meter__track live-meter__track--pace"><div class="live-meter__fill live-meter__fill--pace" id="livePaceBar"></div></div>
+            </div>
+          </div>
+          <div class="live-coach__words" id="liveWordProgress" aria-label="Word progress"></div>
+          <ul class="live-coach__tips" id="liveCoachTips"></ul>
+        </div>
+
+        <div class="transcript-card" id="transcriptCard" hidden>
+          <div class="transcript-card__header">
+            <h3>What we heard</h3>
+            <span class="timer" id="speechTimer">0.0s</span>
+          </div>
+          <p class="transcript-card__interim" id="interimText"></p>
+          <p class="transcript-card__final" id="finalText"></p>
+        </div>
+
+        <div class="feedback-card" id="feedbackCard" hidden>
+          <div class="feedback-card__score-row">
+            <div class="score-ring" id="scoreRing" data-score="0">
+              <svg viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="score-ring__bg" cx="60" cy="60" r="52" />
+                <circle class="score-ring__fg" cx="60" cy="60" r="52" id="scoreRingFg" />
+              </svg>
+              <span class="score-ring__value" id="scoreValue">0</span>
+            </div>
+            <div class="feedback-card__summary">
+              <h3 id="feedbackTitle">Feedback</h3>
+              <p id="feedbackSummary"></p>
+              <div class="tension-row">
+                <label for="tensionSlider">How tense did you feel? <span id="tensionValue">5</span>/10</label>
+                <input type="range" id="tensionSlider" min="1" max="10" value="5" />
+              </div>
+            </div>
+          </div>
+          <ul class="feedback-list" id="feedbackList"></ul>
+          <div class="feedback-actions">
+            <button type="button" id="retryBtn" class="btn btn--secondary">Try again</button>
+            <button type="button" id="nextBtn" class="btn btn--primary">Next prompt →</button>
+            <button type="button" id="continueConvoBtn" class="btn btn--primary" hidden>Continue conversation →</button>
+          </div>
+        </div>
+
+        <section class="panel week-today" id="weekTodayPanel">
+          <details class="week-today__details" id="weekTodayDetails">
+            <summary class="week-today__summary">Today's 30-min plan (tap to expand)</summary>
+          <div class="week-today__header">
+            <div>
+              <p class="practice__label">Today's plan</p>
+              <h2 class="week-today__title" id="todayPlanTitle">Day 1 — Foundation Monday</h2>
+              <p class="week-today__focus" id="todayPlanFocus"></p>
+            </div>
+            <span class="badge badge--day" id="todayPlanBadge">30 min</span>
+          </div>
+          <ol class="schedule-list" id="todayScheduleList"></ol>
+          <p class="week-today__exercises" id="todayPlanExercises"></p>
+          </details>
+        </section>
+
+        <section class="history panel" id="historyPanel">
+          <h2>Recent practice</h2>
+          <div class="history-empty" id="historyEmpty">No sessions yet — complete your first round above.</div>
+          <ul class="history-list" id="historyList"></ul>
+        </section>
+
+        <section class="panel performance-panel" id="performancePanel">
+          <div class="performance-panel__header">
+            <h2>Weekly performance</h2>
+            <span class="badge" id="perfWeekLabel"></span>
+          </div>
+
+          <div class="scorecard" id="scorecard">
+            <div class="scorecard__item">
+              <span class="scorecard__label">Sessions</span>
+              <span class="scorecard__value" id="perfSessions">0</span>
+            </div>
+            <div class="scorecard__item">
+              <span class="scorecard__label">Avg score</span>
+              <span class="scorecard__value" id="perfAvgScore">—</span>
+            </div>
+            <div class="scorecard__item">
+              <span class="scorecard__label">Avg tension</span>
+              <span class="scorecard__value" id="perfAvgTension">—</span>
+            </div>
+            <div class="scorecard__item">
+              <span class="scorecard__label">Days checked</span>
+              <span class="scorecard__value" id="perfDaysChecked">0/7</span>
+            </div>
+          </div>
+
+          <div class="perf-highlights" id="perfHighlights"></div>
+
+          <div class="chart-wrap">
+            <p class="chart-wrap__label">Daily average score</p>
+            <div class="progress-chart" id="progressChart" role="img" aria-label="Weekly score chart"></div>
+          </div>
+
+          <div class="tension-chart-wrap">
+            <p class="chart-wrap__label">Tension trend</p>
+            <canvas id="tensionCanvas" class="tension-canvas" width="560" height="120" aria-label="Weekly tension line chart"></canvas>
+          </div>
+
+          <div class="week-summary" id="weekSummary">
+            <h3>End-of-week evaluation</h3>
+            <p id="weekSummaryText">Complete sessions this week to generate your summary.</p>
+          </div>
+
+          <div class="improvement-log" id="improvementLogPanel">
+            <h3>4-hour improvement log</h3>
+            <p class="improvement-log__summary" id="improvementLogSummary"></p>
+            <ul class="improvement-log__list" id="improvementLogList"></ul>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Uses your browser's free Web Speech API — no account, no API keys. Open in Chrome at <code id="canonicalUrl">http://127.0.0.1:8787</code> (not <code>file://</code>).</p>
+      <p class="footer__meta"><span id="appVersionLabel" class="app-version">v—</span> · <span id="cycleStatusLabel">Auto-check pending</span></p>
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      var banner = document.getElementById("setupBanner");
+      var title = document.getElementById("setupBannerTitle");
+      var body = document.getElementById("setupBannerBody");
+      function showBootError(msg) {
+        if (!banner) return;
+        banner.hidden = false;
+        banner.className = "setup-banner is-error";
+        if (title) title.textContent = "App failed to load";
+        if (body) body.textContent = msg;
+      }
+      window.addEventListener("error", function (e) {
+        showBootError((e.message || "Unknown error") + ". Run ./start.sh then open http://127.0.0.1:8787");
+      });
+      window.addEventListener("unhandledrejection", function (e) {
+        var reason = e.reason && e.reason.message ? e.reason.message : String(e.reason);
+        showBootError(reason + ". Hard-refresh with Cmd+Shift+R.");
+      });
+      setTimeout(function () {
+        if (!window.__STUTTER_COACH_READY) {
+          showBootError("JavaScript did not start. Do not open index.html as a file — run ./start.sh and use http://127.0.0.1:8787");
+        }
+      }, 4000);
+    })();
+  </script>
+  <script src="app.bundle.js?v=1"></script>
+</body>
+</html>

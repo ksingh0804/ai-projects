@@ -1,0 +1,32 @@
+[
+  {
+    "id": "health-endpoint",
+    "version": "1.6.0",
+    "title": "Health check endpoint",
+    "description": "GET /health returns JSON status for automated verification."
+  },
+  {
+    "id": "version-badge",
+    "version": "1.6.0",
+    "title": "Version badge in footer",
+    "description": "Show app version and last improvement cycle in the UI footer."
+  },
+  {
+    "id": "pulse-streak",
+    "version": "1.7.0",
+    "title": "Pulse streak counter",
+    "description": "Track consecutive days with 3+ completed 4-hour pulses."
+  },
+  {
+    "id": "session-export",
+    "version": "1.8.0",
+    "title": "Export practice log",
+    "description": "Download recent sessions as JSON from the history panel."
+  },
+  {
+    "id": "cycle-notify",
+    "version": "1.9.0",
+    "title": "New pulse browser notification",
+    "description": "Optional notification when a new 4-hour slot opens."
+  }
+]
