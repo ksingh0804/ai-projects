@@ -3,12 +3,25 @@ title: Activity Log
 type: overview
 tags: [log, meta]
 created: 2026-05-20
-updated: 2026-06-23
+updated: 2026-06-28
 ---
 
 # Activity Log
 
 Append-only record of wiki and workspace changes.
+
+## [2026-06-28] project | enhance | steady-voice (more reading content)
+
+- Expanded the Reading section from 4 to 17 passages, tagged by level: Easy, Onsets (easy-onset/vowel), Real life (coffee, phone, intro, small talk, interview), Harder (consonant clusters, numbers, addresses), and two longer Story passages for stamina/phrasing.
+- Passage dropdown now shows the level tag (e.g. "Real life · Answering the phone").
+- Files: `projects/steady-voice/content.js`, `projects/steady-voice/app.js`.
+
+## [2026-06-28] project | add | steady-voice (Steady)
+
+- Did a fresh web-research pass on stuttering and captured it in `wiki/sources/stuttering-research.md` (facts/epidemiology, fluency shaping vs. Van Riper modification, rhythm/choral/metronome, DAF/FAF/MAF/AAF, CBT/ACT & avoidance reduction, practice principles, app-market gaps).
+- Built new **Steady** app filling the highest-evidence gaps vs. Stutter Coach: real-time altered auditory feedback (Web Audio DAF + pure-Web-Audio "Jungle" FAF pitch shifter + AAF + MAF), rhythmic pacing metronome with visual pulse, guided breathing, fluency-shaping + modification technique trainers, paced reading, and a CBT/ACT confidence toolkit (exposure ladder, thought reframe, self-disclosure builder). Private localStorage progress; accessible; respectful/no-cure tone.
+- Verified: JS/PY syntax checks pass; dev server (port 8788) serves all assets 200 with localhost→127.0.0.1 redirect; all app.js element IDs exist in index.html.
+- Files: `projects/steady-voice/{index.html,styles.css,content.js,audio.js,app.js,serve.py,start.sh,favicon.svg,README.md}`, `wiki/sources/stuttering-research.md`, `wiki/projects/steady-voice.md`, `wiki/index.md`, `README.md`.
 
 ## [2026-05-20] setup | workspace initialization
 

@@ -28,6 +28,7 @@ Catalog of all wiki pages. Updated by the agent on every change.
 | Page | Summary |
 |------|---------|
 | [sources/karpathy-llm-wiki.md](sources/karpathy-llm-wiki.md) | Original LLM Wiki idea document by Andrej Karpathy |
+| [sources/stuttering-research.md](sources/stuttering-research.md) | Evidence synthesis on stuttering — therapy approaches, rhythm/pacing, altered auditory feedback (DAF/FAF/MAF/AAF), CBT/ACT — driving the Steady app design. |
 
 ## Projects
 
@@ -35,3 +36,4 @@ Catalog of all wiki pages. Updated by the agent on every change.
 |------|---------|
 | [projects/grocery-logistics-de.md](projects/grocery-logistics-de.md) | **FreshCart** — end-to-end data engineering project (lakehouse, batch ELT, streaming, orchestration, ML features) plus 30-day AWS curriculum. |
 | [projects/stutter-coach.md](projects/stutter-coach.md) | **Stutter Coach** — free browser voice-practice app with live coaching, Small Talk, weekly plan, and 4-hour auto-improvement cycle. |
+| [projects/steady-voice.md](projects/steady-voice.md) | **Steady** — free, private, evidence-based toolkit for people who stutter: altered auditory feedback (DAF/FAF/MAF/AAF), pacing metronome, breathing, technique trainers, and a CBT/ACT confidence toolkit. |

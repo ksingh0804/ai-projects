@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Steady — a free toolkit for people who stutter</title>
+  <meta name="description" content="Steady is a free, private, evidence-based toolkit for people who stutter: delayed auditory feedback, pacing metronome, breathing, technique trainers, and a confidence toolkit." />
+  <link rel="icon" href="favicon.svg" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" aria-label="Primary">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">◗◖</span>
+        <div>
+          <h1 class="brand-name">Steady</h1>
+          <p class="brand-tag">speak on your terms</p>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="Sections">
+        <button class="nav-btn is-active" data-view="home"><span class="nav-ico">⌂</span> Home</button>
+        <button class="nav-btn" data-view="daf"><span class="nav-ico">♺</span> Echo (DAF)</button>
+        <button class="nav-btn" data-view="pacing"><span class="nav-ico">♩</span> Pacing</button>
+        <button class="nav-btn" data-view="breathing"><span class="nav-ico">◯</span> Breathing</button>
+        <button class="nav-btn" data-view="techniques"><span class="nav-ico">✎</span> Techniques</button>
+        <button class="nav-btn" data-view="reading"><span class="nav-ico">▤</span> Reading</button>
+        <button class="nav-btn" data-view="confidence"><span class="nav-ico">♥</span> Confidence</button>
+        <button class="nav-btn" data-view="learn"><span class="nav-ico">ℹ</span> Learn</button>
+        <button class="nav-btn" data-view="progress"><span class="nav-ico">▦</span> Progress</button>
+      </nav>
+
+      <div class="sidebar-foot">
+        <button id="textsize-btn" class="ghost-btn" title="Toggle large text">A+ Text size</button>
+        <p class="disclaimer-mini">Not medical advice. Pairs best with a speech-language pathologist.</p>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main id="main" class="main" tabindex="-1">
+      <!-- HOME -->
+      <section class="view is-active" id="view-home">
+        <header class="view-head">
+          <h2>Welcome</h2>
+          <p class="lead">A free, private toolkit for people who stutter. Everything runs in your browser — nothing is uploaded.</p>
+        </header>
+
+        <div class="grid">
+          <div class="card streak-card">
+            <p class="card-kicker">Practice streak</p>
+            <p class="streak-num"><span id="streak-count">0</span> <span class="streak-unit">days</span></p>
+            <p class="muted" id="streak-sub">Do anything today to start your streak.</p>
+            <button class="primary-btn" id="log-practice-btn">I practiced today ✓</button>
+          </div>
+
+          <div class="card challenge-card">
+            <p class="card-kicker">Today's brave challenge</p>
+            <p class="challenge-text" id="daily-challenge">…</p>
+            <div class="row">
+              <button class="ghost-btn" id="new-challenge-btn">Shuffle</button>
+              <button class="primary-btn" id="done-challenge-btn">I did it 🎉</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <p class="card-kicker">Start here</p>
+            <p class="muted">A balanced 10-minute routine, grounded in research.</p>
+            <ol class="routine">
+              <li><button class="link-btn" data-goto="breathing">2 min — calm breathing</button></li>
+              <li><button class="link-btn" data-goto="techniques">3 min — a technique drill</button></li>
+              <li><button class="link-btn" data-goto="reading">3 min — paced reading</button></li>
+              <li><button class="link-btn" data-goto="confidence">2 min — one brave step</button></li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="card info-card">
+          <h3>You are not alone, and it's not your fault</h3>
+          <p>Stuttering is a <strong>neurological, often genetic</strong> condition affecting about <strong>1% of adults — ~80 million people</strong> worldwide. It is <strong>not</strong> caused by anxiety, low intelligence, or anything you did. This toolkit helps you build skills <em>and</em> self-acceptance. There's no instant cure, but consistent practice and reduced avoidance genuinely help.</p>
+        </div>
+      </section>
+
+      <!-- DAF -->
+      <section class="view" id="view-daf">
+        <header class="view-head">
+          <h2>Echo — Altered Auditory Feedback</h2>
+          <p class="lead">Hear your own voice slightly delayed and changed. For many people this naturally slows speech and eases blocks (helps roughly 1 in 3).</p>
+        </header>
+
+        <div class="callout warn">
+          <strong>Use wired headphones.</strong> Without them you'll get loud feedback (echo squeal), and Bluetooth adds unreliable lag. Start at a comfortable volume.
+        </div>
+
+        <div class="card">
+          <div class="daf-status">
+            <span class="dot" id="daf-dot"></span>
+            <span id="daf-state">Stopped</span>
+          </div>
+          <button class="primary-btn big" id="daf-toggle">Start Echo</button>
+
+          <div class="controls" id="daf-controls" aria-hidden="true">
+            <label class="ctl">
+              <span>Delay <output id="daf-delay-val">75</output> ms</span>
+              <input type="range" id="daf-delay" min="0" max="250" value="75" step="5" />
+              <small class="muted">50–100 ms suits most people; try higher for stronger effect.</small>
+            </label>
+            <label class="ctl">
+              <span>Pitch <output id="daf-pitch-val">0</output></span>
+              <input type="range" id="daf-pitch" min="-6" max="6" value="0" step="1" />
+              <small class="muted">Frequency-altered feedback (FAF). 0 = off.</small>
+            </label>
+            <label class="ctl">
+              <span>Volume <output id="daf-vol-val">100</output>%</span>
+              <input type="range" id="daf-vol" min="0" max="250" value="100" step="10" />
+              <small class="muted">Amplified feedback (AAF) can also help.</small>
+            </label>
+            <label class="ctl">
+              <span>Masking <output id="daf-mask-val">0</output>%</span>
+              <input type="range" id="daf-mask" min="0" max="100" value="0" step="5" />
+              <small class="muted">Soft noise (MAF) masks your voice. Try alone or with delay.</small>
+            </label>
+          </div>
+          <p class="muted small">Tip: read a passage in the Reading tab while Echo is on. Effects can be temporary — treat it as practice support, not a cure.</p>
+        </div>
+      </section>
+
+      <!-- PACING -->
+      <section class="view" id="view-pacing">
+        <header class="view-head">
+          <h2>Pacing — rhythm &amp; syllable timing</h2>
+          <p class="lead">Speaking in time to a beat is one of the strongest, best-evidenced ways to ease stuttering. Say one syllable per beat.</p>
+        </header>
+
+        <div class="card pacing-card">
+          <div class="pulse" id="pulse" aria-hidden="true"></div>
+          <p class="bpm-display"><output id="bpm-val">60</output> <span class="muted">beats/min</span></p>
+          <input type="range" id="bpm" min="30" max="160" value="60" step="2" aria-label="Beats per minute" />
+          <div class="row center">
+            <button class="primary-btn" id="metro-toggle">Start metronome</button>
+            <label class="checkline"><input type="checkbox" id="metro-accent" checked /> Accent every 4th beat</label>
+          </div>
+          <p class="muted">Try: read slowly, one syllable per click. Start slow (50–70), then speed up as it feels natural.</p>
+        </div>
+
+        <div class="card">
+          <h3>How to use it</h3>
+          <ul class="bullets">
+            <li>Pick a phrase and tap out a syllable on each beat: <em>"I — would — like — a — cof — fee."</em></li>
+            <li>Keep it smooth and even — minimal stress differences between syllables.</li>
+            <li>Gradually raise the tempo toward natural conversational speed.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- BREATHING -->
+      <section class="view" id="view-breathing">
+        <header class="view-head">
+          <h2>Breathing</h2>
+          <p class="lead">Speech rides on breath. Belly breathing steadies airflow and lowers tension before you speak.</p>
+        </header>
+
+        <div class="card breathe-card">
+          <div class="breath-orb" id="breath-orb"><span id="breath-label">Ready</span></div>
+          <div class="row center">
+            <label class="selectline">Pattern
+              <select id="breath-pattern"></select>
+            </label>
+            <button class="primary-btn" id="breath-toggle">Start</button>
+          </div>
+          <p class="muted" id="breath-hint">Follow the circle. Breathe from the belly, not the chest.</p>
+        </div>
+      </section>
+
+      <!-- TECHNIQUES -->
+      <section class="view" id="view-techniques">
+        <header class="view-head">
+          <h2>Technique trainers</h2>
+          <p class="lead">The core skills from speech therapy — fluency shaping (smoother speech) and stuttering modification (easier stutters). Tap any card.</p>
+        </header>
+        <div id="technique-list" class="tech-grid"></div>
+      </section>
+
+      <!-- READING -->
+      <section class="view" id="view-reading">
+        <header class="view-head">
+          <h2>Paced reading</h2>
+          <p class="lead">Read along as each word lights up. Practice slow, stretched, gentle speech. Turn on Echo or the metronome too.</p>
+        </header>
+
+        <div class="card">
+          <div class="row">
+            <label class="selectline">Passage <select id="passage-select"></select></label>
+            <label class="ctl inline">
+              <span>Pace <output id="wpm-val">90</output> wpm</span>
+              <input type="range" id="wpm" min="40" max="180" value="90" step="5" />
+            </label>
+          </div>
+          <div class="row">
+            <button class="primary-btn" id="read-toggle">Start</button>
+            <button class="ghost-btn" id="read-speak">🔊 Hear it</button>
+          </div>
+          <div class="reading-box" id="reading-box" aria-live="off"></div>
+        </div>
+      </section>
+
+      <!-- CONFIDENCE -->
+      <section class="view" id="view-confidence">
+        <header class="view-head">
+          <h2>Confidence toolkit</h2>
+          <p class="lead">Stuttering's hardest part is often fear and avoidance. These tools (from CBT &amp; ACT) build courage and openness.</p>
+        </header>
+
+        <div class="card">
+          <h3>Avoidance-reduction ladder</h3>
+          <p class="muted">List speaking situations you avoid, rate the fear (0–100), and check them off as you face them. Facing fears shrinks them.</p>
+          <div class="row">
+            <input type="text" id="ladder-input" placeholder="e.g. Make a phone call" />
+            <input type="number" id="ladder-suds" min="0" max="100" value="50" title="Fear 0–100" class="suds" />
+            <button class="primary-btn" id="ladder-add">Add</button>
+          </div>
+          <div class="row"><button class="link-btn" id="ladder-suggest">Need ideas? Add a suggestion</button></div>
+          <ul class="ladder" id="ladder-list"></ul>
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <h3>Self-disclosure builder</h3>
+            <p class="muted">Telling people you stutter ("advertising") reduces pressure and improves how listeners respond.</p>
+            <select id="disclosure-select"></select>
+            <p class="disclosure-preview" id="disclosure-preview"></p>
+            <button class="ghost-btn" id="disclosure-speak">🔊 Practice it</button>
+          </div>
+
+          <div class="card">
+            <h3>Thought reframe (CBT)</h3>
+            <p class="muted">Swap an unhelpful thought for a balanced one.</p>
+            <select id="cbt-select"></select>
+            <div class="reframe">
+              <p class="reframe-bad" id="cbt-bad"></p>
+              <p class="reframe-arrow">↓ reframe ↓</p>
+              <p class="reframe-good" id="cbt-good"></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- LEARN -->
+      <section class="view" id="view-learn">
+        <header class="view-head">
+          <h2>Learn — facts vs myths</h2>
+          <p class="lead">Accurate understanding reduces shame. Share these with friends, family, and colleagues.</p>
+        </header>
+        <div id="facts-list" class="facts"></div>
+        <div class="card">
+          <h3>When to see a professional</h3>
+          <p>A speech-language pathologist (SLP) who specializes in fluency can tailor therapy to you — something no app can do. Consider one if stuttering affects your daily life, work, or wellbeing.</p>
+          <ul class="links" id="resource-links"></ul>
+        </div>
+      </section>
+
+      <!-- PROGRESS -->
+      <section class="view" id="view-progress">
+        <header class="view-head">
+          <h2>Your progress</h2>
+          <p class="lead">Private and stored only on this device.</p>
+        </header>
+        <div class="grid" id="progress-stats"></div>
+        <div class="card">
+          <h3>Recent activity</h3>
+          <ul class="log" id="activity-log"></ul>
+          <button class="ghost-btn danger" id="reset-data">Reset all data</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="content.js"></script>
+  <script src="audio.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
