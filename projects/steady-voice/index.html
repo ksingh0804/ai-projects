@@ -188,7 +188,7 @@
       <section class="view" id="view-reading">
         <header class="view-head">
           <h2>Paced reading</h2>
-          <p class="lead">Read along as each word lights up. Practice slow, stretched, gentle speech. Turn on Echo or the metronome too.</p>
+          <p class="lead"><strong>50 fresh topics every day</strong> — the set and wording change daily, so it's never the same as yesterday. Pick a topic, read along as each word lights up, or paste your own text. Practice slow, stretched, gentle speech, and turn on Echo or the metronome too.</p>
         </header>
 
         <div class="card">
@@ -201,8 +201,10 @@
           </div>
           <div class="row">
             <button class="primary-btn" id="read-toggle">Start</button>
+            <button class="ghost-btn" id="read-new">🔀 Random topic</button>
             <button class="ghost-btn" id="read-speak">🔊 Hear it</button>
           </div>
+          <textarea id="custom-text" class="custom-text" placeholder="Paste or type your own text here — a speech, an email, a script, anything you want to practice. It stays on this device." style="display:none"></textarea>
           <div class="reading-box" id="reading-box" aria-live="off"></div>
         </div>
       </section>

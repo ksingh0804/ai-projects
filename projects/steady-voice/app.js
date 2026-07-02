@@ -230,14 +230,103 @@
   var wpmInput = document.getElementById("wpm");
   var wpmVal = document.getElementById("wpm-val");
   var readBtn = document.getElementById("read-toggle");
+  var readNewBtn = document.getElementById("read-new");
   var readTimer = null;
-  C.passages.forEach(function (p, i) {
-    var o = document.createElement("option"); o.value = i;
-    o.textContent = (p.level ? p.level + " · " : "") + p.title;
-    passageSelect.appendChild(o);
+
+  // Seeded PRNG (mulberry32) so a date seed gives a stable, reproducible passage.
+  function mulberry32(seed) {
+    return function () {
+      seed |= 0; seed = (seed + 0x6d2b79f5) | 0;
+      var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function dayNumber() {
+    // whole days since epoch (UTC-stable per calendar day locally)
+    return Math.floor((Date.now() - new Date().getTimezoneOffset() * 60000) / 86400000);
+  }
+  function pick(arr, rnd) { return arr[Math.floor(rnd() * arr.length)]; }
+  function pickN(arr, n, rnd) {
+    var copy = arr.slice(), out = [];
+    for (var i = 0; i < n && copy.length; i++) out.push(copy.splice(Math.floor(rnd() * copy.length), 1)[0]);
+    return out;
+  }
+  function seededShuffle(arr, seed) {
+    var rnd = mulberry32(seed), a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(rnd() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
+    return a;
+  }
+  function titleCase(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  // Build one topic passage (intro + 2–3 middles + closer), seeded for reproducibility.
+  function makeTopicPassage(topic, seed) {
+    var d = C.readingTopics;
+    var rnd = mulberry32(seed);
+    var fill = function (s) { return s.replace("{t}", topic); };
+    var nMid = 2 + Math.floor(rnd() * 2); // 2–3 middles
+    var sentences = [fill(pick(d.intros, rnd))].concat(pickN(d.middles, nMid, rnd), [fill(pick(d.closers, rnd))]);
+    return { level: "Daily 50", title: titleCase(topic), text: sentences.join(" ") };
+  }
+
+  // Today's 50 topics — a date-seeded shuffle of the subject bank, so the set, order,
+  // and wording are new every day and differ from yesterday.
+  var daySeed = dayNumber();
+  // Stable global order of all subjects; each day takes the next 50-topic window,
+  // so consecutive days are disjoint (no overlap with yesterday). Wording is
+  // re-seeded per day so even eventual repeats read differently.
+  function buildDailySet(day) {
+    var base = seededShuffle(C.readingTopics.subjects, 987654321);
+    var len = base.length, n = Math.min(50, len);
+    var start = ((day * n) % len + len) % len;
+    var set = [];
+    for (var i = 0; i < n; i++) set.push(makeTopicPassage(base[(start + i) % len], day * 131 + i + 1));
+    return set;
+  }
+  var dailySet = buildDailySet(daySeed);
+
+  var customText = document.getElementById("custom-text");
+  if (customText && state.customText) customText.value = state.customText;
+  function currentPassage() {
+    var v = passageSelect.value;
+    if (v.charAt(0) === "d") return dailySet[+v.slice(1)];
+    if (v === "custom") {
+      var t = (customText.value || "").trim();
+      return { level: "Custom", title: "Your text", text: t || "Type or paste your own text above, then press Start." };
+    }
+    return C.passages[+v];
+  }
+
+  // Build the dropdown: Today's 50 topics, then your-own-text, then the calm library.
+  var todayStr = new Date().toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
+  var gDaily = document.createElement("optgroup");
+  gDaily.label = "★ Today's 50 topics · " + todayStr + " (new daily)";
+  dailySet.forEach(function (p, i) {
+    var o = document.createElement("option"); o.value = "d" + i;
+    o.textContent = (i + 1) + ". " + p.title;
+    gDaily.appendChild(o);
   });
+  passageSelect.appendChild(gDaily);
+
+  var gCustom = document.createElement("optgroup");
+  gCustom.label = "Your text";
+  var customOpt = document.createElement("option");
+  customOpt.value = "custom"; customOpt.textContent = "✎ Your own text";
+  gCustom.appendChild(customOpt);
+  passageSelect.appendChild(gCustom);
+
+  var gLib = document.createElement("optgroup");
+  gLib.label = "Calm library";
+  C.passages.forEach(function (p, i) {
+    var o = document.createElement("option"); o.value = "" + i;
+    o.textContent = (p.level ? p.level + " · " : "") + p.title;
+    gLib.appendChild(o);
+  });
+  passageSelect.appendChild(gLib);
+  passageSelect.value = "d0";
+
   function renderPassage() {
-    var p = C.passages[+passageSelect.value];
+    var p = currentPassage();
     readBox.innerHTML = p.text.split(/\s+/).map(function (w, i) { return '<span class="w" data-i="' + i + '">' + escapeHtml(w) + "</span>"; }).join(" ");
   }
   function stopReading() {
@@ -246,7 +335,16 @@
     readBtn.textContent = "Start";
     readBox.querySelectorAll(".w").forEach(function (w) { w.classList.remove("active", "done"); });
   }
-  passageSelect.addEventListener("change", function () { stopReading(); renderPassage(); });
+  function updateNewBtn() {
+    if (readNewBtn) readNewBtn.style.display = passageSelect.value.charAt(0) === "d" ? "" : "none";
+    if (customText) customText.style.display = passageSelect.value === "custom" ? "" : "none";
+  }
+  passageSelect.addEventListener("change", function () { stopReading(); updateNewBtn(); renderPassage(); });
+  updateNewBtn();
+  if (customText) customText.addEventListener("input", function () {
+    state.customText = customText.value; save();
+    if (passageSelect.value === "custom") { stopReading(); renderPassage(); }
+  });
   wpmInput.addEventListener("input", function () { wpmVal.textContent = wpmInput.value; });
   readBtn.addEventListener("click", function () {
     if (readTimer) { stopReading(); return; }
@@ -263,8 +361,14 @@
       if (i > words.length) stopReading();
     }, interval);
   });
+  if (readNewBtn) readNewBtn.addEventListener("click", function () {
+    // Jump to a random topic from today's 50 for extra practice.
+    var idx = Math.floor(Math.random() * dailySet.length);
+    passageSelect.value = "d" + idx;
+    stopReading(); updateNewBtn(); renderPassage();
+  });
   document.getElementById("read-speak").addEventListener("click", function () {
-    speak(C.passages[+passageSelect.value].text, 0.7);
+    speak(currentPassage().text, 0.7);
   });
 
   /* ---------------- Confidence: ladder ---------------- */
