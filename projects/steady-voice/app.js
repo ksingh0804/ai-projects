@@ -41,9 +41,9 @@
   function go(view) {
     navBtns.forEach(function (b) { b.classList.toggle("is-active", b.dataset.view === view); });
     views.forEach(function (v) { v.classList.toggle("is-active", v.id === "view-" + view); });
-    // stop audio when leaving relevant tabs
-    if (view !== "daf" && window.SteadyAudio.isRunning()) toggleDaf(true);
-    if (view !== "pacing" && window.SteadyMetronome.isRunning()) stopMetro();
+    // Echo (DAF) and the metronome are practice aids meant to run WHILE you use other
+    // tabs (e.g. Echo on while reading), so they keep playing until you explicitly stop
+    // them from their own tab. Only stop the view-local animations/timers on navigation.
     if (view !== "breathing") stopBreath();
     if (view !== "reading") stopReading();
     document.getElementById("main").focus();
