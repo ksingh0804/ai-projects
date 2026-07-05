@@ -46,11 +46,21 @@
     // them from their own tab. Only stop the view-local animations/timers on navigation.
     if (view !== "breathing") stopBreath();
     if (view !== "reading") stopReading();
+    if (("#" + view) !== location.hash) location.hash = view;
     document.getElementById("main").focus();
   }
-  navBtns.forEach(function (b) { b.addEventListener("click", function () { go(b.dataset.view); }); });
+  var validViews = {};
+  navBtns.forEach(function (b) {
+    validViews[b.dataset.view] = true;
+    b.addEventListener("click", function () { go(b.dataset.view); });
+  });
   document.querySelectorAll("[data-goto]").forEach(function (el) {
     el.addEventListener("click", function () { go(el.dataset.goto); });
+  });
+  // Deep-linking: open directly to a tab via URL hash (e.g. .../#progress).
+  window.addEventListener("hashchange", function () {
+    var v = location.hash.slice(1);
+    if (validViews[v]) go(v);
   });
 
   /* ---------------- Text size ---------------- */
@@ -486,6 +496,8 @@
     renderHome(); renderPassage(); renderLadder(); renderDisclosure(); renderCbt(); renderProgress();
   }
   renderAll();
+  // Honor a deep-link hash on load (e.g. .../#progress opens the Progress tab).
+  (function () { var v = location.hash.slice(1); if (validViews[v]) go(v); })();
   window.addEventListener("beforeunload", function () {
     window.SteadyAudio.stop(); window.SteadyMetronome.stop(); window.speechSynthesis && window.speechSynthesis.cancel();
   });
