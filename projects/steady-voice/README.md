@@ -28,17 +28,36 @@ Manual server: `python3 serve.py`
 | **Pacing** | Metronome + visual pulse for rhythmic / syllable-timed speech — one of the strongest fluency inducers (choral/rhythm effect). | Metronome & choral-speech studies |
 | **Breathing** | Guided belly-breathing (box, 4-7-8, speech-breath) to steady airflow and reduce tension. | Fluency shaping |
 | **Techniques** | Trainers for gentle onset, prolonged/stretched speech, continuous phonation, light contact, pausing — plus modification: preparatory set, pull-out, cancellation. Each with steps and tap-to-hear drills. | Fluency shaping + Van Riper modification |
-| **Reading** | Paced reading with a moving word highlight at adjustable WPM; pair it with Echo or the metronome. | Daily practice + transfer |
+| **Reading** | Paced reading + **Practice aloud** with live speech tips, score, and next-time corrections. Daily 50 topics + custom text. | Daily practice + transfer |
+| **Interview** | **Daily 10** data-engineering interview questions and speakable answers; any answer can be sent into Reading practice. | Career prep + speech carryover |
 | **Confidence** | CBT/ACT tools: an avoidance-reduction (exposure) ladder, thought reframing, and a self-disclosure ("advertising") script builder. | CBT/ACT for social anxiety & avoidance |
 | **Learn** | Facts vs myths and pointers to professional help. | Public-health facts |
-| **Progress** | Private streaks, session log, brave-challenge and fears-faced counts (localStorage). | Consistency > duration |
+| **Progress** | Streaks, activity log, and **live PERSONAL-PROGRESS.md** with trend + next-time focus (rewritten after every check-in). | Consistency + carry-over corrections |
+
+## Personal progress (live file)
+
+Every reading-aloud round and check-in:
+
+1. Posts to `POST /api/progress` on the local server
+2. Rewrites **`PERSONAL-PROGRESS.md`** (human-readable) and `data/personal-progress.json`
+3. Shows **Next-time focus** tips on the Progress tab
+
+Open the Progress tab or read `projects/steady-voice/PERSONAL-PROGRESS.md` while you practice — it updates in real time.
 
 ## Design principles
 
 - **Respectful & accurate**: stuttering is neurological/genetic, not caused by anxiety or any personal failing. No "cure" promises.
 - **Fluency *and* acceptance**: both speaking-skill tools and emotional/avoidance tools.
 - **Private by default**: no network calls; data stays on your device.
-- **Accessible**: keyboard navigation, ARIA labels, large-text toggle, reduced-motion support, mobile layout.
+- **Accessible**: keyboard navigation (`G`, `1`–`0`), ARIA labels, large-text toggle, reduced-motion support, mobile bottom nav.
+
+## Production (v2.0.0)
+
+See [`PRODUCTION.md`](PRODUCTION.md) for the deploy checklist. Improvement history: [`IMPROVEMENT-LOG.md`](IMPROVEMENT-LOG.md).
+
+```bash
+node scripts/verify-app.mjs   # server must be on :8788
+```
 
 ## Tech
 

@@ -403,6 +403,162 @@ window.STEADY_CONTENT = {
     ],
   },
 
+  // ---- Interview: daily data-engineering Q&A practice ----
+  // The app selects 10 of these every day. Each item is written as a
+  // speakable answer so it can be pushed into Reading practice.
+  interviewQuestions: [
+    {
+      question: "What is the difference between ETL and ELT?",
+      answer: "ETL extracts data, transforms it before loading, and then writes clean data into the warehouse. ELT extracts and loads raw data first, then transforms it inside the warehouse or lakehouse. Modern cloud warehouses often prefer ELT because compute scales well near storage, raw history is preserved, and teams can rebuild models without re-ingesting source data.",
+      focus: "pipelines",
+    },
+    {
+      question: "How do you design an idempotent data pipeline?",
+      answer: "An idempotent pipeline can be safely rerun without creating duplicates or corrupting output. I use deterministic partition keys, stable primary keys, merge or upsert logic, checkpoints, and replace-partition writes. I also separate raw immutable input from curated output so a failed run can be retried from a known source of truth.",
+      focus: "reliability",
+    },
+    {
+      question: "What is a slowly changing dimension?",
+      answer: "A slowly changing dimension tracks changes to descriptive attributes over time. Type 1 overwrites the value, Type 2 keeps history with effective dates and current flags, and Type 3 keeps limited previous values in extra columns. I choose Type 2 when historical reporting must answer what was true at the time of an event.",
+      focus: "warehousing",
+    },
+    {
+      question: "How would you handle duplicate events in a streaming pipeline?",
+      answer: "I would define an event identity, such as source event id plus timestamp and source system. Then I would deduplicate within a watermark window for late data and use an idempotent sink such as merge by event id. For critical pipelines, I would also track duplicate rates as a data quality metric.",
+      focus: "streaming",
+    },
+    {
+      question: "What is the purpose of data partitioning?",
+      answer: "Partitioning stores data by a column such as date, region, or tenant so queries can scan less data. Good partitions match common filters and keep file counts balanced. Bad partitions, like high-cardinality user ids, can create too many tiny files and make reads slower instead of faster.",
+      focus: "performance",
+    },
+    {
+      question: "What is a data quality check you always add?",
+      answer: "I usually start with freshness, row count, null checks on required keys, uniqueness on primary keys, and accepted ranges for important measures. These checks catch missing loads, duplicate records, and schema issues early. I also make quality failures visible through alerts and quarantine tables instead of silently dropping records.",
+      focus: "quality",
+    },
+    {
+      question: "How do you backfill a production table safely?",
+      answer: "I backfill from raw immutable data into a separate staging target or isolated partitions first. I validate counts, keys, and sample aggregates against the existing table. Then I swap or merge in controlled batches, keep rollback options, and communicate expected load on the warehouse before running the job.",
+      focus: "operations",
+    },
+    {
+      question: "What is the difference between a data lake and a data warehouse?",
+      answer: "A data lake stores raw or semi-structured data cheaply and flexibly, often in object storage. A warehouse stores modeled, governed data optimized for analytics. A lakehouse combines parts of both by adding table formats, transactions, schema evolution, and performance features on top of lake storage.",
+      focus: "architecture",
+    },
+    {
+      question: "Explain a star schema.",
+      answer: "A star schema has a central fact table connected to dimension tables. The fact table stores measurable events like orders, trades, or page views. Dimensions store descriptive context like customer, product, date, or region. This design is easy for analysts to query and works well for BI performance.",
+      focus: "modeling",
+    },
+    {
+      question: "How do you optimize a slow SQL query?",
+      answer: "I start by reading the query plan and checking scan volume, joins, filters, and aggregations. Then I reduce columns and rows early, filter on partition columns, avoid unnecessary cross joins, fix skewed joins, and pre-aggregate when needed. I also verify that changes improve both runtime and cost.",
+      focus: "sql",
+    },
+    {
+      question: "What is schema evolution and why does it matter?",
+      answer: "Schema evolution is the controlled change of table structure over time, such as adding columns, changing types, or deprecating fields. It matters because producers and consumers often deploy independently. Good pipelines validate schemas, support backward-compatible changes, and fail loudly on breaking changes.",
+      focus: "governance",
+    },
+    {
+      question: "How do you handle late-arriving data?",
+      answer: "I define an acceptable lateness window based on business requirements. In batch, I rerun affected partitions. In streaming, I use watermarks and state retention. For reporting, I make the data freshness and correction behavior clear so users understand when numbers may still change.",
+      focus: "streaming",
+    },
+    {
+      question: "What is a watermark in stream processing?",
+      answer: "A watermark is the system's estimate that events earlier than a certain event time have mostly arrived. It lets the engine close windows and emit results while still allowing a defined amount of late data. The tradeoff is between waiting longer for completeness and producing results quickly.",
+      focus: "streaming",
+    },
+    {
+      question: "What are small files and why are they a problem?",
+      answer: "Small files happen when a pipeline writes too many tiny output files. They hurt performance because query engines spend more time listing, opening, and planning files than scanning useful data. I fix this with compaction, sensible batch sizes, partition tuning, and table maintenance jobs.",
+      focus: "lakehouse",
+    },
+    {
+      question: "What is data lineage?",
+      answer: "Data lineage shows where data came from, how it changed, and where it is consumed. It helps with debugging, compliance, impact analysis, and trust. At minimum, I track source tables, transformations, job versions, output tables, and owners for important datasets.",
+      focus: "governance",
+    },
+    {
+      question: "How would you test a data pipeline?",
+      answer: "I test transformations with small deterministic fixtures, validate schema and data quality checks, and run integration tests against representative source samples. I also test retries, empty inputs, late data, duplicate input, and failure recovery because production data pipelines fail in operational ways.",
+      focus: "testing",
+    },
+    {
+      question: "What is exactly-once processing?",
+      answer: "Exactly-once means each event affects the final result one time, even when retries or failures happen. In practice, it depends on source offsets, checkpointing, deterministic processing, and idempotent writes. I do not assume exactly-once from a tool alone; I design the full pipeline to make duplicates harmless.",
+      focus: "streaming",
+    },
+    {
+      question: "How do you choose between batch and streaming?",
+      answer: "I choose based on business latency, complexity, cost, and correctness needs. Batch is simpler and often enough for daily or hourly analytics. Streaming is useful when decisions need low latency, such as fraud detection or operational monitoring, but it adds state, ordering, and recovery complexity.",
+      focus: "architecture",
+    },
+    {
+      question: "What is a surrogate key?",
+      answer: "A surrogate key is an artificial key generated by the warehouse, often for dimension tables. It gives stable joins even when natural business keys change or are reused. In Type 2 dimensions, surrogate keys are especially useful because one business entity can have multiple historical versions.",
+      focus: "warehousing",
+    },
+    {
+      question: "What is the difference between a fact and a dimension?",
+      answer: "A fact is a measurable event or transaction, such as an order amount, click, or trade. A dimension describes the context around that event, such as date, customer, product, or location. Facts usually grow quickly, while dimensions are smaller and change more slowly.",
+      focus: "modeling",
+    },
+    {
+      question: "How do you monitor a data pipeline?",
+      answer: "I monitor job success, runtime, freshness, row counts, data quality checks, cost, and downstream SLA impact. I prefer alerts that explain the broken dataset and likely owner, not just that a job failed. For important pipelines, dashboards should show trend and recent incidents.",
+      focus: "operations",
+    },
+    {
+      question: "What is a CDC pipeline?",
+      answer: "CDC means change data capture. It captures inserts, updates, and deletes from a source database and sends them downstream. A good CDC pipeline preserves ordering, handles schema changes, tracks offsets, and applies changes idempotently into the target system.",
+      focus: "ingestion",
+    },
+    {
+      question: "How do you manage PII in a data platform?",
+      answer: "I classify sensitive fields, restrict access by role, encrypt data in transit and at rest, and mask or tokenize data when possible. I also limit raw access, log usage, define retention policies, and make sure downstream datasets do not accidentally expose sensitive attributes.",
+      focus: "security",
+    },
+    {
+      question: "What is orchestration in data engineering?",
+      answer: "Orchestration coordinates pipeline tasks, dependencies, schedules, retries, and alerts. Tools like Airflow, Dagster, or Prefect do not process the data themselves; they manage when and how jobs run. Good orchestration makes failure recovery and observability easier.",
+      focus: "orchestration",
+    },
+    {
+      question: "How do you design a warehouse table for analysts?",
+      answer: "I start with the business question, grain, dimensions, and measures. Then I make names clear, define one row per grain, document assumptions, and include quality checks. The best table is not just technically correct; it is easy for analysts to use without hidden traps.",
+      focus: "analytics",
+    },
+    {
+      question: "What is data skew?",
+      answer: "Data skew happens when some keys or partitions contain much more data than others. It can make distributed jobs slow because a few workers do most of the work. I address it with salting, broadcast joins, repartitioning, better keys, or handling heavy hitters separately.",
+      focus: "performance",
+    },
+    {
+      question: "What is a medallion architecture?",
+      answer: "A medallion architecture organizes data into bronze, silver, and gold layers. Bronze stores raw ingested data, silver cleans and conforms it, and gold provides business-ready datasets. The pattern helps separate concerns and makes data quality improvements traceable.",
+      focus: "lakehouse",
+    },
+    {
+      question: "How do you handle a breaking schema change from a source team?",
+      answer: "First I detect it with schema validation and stop unsafe downstream writes. Then I confirm whether the change is intentional, assess impacted datasets, and either adapt transformations or ask for a backward-compatible producer change. I communicate impact and backfill if needed.",
+      focus: "operations",
+    },
+    {
+      question: "What is the role of dbt in a data stack?",
+      answer: "dbt is mainly for transforming data in the warehouse using SQL plus software engineering practices. It supports models, tests, documentation, lineage, and deployments. I would still use separate tools for ingestion, orchestration, and heavy non-SQL processing when needed.",
+      focus: "tools",
+    },
+    {
+      question: "Explain primary key, foreign key, and unique constraint.",
+      answer: "A primary key uniquely identifies each row in a table. A foreign key references a key in another table and represents a relationship. A unique constraint guarantees that a column or group of columns does not repeat. In analytics systems, these may be enforced or documented depending on the engine.",
+      focus: "sql",
+    },
+  ],
+
   // ---- Confidence toolkit: starter exposure ladder suggestions (research §5) ----
   exposureSuggestions: [
     "Say 'hello' to one stranger today",

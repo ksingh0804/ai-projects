@@ -22,4 +22,4 @@ See [wiki/overview.md](wiki/overview.md) for the knowledge base. The agent updat
 |---------|------|--------|
 | FreshCart (Grocery + Logistics DE) | `projects/grocery-logistics-de/` | Runnable end-to-end data engineering project (lakehouse, batch ELT, streaming, orchestration, ML features) plus 30-day AWS curriculum |
 | Stutter Coach | `projects/stutter-coach/` | Free browser voice-practice app — Web Speech API, live coaching, Small Talk + drills, 7-day plan, 4-hour auto-improvement cycle (v1.7.0) |
-| Steady | `projects/steady-voice/` | Free, private, evidence-based toolkit for people who stutter — altered auditory feedback (DAF/FAF/MAF/AAF), pacing metronome, breathing, technique trainers, CBT/ACT confidence toolkit (port 8788) |
+| Steady | `projects/steady-voice/` | **v2.0.0** free stuttering toolkit — guided session, Echo (DAF), pacing, Daily 50 reading + live coach, Interview Daily 10, CBT/ACT, mobile nav (port 8788) |

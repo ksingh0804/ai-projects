@@ -1,0 +1,37 @@
+[
+  {
+    "id": "day1-guided-session",
+    "day": 1,
+    "version": "1.1.0",
+    "title": "Guided interactive daily session",
+    "description": "Home: Start Today's Session walkthrough with checkable mission steps, toast feedback, sticky coach bar, keyboard shortcuts, health endpoint, version badge."
+  },
+  {
+    "id": "day2-interactive-coach",
+    "day": 2,
+    "version": "1.2.0",
+    "title": "Richer live coaching & session replay",
+    "description": "Improve Practice aloud live tips; add mid-session encouragement; show last-round tip banner on Reading/Interview; interactive interview reveal/quiz mode; pace+Echo one-click combo."
+  },
+  {
+    "id": "day3-engagement-polish",
+    "day": 3,
+    "version": "1.3.0",
+    "title": "Onboarding, streaks, mobile polish",
+    "description": "First-run onboarding overlay; weekly streak calendar; mobile bottom nav; reduced-motion polish; interview practice timer; celebration micro-interactions."
+  },
+  {
+    "id": "day4-production-hardening",
+    "day": 4,
+    "version": "1.4.0",
+    "title": "Production hardening",
+    "description": "CSP-friendly headers, error UI for mic/audio failures, offline banner, cache-bust assets, accessibility audit fixes, compress CSS, verify suite expands for every tab."
+  },
+  {
+    "id": "day5-production-release",
+    "day": 5,
+    "version": "2.0.0",
+    "title": "Production-ready package",
+    "description": "Freeze production build: PRODUCTION.md deploy checklist, final verify green, polish copy, remove temp shot helpers, production start script, wiki release note. Ship best interactive Steady."
+  }
+]

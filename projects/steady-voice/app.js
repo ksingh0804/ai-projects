@@ -3,54 +3,191 @@
   "use strict";
   var C = window.STEADY_CONTENT;
   var KEY = "steady_v1";
-
-  /* ---------------- State ---------------- */
-  var state = load();
+  var DEFAULT_STATE = {
+    streak: { count: 0, lastDay: null },
+    log: [],
+    challengesDone: 0,
+    ladder: [],
+    largeText: false,
+    customText: "",
+    mission: { day: null, done: [], active: false, step: 0 },
+    onboarded: false,
+    practiceDays: {},
+    lastTip: null,
+  };
 
   function load() {
     try {
-      var s = JSON.parse(localStorage.getItem(KEY));
-      if (s && typeof s === "object") return s;
+      var raw = localStorage.getItem(KEY);
+      if (raw) {
+        var s = JSON.parse(raw);
+        if (s && typeof s === "object") {
+          if (!s.streak || typeof s.streak !== "object") s.streak = { count: 0, lastDay: null };
+          if (typeof s.streak.count !== "number") s.streak.count = 0;
+          if (s.streak.lastDay !== null && typeof s.streak.lastDay !== "string") s.streak.lastDay = null;
+          if (!Array.isArray(s.log)) s.log = [];
+          if (!Array.isArray(s.ladder)) s.ladder = [];
+          if (typeof s.challengesDone !== "number") s.challengesDone = 0;
+          if (typeof s.customText !== "string") s.customText = "";
+          if (!s.mission || typeof s.mission !== "object") s.mission = { day: null, done: [], active: false, step: 0 };
+          if (!Array.isArray(s.mission.done)) s.mission.done = [];
+          if (typeof s.onboarded !== "boolean") s.onboarded = false;
+          if (!s.practiceDays || typeof s.practiceDays !== "object") s.practiceDays = {};
+          if (s.lastTip != null && typeof s.lastTip !== "string") s.lastTip = null;
+          return s;
+        }
+      }
     } catch (e) {}
-    return { streak: { count: 0, lastDay: null }, log: [], challengesDone: 0, ladder: [], largeText: false };
+    return JSON.parse(JSON.stringify(DEFAULT_STATE));
   }
+
+  /* ---------------- State ---------------- */
+  var state = load();
   function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
 
   function todayKey() { return new Date().toISOString().slice(0, 10); }
   function yesterdayKey() { var d = new Date(); d.setDate(d.getDate() - 1); return d.toISOString().slice(0, 10); }
 
-  function markPractice(label) {
+  function markPractice(label, meta) {
     var t = todayKey();
     if (state.streak.lastDay !== t) {
       state.streak.count = state.streak.lastDay === yesterdayKey() ? state.streak.count + 1 : 1;
       state.streak.lastDay = t;
     }
+    if (!state.practiceDays) state.practiceDays = {};
+    state.practiceDays[t] = true;
     addLog(label || "Practiced");
     save();
     renderHome();
     renderProgress();
+    toast(label || "Practiced");
+    if (meta && meta.missionStep) completeMissionStep(meta.missionStep);
+    if (meta && meta.syncFile) syncProgressEntry(meta);
   }
+  function showError(msg) {
+    var el = document.getElementById("error-banner");
+    if (!el) return;
+    el.textContent = msg;
+    el.hidden = false;
+    clearTimeout(showError._t);
+    showError._t = setTimeout(function () { el.hidden = true; }, 5000);
+  }
+  function syncOfflineBanner() {
+    var el = document.getElementById("offline-banner");
+    if (el) el.hidden = navigator.onLine !== false;
+  }
+  window.addEventListener("online", syncOfflineBanner);
+  window.addEventListener("offline", syncOfflineBanner);
+  syncOfflineBanner();
   function addLog(text) {
     state.log.unshift({ t: Date.now(), text: text });
     state.log = state.log.slice(0, 60);
   }
 
+  /* ---------------- Personal progress file sync ---------------- */
+  var progressEntries = [];
+  var lastCorrections = [];
+  var P = window.SteadyProgress;
+
+  async function fetchProgress() {
+    try {
+      var res = await fetch("/api/progress");
+      if (!res.ok) return;
+      var data = await res.json();
+      progressEntries = data.entries || [];
+      if (data.summary && data.summary.last && data.summary.last.corrections) {
+        lastCorrections = data.summary.last.corrections;
+      }
+      renderPersonalProgress();
+    } catch (e) { /* offline / file:// */ }
+  }
+
+  async function syncProgressEntry(meta) {
+    if (!P) return;
+    var analysis = meta.analysis || {
+      score: meta.score != null ? meta.score : 72,
+      repetitions: [],
+      fillers: [],
+      missing: [],
+      issues: meta.issues || [],
+    };
+    var corrections = meta.corrections || P.buildNextTimeCorrections(analysis, {
+      tool: meta.tool,
+      tension: meta.tension,
+      hard: meta.hard,
+      promptTip: meta.promptTip,
+    });
+    lastCorrections = corrections.map(function (c) { return typeof c === "string" ? c : c.text; });
+    var entry = P.buildSessionEntry({
+      tool: meta.tool || "practice",
+      title: meta.title || meta.label || "Practice",
+      target: meta.target || "",
+      spoken: meta.spoken || "",
+      analysis: analysis,
+      tension: meta.tension,
+      corrections: corrections,
+    });
+    var entries = [entry].concat(progressEntries).slice(0, 100);
+    var summary = P.summarizeProgress(entries);
+    var markdown = P.formatProgressMarkdown(entries, summary);
+    try {
+      var res = await fetch("/api/progress", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ entry: entry, summary: summary, markdown: markdown }),
+      });
+      if (res.ok) {
+        progressEntries = entries;
+        renderPersonalProgress();
+      }
+    } catch (e) { /* keep local UI even if file write fails */ }
+    return { entry: entry, corrections: corrections, summary: summary };
+  }
+
+  function renderPersonalProgress() {
+    var trendEl = document.getElementById("progress-trend");
+    var tipsEl = document.getElementById("progress-next-tips");
+    var metaEl = document.getElementById("progress-file-meta");
+    if (!trendEl || !P) return;
+    var summary = P.summarizeProgress(progressEntries);
+    trendEl.textContent = summary.trend.text + (summary.avg != null ? " · avg " + summary.avg : "");
+    if (lastCorrections.length) {
+      tipsEl.innerHTML = lastCorrections.map(function (t) { return "<li>" + escapeHtml(t) + "</li>"; }).join("");
+    } else if (summary.last && summary.last.corrections && summary.last.corrections.length) {
+      tipsEl.innerHTML = summary.last.corrections.map(function (t) { return "<li>" + escapeHtml(t) + "</li>"; }).join("");
+    } else {
+      tipsEl.innerHTML = '<li class="muted">Finish a reading-aloud round to unlock corrections.</li>';
+    }
+    if (metaEl) {
+      metaEl.textContent = summary.sessions
+        ? summary.sessions + " sessions in PERSONAL-PROGRESS.md · updates live after each check-in"
+        : "Sessions save to PERSONAL-PROGRESS.md in real time.";
+    }
+  }
+
   /* ---------------- Navigation ---------------- */
   var navBtns = document.querySelectorAll(".nav-btn");
   var views = document.querySelectorAll(".view");
+  var mobileNavBtns = document.querySelectorAll(".mobile-nav-btn");
   function go(view) {
     navBtns.forEach(function (b) { b.classList.toggle("is-active", b.dataset.view === view); });
+    mobileNavBtns.forEach(function (b) { b.classList.toggle("is-active", b.dataset.view === view); });
     views.forEach(function (v) { v.classList.toggle("is-active", v.id === "view-" + view); });
     // Echo (DAF) and the metronome are practice aids meant to run WHILE you use other
     // tabs (e.g. Echo on while reading), so they keep playing until you explicitly stop
     // them from their own tab. Only stop the view-local animations/timers on navigation.
     if (view !== "breathing") stopBreath();
-    if (view !== "reading") stopReading();
+    if (view !== "reading") { stopReading(); stopLiveListen(); }
+    if (view === "reading") renderLastTipBanner();
     if (("#" + view) !== location.hash) location.hash = view;
     document.getElementById("main").focus();
   }
   var validViews = {};
   navBtns.forEach(function (b) {
+    validViews[b.dataset.view] = true;
+    b.addEventListener("click", function () { go(b.dataset.view); });
+  });
+  mobileNavBtns.forEach(function (b) {
     validViews[b.dataset.view] = true;
     b.addEventListener("click", function () { go(b.dataset.view); });
   });
@@ -79,10 +216,170 @@
     window.speechSynthesis.speak(u);
   }
 
+  /* ---------------- Toast + guided mission ---------------- */
+  var toastEl = document.getElementById("toast");
+  var toastTimer = null;
+  function toast(msg) {
+    if (!toastEl) return;
+    toastEl.textContent = msg;
+    toastEl.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.hidden = true; }, 2200);
+  }
+
+  var MISSION_STEPS = [
+    { id: "breathing", label: "Breathe (2 min)", view: "breathing", tip: "Start a breathing pattern, then mark done." },
+    { id: "techniques", label: "Open a technique", view: "techniques", tip: "Open one technique card and try a drill chip." },
+    { id: "reading", label: "Read aloud once", view: "reading", tip: "Use Practice aloud or Start pace on today's topic." },
+    { id: "interview", label: "One interview answer", view: "interview", tip: "Reveal or practice one Daily 10 answer." },
+    { id: "checkin", label: "Log today's practice", view: "home", tip: "Tap I practiced today or finish your brave challenge." },
+  ];
+
+  function ensureMissionDay() {
+    if (!state.mission) state.mission = { day: null, done: [], active: false, step: 0 };
+    if (state.mission.day !== todayKey()) {
+      state.mission = { day: todayKey(), done: [], active: false, step: 0 };
+      save();
+    }
+  }
+
+  function completeMissionStep(id) {
+    ensureMissionDay();
+    if (state.mission.done.indexOf(id) >= 0) { renderMission(); return; }
+    state.mission.done.push(id);
+    if (state.mission.active) {
+      var idx = MISSION_STEPS.findIndex(function (s) { return s.id === id; });
+      if (idx >= 0 && idx >= state.mission.step) state.mission.step = Math.min(idx + 1, MISSION_STEPS.length);
+    }
+    save();
+    renderMission();
+    toast("Mission step done: " + id);
+    if (state.mission.done.length >= MISSION_STEPS.length) {
+      toast("Today's guided session complete — nice work.");
+      state.mission.active = false;
+      save();
+      renderMission();
+      var card = document.getElementById("mission-card");
+      if (card) {
+        card.classList.remove("celebrate");
+        void card.offsetWidth;
+        card.classList.add("celebrate");
+      }
+    }
+  }
+
+  function renderMission() {
+    ensureMissionDay();
+    var stepsEl = document.getElementById("mission-steps");
+    var bar = document.getElementById("mission-bar");
+    var title = document.getElementById("mission-title");
+    var sub = document.getElementById("mission-sub");
+    var nextBtn = document.getElementById("mission-next");
+    var coachBar = document.getElementById("coach-bar");
+    var coachText = document.getElementById("coach-bar-text");
+    if (!stepsEl) return;
+    var done = state.mission.done;
+    var pct = Math.round((done.length / MISSION_STEPS.length) * 100);
+    if (bar) bar.style.width = pct + "%";
+    if (title) {
+      title.textContent = done.length >= MISSION_STEPS.length
+        ? "Today's session complete"
+        : (state.mission.active ? "Session in progress" : "Start today's practice");
+    }
+    if (sub) {
+      var cur = MISSION_STEPS[Math.min(state.mission.step, MISSION_STEPS.length - 1)];
+      sub.textContent = done.length >= MISSION_STEPS.length
+        ? "You finished all five interactive steps. Come back tomorrow for a fresh Daily 50 + Interview 10."
+        : (state.mission.active ? cur.tip : "A short interactive walkthrough — breathe, technique, reading, interview, then check in.");
+    }
+    stepsEl.innerHTML = MISSION_STEPS.map(function (s, i) {
+      var isDone = done.indexOf(s.id) >= 0;
+      var isCurrent = state.mission.active && i === state.mission.step && !isDone;
+      return '<li class="' + (isDone ? "done" : "") + (isCurrent ? " current" : "") + '">' +
+        '<button type="button" class="mission-check" data-id="' + s.id + '" aria-pressed="' + isDone + '">' +
+        (isDone ? "✓" : (i + 1)) + "</button> " +
+        '<button type="button" class="link-btn" data-goto="' + s.view + '">' + escapeHtml(s.label) + "</button>" +
+        "</li>";
+    }).join("");
+    stepsEl.querySelectorAll(".mission-check").forEach(function (btn) {
+      btn.addEventListener("click", function () { completeMissionStep(btn.dataset.id); });
+    });
+    stepsEl.querySelectorAll("[data-goto]").forEach(function (el) {
+      el.addEventListener("click", function () { go(el.dataset.goto); });
+    });
+    if (nextBtn) nextBtn.hidden = !state.mission.active || done.length >= MISSION_STEPS.length;
+    if (coachBar) {
+      coachBar.hidden = !state.mission.active || done.length >= MISSION_STEPS.length;
+      if (!coachBar.hidden && coachText) {
+        var step = MISSION_STEPS[Math.min(state.mission.step, MISSION_STEPS.length - 1)];
+        coachText.textContent = "Step " + (Math.min(state.mission.step, MISSION_STEPS.length - 1) + 1) + "/" + MISSION_STEPS.length + ": " + step.tip;
+      }
+    }
+  }
+
+  function startMission() {
+    ensureMissionDay();
+    state.mission.active = true;
+    if (state.mission.done.length >= MISSION_STEPS.length) {
+      state.mission.done = [];
+      state.mission.step = 0;
+    }
+    save();
+    renderMission();
+    var next = MISSION_STEPS.find(function (s) { return state.mission.done.indexOf(s.id) < 0; }) || MISSION_STEPS[0];
+    go(next.view);
+    toast("Guided session started");
+  }
+
+  function advanceMission() {
+    ensureMissionDay();
+    var next = MISSION_STEPS.find(function (s) { return state.mission.done.indexOf(s.id) < 0; });
+    if (!next) { toast("All steps done"); return; }
+    state.mission.step = MISSION_STEPS.indexOf(next);
+    state.mission.active = true;
+    save();
+    renderMission();
+    go(next.view);
+  }
+
+  document.getElementById("mission-start") && document.getElementById("mission-start").addEventListener("click", startMission);
+  document.getElementById("mission-next") && document.getElementById("mission-next").addEventListener("click", advanceMission);
+  document.getElementById("mission-reset") && document.getElementById("mission-reset").addEventListener("click", function () {
+    state.mission = { day: todayKey(), done: [], active: false, step: 0 };
+    save(); renderMission(); toast("Today's mission reset");
+  });
+  document.getElementById("coach-bar-next") && document.getElementById("coach-bar-next").addEventListener("click", advanceMission);
+  document.getElementById("coach-bar-home") && document.getElementById("coach-bar-home").addEventListener("click", function () { go("home"); });
+
+  // Keyboard shortcuts
+  var viewKeys = { "1": "home", "2": "daf", "3": "pacing", "4": "breathing", "5": "techniques", "6": "reading", "7": "interview", "8": "confidence", "9": "learn", "0": "progress" };
+  document.addEventListener("keydown", function (e) {
+    if (e.target && /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+    if (e.key === "g" || e.key === "G") { e.preventDefault(); startMission(); return; }
+    if (viewKeys[e.key]) { e.preventDefault(); go(viewKeys[e.key]); }
+  });
+
   /* ---------------- Home ---------------- */
   var challengeIdx = dayOfYear() % C.dailyChallenges.length;
   function dayOfYear() { var n = new Date(); var s = new Date(n.getFullYear(), 0, 0); return Math.floor((n - s) / 86400000); }
 
+  function renderWeekCal() {
+    var el = document.getElementById("week-cal");
+    if (!el) return;
+    var days = state.practiceDays || {};
+    var labels = ["S", "M", "T", "W", "T", "F", "S"];
+    var now = new Date();
+    var dow = now.getDay();
+    var html = "";
+    for (var i = 0; i < 7; i++) {
+      var d = new Date(now);
+      d.setDate(now.getDate() - dow + i);
+      var key = d.toISOString().slice(0, 10);
+      var cls = "week-day" + (days[key] ? " practiced" : "") + (key === todayKey() ? " today" : "");
+      html += '<span class="' + cls + '" title="' + key + '">' + labels[i] + "</span>";
+    }
+    el.innerHTML = html;
+  }
   function renderHome() {
     document.getElementById("streak-count").textContent = state.streak.count;
     var sub = document.getElementById("streak-sub");
@@ -90,14 +387,18 @@
     else if (state.streak.count > 0) sub.textContent = "Practice today to keep your streak alive.";
     else sub.textContent = "Do anything today to start your streak.";
     document.getElementById("daily-challenge").textContent = C.dailyChallenges[challengeIdx];
+    renderWeekCal();
+    renderMission();
   }
-  document.getElementById("log-practice-btn").addEventListener("click", function () { markPractice("Logged a practice day"); });
+  document.getElementById("log-practice-btn").addEventListener("click", function () {
+    markPractice("Logged a practice day", { missionStep: "checkin" });
+  });
   document.getElementById("new-challenge-btn").addEventListener("click", function () {
     challengeIdx = (challengeIdx + 1) % C.dailyChallenges.length; renderHome();
   });
   document.getElementById("done-challenge-btn").addEventListener("click", function () {
     state.challengesDone = (state.challengesDone || 0) + 1;
-    markPractice("Brave challenge: " + C.dailyChallenges[challengeIdx]);
+    markPractice("Brave challenge: " + C.dailyChallenges[challengeIdx], { missionStep: "checkin" });
   });
 
   /* ---------------- DAF (Echo) ---------------- */
@@ -132,6 +433,7 @@
       markPractice("Used Echo (altered auditory feedback)");
     } catch (e) {
       dafStateEl.textContent = "Mic blocked — allow microphone access and use http (not file://).";
+      showError("Echo needs microphone permission on http://127.0.0.1:8788");
     }
   }
   dafBtn.addEventListener("click", function () { toggleDaf(false); });
@@ -208,7 +510,7 @@
     if (breathTimer) { stopBreath(); return; }
     breathBtn.textContent = "Stop";
     runBreath();
-    markPractice("Did a breathing exercise");
+    markPractice("Did a breathing exercise", { missionStep: "breathing" });
   });
 
   /* ---------------- Techniques ---------------- */
@@ -229,7 +531,7 @@
     card.addEventListener("click", function (e) {
       if (e.target.classList.contains("chip")) { speak(e.target.dataset.say, 0.55); return; }
       card.classList.toggle("open");
-      if (card.classList.contains("open")) markPractice("Studied technique: " + t.name);
+      if (card.classList.contains("open")) markPractice("Studied technique: " + t.name, { missionStep: "techniques" });
     });
     techList.appendChild(card);
   });
@@ -364,7 +666,7 @@
     var i = 0;
     var interval = 60000 / (+wpmInput.value);
     readBtn.textContent = "Stop";
-    markPractice("Paced reading practice");
+    markPractice("Paced reading practice", { missionStep: "reading" });
     readTimer = setInterval(function () {
       words.forEach(function (w, j) { w.classList.toggle("active", j === i); w.classList.toggle("done", j < i); });
       i++;
@@ -379,6 +681,292 @@
   });
   document.getElementById("read-speak").addEventListener("click", function () {
     speak(currentPassage().text, 0.7);
+  });
+
+  /* -------- Reading aloud: live STT coach + next-time corrections -------- */
+  var liveCoach = document.getElementById("live-coach");
+  var liveTip = document.getElementById("live-tip");
+  var liveHeard = document.getElementById("live-heard");
+  var liveStopBtn = document.getElementById("live-stop");
+  var readAloudBtn = document.getElementById("read-aloud");
+  var feedbackCard = document.getElementById("feedback-card");
+  var feedbackScore = document.getElementById("feedback-score");
+  var feedbackTips = document.getElementById("feedback-tips");
+  var feedbackTension = document.getElementById("feedback-tension");
+  var feedbackTensionVal = document.getElementById("feedback-tension-val");
+  var feedbackHard = document.getElementById("feedback-hard");
+  var feedbackSave = document.getElementById("feedback-save");
+  var recognition = null;
+  var liveTranscript = "";
+  var pendingFeedback = null;
+  var coachEncourageTimer = null;
+  var ENCOURAGE = [
+    "Nice pace — keep the airflow easy.",
+    "You're doing the hard work. Soften the next onset.",
+    "Slow is strong. One syllable at a time.",
+    "If a block comes, pause and restart gently.",
+  ];
+  function renderLastTipBanner() {
+    var el = document.getElementById("last-tip-banner");
+    if (!el) return;
+    if (state.lastTip) {
+      el.hidden = false;
+      el.textContent = "Last round tip: " + state.lastTip;
+    } else {
+      el.hidden = true;
+    }
+  }
+  function clearEncourage() {
+    if (coachEncourageTimer) clearInterval(coachEncourageTimer);
+    coachEncourageTimer = null;
+  }
+
+  function SpeechRec() {
+    return window.SpeechRecognition || window.webkitSpeechRecognition || null;
+  }
+  function stopLiveListen() {
+    clearEncourage();
+    if (recognition) {
+      try { recognition.onresult = null; recognition.onend = null; recognition.onerror = null; recognition.stop(); } catch (e) {}
+      recognition = null;
+    }
+    if (liveCoach) liveCoach.hidden = true;
+    if (readAloudBtn) readAloudBtn.textContent = "🎙 Practice aloud";
+  }
+  function showFeedbackRound(analysis, target, spoken) {
+    if (!P || !feedbackCard) return;
+    var corrections = P.buildNextTimeCorrections(analysis, {});
+    pendingFeedback = { analysis: analysis, target: target, spoken: spoken, corrections: corrections };
+    feedbackScore.textContent = "Fluency score " + analysis.score + " · word match " + analysis.accuracy + "%";
+    feedbackTips.innerHTML = corrections.map(function (c) {
+      return "<li>" + escapeHtml((c.icon ? c.icon + " " : "") + c.text) + "</li>";
+    }).join("");
+    feedbackCard.hidden = false;
+    if (corrections.length) {
+      state.lastTip = (corrections[0].icon ? corrections[0].icon + " " : "") + corrections[0].text;
+      save();
+      renderLastTipBanner();
+    }
+  }
+  function startLiveListen() {
+    var Rec = SpeechRec();
+    if (!Rec) {
+      if (liveTip) liveTip.textContent = "Speech recognition needs Chrome or Edge.";
+      if (liveCoach) liveCoach.hidden = false;
+      return;
+    }
+    stopReading();
+    stopLiveListen();
+    liveTranscript = "";
+    if (feedbackCard) feedbackCard.hidden = true;
+    var passage = currentPassage();
+    recognition = new Rec();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = "en-US";
+    recognition.onresult = function (ev) {
+      var interim = "";
+      var final = "";
+      for (var i = 0; i < ev.results.length; i++) {
+        var t = ev.results[i][0].transcript;
+        if (ev.results[i].isFinal) final += t + " ";
+        else interim += t;
+      }
+      if (final) liveTranscript += final;
+      var heard = (liveTranscript + " " + interim).trim();
+      if (liveHeard) liveHeard.textContent = heard ? 'Heard: "' + heard.slice(0, 140) + (heard.length > 140 ? "…" : "") + '"' : "";
+      if (liveTip && P) {
+        var tip = P.liveTipFromInterim(heard);
+        liveTip.textContent = tip.icon + " " + tip.text;
+      }
+    };
+    recognition.onerror = function () {
+      if (liveTip) liveTip.textContent = "Mic issue — allow microphone, stay on http://127.0.0.1:8788.";
+      showError("Microphone issue — allow access and stay on http://127.0.0.1:8788");
+    };
+    recognition.onend = function () {
+      // Auto-restart while still in listening mode (Chrome ends between pauses).
+      if (recognition) {
+        try { recognition.start(); } catch (e) {}
+      }
+    };
+    try {
+      recognition.start();
+      if (liveCoach) liveCoach.hidden = false;
+      if (liveTip) liveTip.textContent = "🎙 Listening — speak the passage slowly.";
+      if (readAloudBtn) readAloudBtn.textContent = "Listening…";
+      clearEncourage();
+      var ei = 0;
+      coachEncourageTimer = setInterval(function () {
+        if (!liveTip || !recognition) return;
+        liveTip.textContent = "💬 " + ENCOURAGE[ei % ENCOURAGE.length];
+        ei++;
+      }, 18000);
+    } catch (e) {
+      if (liveTip) liveTip.textContent = "Could not start mic. Check Chrome microphone permission.";
+      if (liveCoach) liveCoach.hidden = false;
+      showError("Could not start mic — check Chrome microphone permission.");
+    }
+  }
+  document.getElementById("combo-echo-pace") && document.getElementById("combo-echo-pace").addEventListener("click", async function () {
+    go("reading");
+    if (!window.SteadyAudio.isRunning()) {
+      try { await toggleDaf(false); } catch (e) {}
+    }
+    if (!window.SteadyMetronome.isRunning()) metroBtn.click();
+    toast("Echo + Pace on — speak one syllable per beat");
+  });
+  function finishLiveListen() {
+    var spoken = liveTranscript.trim();
+    var passage = currentPassage();
+    stopLiveListen();
+    if (!spoken) {
+      if (liveCoach) { liveCoach.hidden = false; liveTip.textContent = "No speech captured — try again and speak closer to the mic."; }
+      return;
+    }
+    var analysis = P ? P.analyzeSpeech(passage.text, spoken) : { score: 70, accuracy: 70, repetitions: [], fillers: [], missing: [] };
+    showFeedbackRound(analysis, passage.text, spoken);
+    markPractice("Reading aloud: " + passage.title, {
+      syncFile: true,
+      missionStep: "reading",
+      tool: "reading",
+      title: "Reading aloud · " + passage.title,
+      target: passage.text,
+      spoken: spoken,
+      analysis: analysis,
+      corrections: pendingFeedback && pendingFeedback.corrections,
+    });
+  }
+  if (readAloudBtn) readAloudBtn.addEventListener("click", function () {
+    if (recognition) finishLiveListen();
+    else startLiveListen();
+  });
+  if (liveStopBtn) liveStopBtn.addEventListener("click", finishLiveListen);
+  if (feedbackTension) feedbackTension.addEventListener("input", function () {
+    feedbackTensionVal.textContent = feedbackTension.value;
+  });
+  if (feedbackSave) feedbackSave.addEventListener("click", async function () {
+    if (!pendingFeedback || !P) return;
+    var tension = +feedbackTension.value;
+    var hard = feedbackHard.value;
+    var analysis = Object.assign({}, pendingFeedback.analysis, {
+      issues: (pendingFeedback.analysis.issues || []).concat(hard ? [hard] : []),
+    });
+    var corrections = P.buildNextTimeCorrections(analysis, { tension: tension, hard: hard || undefined });
+    await syncProgressEntry({
+      tool: "reading",
+      title: "Check-in · " + currentPassage().title,
+      target: pendingFeedback.target,
+      spoken: pendingFeedback.spoken,
+      analysis: analysis,
+      tension: tension,
+      hard: hard,
+      corrections: corrections,
+    });
+    markPractice("Saved check-in (tension " + tension + ")");
+    feedbackTips.innerHTML = corrections.map(function (c) {
+      return "<li>" + escapeHtml((c.icon ? c.icon + " " : "") + c.text) + "</li>";
+    }).join("");
+    feedbackScore.textContent = "Saved to PERSONAL-PROGRESS.md — use these tips next round.";
+    go("progress");
+  });
+
+  /* ---------------- Interview: daily data-engineering Q&A ---------------- */
+  var interviewList = document.getElementById("interview-list");
+  var interviewDate = document.getElementById("interview-date");
+
+  function buildDailyInterviewSet(day) {
+    var bank = C.interviewQuestions || [];
+    var base = seededShuffle(bank, 246813579);
+    var len = base.length, n = Math.min(10, len);
+    var start = len ? ((day * n) % len + len) % len : 0;
+    var set = [];
+    for (var i = 0; i < n; i++) set.push(base[(start + i) % len]);
+    return set;
+  }
+
+  function renderInterview() {
+    if (!interviewList) return;
+    var set = buildDailyInterviewSet(daySeed);
+    var dateText = new Date().toLocaleDateString(undefined, {
+      weekday: "long",
+      month: "short",
+      day: "numeric",
+    });
+    if (interviewDate) interviewDate.textContent = "Daily 10 · " + dateText;
+    interviewList.innerHTML = set.map(function (item, i) {
+      return '<article class="interview-card" data-i="' + i + '">' +
+        '<p class="interview-focus">' + escapeHtml(item.focus || "data engineering") + "</p>" +
+        "<h3>" + (i + 1) + ". " + escapeHtml(item.question) + "</h3>" +
+        '<button class="ghost-btn interview-reveal" data-action="reveal">Try first, then show answer</button>' +
+        '<div class="interview-answer-wrap" hidden>' +
+          '<p class="interview-answer">' + escapeHtml(item.answer) + "</p>" +
+          '<div class="row">' +
+            '<button class="ghost-btn" data-action="speak">🔊 Hear answer</button>' +
+            '<button class="primary-btn" data-action="practice">Practice in Reading</button>' +
+          "</div>" +
+        "</div>" +
+      "</article>";
+    }).join("");
+    interviewList.querySelectorAll("button").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var card = btn.closest(".interview-card");
+        var item = set[+card.dataset.i];
+        var wrap = card.querySelector(".interview-answer-wrap");
+        var reveal = card.querySelector(".interview-reveal");
+        if (btn.dataset.action === "reveal") {
+          var open = wrap.hidden;
+          wrap.hidden = !open;
+          reveal.textContent = open ? "Hide answer" : "Try first, then show answer";
+          if (open) markPractice("Revealed interview answer: " + item.question);
+          completeMissionStep("interview");
+          return;
+        }
+        var script = "Question: " + item.question + " Answer: " + item.answer;
+        if (btn.dataset.action === "speak") {
+          speak(script, 0.82);
+          markPractice("Reviewed interview answer: " + item.question);
+          completeMissionStep("interview");
+          return;
+        }
+        if (customText) {
+          customText.value = script;
+          state.customText = script;
+          save();
+        }
+        passageSelect.value = "custom";
+        updateNewBtn();
+        renderPassage();
+        markPractice("Prepared interview answer for reading: " + item.question);
+        completeMissionStep("interview");
+        go("reading");
+      });
+    });
+  }
+
+  var interviewTimerId = null;
+  document.getElementById("interview-timer") && document.getElementById("interview-timer").addEventListener("click", function () {
+    var label = document.getElementById("interview-timer-label");
+    if (interviewTimerId) {
+      clearInterval(interviewTimerId);
+      interviewTimerId = null;
+      if (label) label.textContent = "Timer stopped";
+      return;
+    }
+    var left = 60;
+    if (label) label.textContent = left + "s — answer out loud";
+    interviewTimerId = setInterval(function () {
+      left--;
+      if (left <= 0) {
+        clearInterval(interviewTimerId);
+        interviewTimerId = null;
+        if (label) label.textContent = "Time's up — reveal and compare";
+        toast("60s done — reveal the answer and refine");
+        markPractice("Interview timed practice", { missionStep: "interview" });
+        return;
+      }
+      if (label) label.textContent = left + "s left";
+    }, 1000);
   });
 
   /* ---------------- Confidence: ladder ---------------- */
@@ -468,13 +1056,16 @@
     ];
     stats.innerHTML = data.map(function (d) { return '<div class="stat"><div class="n">' + d[1] + '</div><div class="l">' + d[0] + "</div></div>"; }).join("");
     var log = document.getElementById("activity-log");
-    if (!state.log.length) { log.innerHTML = '<li class="muted">No activity yet.</li>'; return; }
-    log.innerHTML = state.log.map(function (e) {
-      return "<li><span>" + escapeHtml(e.text) + '</span><span class="when">' + relTime(e.t) + "</span></li>";
-    }).join("");
+    if (!state.log.length) { log.innerHTML = '<li class="muted">No activity yet.</li>'; }
+    else {
+      log.innerHTML = state.log.map(function (e) {
+        return "<li><span>" + escapeHtml(e.text) + '</span><span class="when">' + relTime(e.t) + "</span></li>";
+      }).join("");
+    }
+    renderPersonalProgress();
   }
   document.getElementById("reset-data").addEventListener("click", function () {
-    if (!confirm("Erase all your Steady data on this device?")) return;
+    if (!confirm("Erase all your Steady data on this device? (Does not delete PERSONAL-PROGRESS.md on disk.)")) return;
     localStorage.removeItem(KEY);
     state = load();
     renderAll();
@@ -493,12 +1084,43 @@
 
   /* ---------------- Init ---------------- */
   function renderAll() {
-    renderHome(); renderPassage(); renderLadder(); renderDisclosure(); renderCbt(); renderProgress();
+    renderHome(); renderPassage(); renderInterview(); renderLadder(); renderDisclosure(); renderCbt(); renderProgress();
+  }
+  async function loadVersionBadge() {
+    var el = document.getElementById("version-badge");
+    if (!el) return;
+    try {
+      var res = await fetch("/health");
+      if (!res.ok) return;
+      var h = await res.json();
+      el.textContent = "v" + (h.version || "?") + " · day " + (h.day || 1);
+    } catch (e) {
+      try {
+        var v = await fetch("version.json").then(function (r) { return r.json(); });
+        el.textContent = "v" + v.version + " · day " + (v.day || 1);
+      } catch (e2) {}
+    }
   }
   renderAll();
+  fetchProgress();
+  loadVersionBadge();
+  renderLastTipBanner();
+  (function showOnboard() {
+    var overlay = document.getElementById("onboard-overlay");
+    if (!overlay) return;
+    if (state.onboarded) { overlay.hidden = true; return; }
+    overlay.hidden = false;
+    document.getElementById("onboard-done").addEventListener("click", function () {
+      state.onboarded = true;
+      save();
+      overlay.hidden = true;
+      toast("Press G anytime for today's guided session");
+    });
+  })();
   // Honor a deep-link hash on load (e.g. .../#progress opens the Progress tab).
   (function () { var v = location.hash.slice(1); if (validViews[v]) go(v); })();
   window.addEventListener("beforeunload", function () {
+    stopLiveListen();
     window.SteadyAudio.stop(); window.SteadyMetronome.stop(); window.speechSynthesis && window.speechSynthesis.cancel();
   });
 })();

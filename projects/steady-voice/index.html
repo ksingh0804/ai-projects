@@ -6,10 +6,23 @@
   <title>Steady — a free toolkit for people who stutter</title>
   <meta name="description" content="Steady is a free, private, evidence-based toolkit for people who stutter: delayed auditory feedback, pacing metronome, breathing, technique trainers, and a confidence toolkit." />
   <link rel="icon" href="favicon.svg" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=5" />
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
+  <div id="offline-banner" class="offline-banner" hidden role="status">You're offline — practice still works; progress sync waits until you're back.</div>
+  <div id="onboard-overlay" class="onboard-overlay" hidden>
+    <div class="onboard-card" role="dialog" aria-labelledby="onboard-title" aria-modal="true">
+      <p class="card-kicker">Welcome to Steady</p>
+      <h2 id="onboard-title">Three things to know</h2>
+      <ol class="onboard-steps">
+        <li><strong>Guided session</strong> — press Start on Home (or <kbd>G</kbd>) for a 5-step practice path.</li>
+        <li><strong>Echo needs wired headphones</strong> — otherwise you get feedback squeal.</li>
+        <li><strong>Private by default</strong> — progress stays on this device (and optional local file sync).</li>
+      </ol>
+      <button class="primary-btn" id="onboard-done" data-testid="onboard-done">Got it — let's practice</button>
+    </div>
+  </div>
 
   <div class="app">
     <!-- Sidebar -->
@@ -23,19 +36,21 @@
       </div>
 
       <nav class="nav" aria-label="Sections">
-        <button class="nav-btn is-active" data-view="home"><span class="nav-ico">⌂</span> Home</button>
-        <button class="nav-btn" data-view="daf"><span class="nav-ico">♺</span> Echo (DAF)</button>
-        <button class="nav-btn" data-view="pacing"><span class="nav-ico">♩</span> Pacing</button>
-        <button class="nav-btn" data-view="breathing"><span class="nav-ico">◯</span> Breathing</button>
-        <button class="nav-btn" data-view="techniques"><span class="nav-ico">✎</span> Techniques</button>
-        <button class="nav-btn" data-view="reading"><span class="nav-ico">▤</span> Reading</button>
-        <button class="nav-btn" data-view="confidence"><span class="nav-ico">♥</span> Confidence</button>
-        <button class="nav-btn" data-view="learn"><span class="nav-ico">ℹ</span> Learn</button>
-        <button class="nav-btn" data-view="progress"><span class="nav-ico">▦</span> Progress</button>
+        <button class="nav-btn is-active" data-view="home" data-testid="nav-home"><span class="nav-ico">⌂</span> Home</button>
+        <button class="nav-btn" data-view="daf" data-testid="nav-daf"><span class="nav-ico">♺</span> Echo (DAF)</button>
+        <button class="nav-btn" data-view="pacing" data-testid="nav-pacing"><span class="nav-ico">♩</span> Pacing</button>
+        <button class="nav-btn" data-view="breathing" data-testid="nav-breathing"><span class="nav-ico">◯</span> Breathing</button>
+        <button class="nav-btn" data-view="techniques" data-testid="nav-techniques"><span class="nav-ico">✎</span> Techniques</button>
+        <button class="nav-btn" data-view="reading" data-testid="nav-reading"><span class="nav-ico">▤</span> Reading</button>
+        <button class="nav-btn" data-view="interview" data-testid="nav-interview"><span class="nav-ico">▣</span> Interview</button>
+        <button class="nav-btn" data-view="confidence" data-testid="nav-confidence"><span class="nav-ico">♥</span> Confidence</button>
+        <button class="nav-btn" data-view="learn" data-testid="nav-learn"><span class="nav-ico">ℹ</span> Learn</button>
+        <button class="nav-btn" data-view="progress" data-testid="nav-progress"><span class="nav-ico">▦</span> Progress</button>
       </nav>
 
       <div class="sidebar-foot">
-        <button id="textsize-btn" class="ghost-btn" title="Toggle large text">A+ Text size</button>
+        <button id="textsize-btn" class="ghost-btn" title="Toggle large text" data-testid="textsize-btn">A+ Text size</button>
+        <p class="version-badge" id="version-badge">Steady</p>
         <p class="disclaimer-mini">Not medical advice. Pairs best with a speech-language pathologist.</p>
       </div>
     </aside>
@@ -49,12 +64,27 @@
           <p class="lead">A free, private toolkit for people who stutter. Everything runs in your browser — nothing is uploaded.</p>
         </header>
 
+        <div class="card mission-card" id="mission-card">
+          <p class="card-kicker">Today's guided session</p>
+          <h3 id="mission-title">Start today's practice</h3>
+          <p class="muted" id="mission-sub">A short interactive walkthrough — breathe, technique, reading, interview, then check in.</p>
+          <div class="mission-progress"><div class="mission-bar" id="mission-bar"></div></div>
+          <ol class="mission-steps" id="mission-steps"></ol>
+          <div class="row">
+            <button class="primary-btn" id="mission-start" data-testid="mission-start">▶ Start today's session</button>
+            <button class="ghost-btn" id="mission-next" hidden>Next step →</button>
+            <button class="ghost-btn" id="mission-reset">Reset today</button>
+          </div>
+          <p class="muted small">Tip: press <kbd>G</kbd> anytime to jump to the guided session. Number keys <kbd>1</kbd>–<kbd>0</kbd> switch tabs.</p>
+        </div>
+
         <div class="grid">
           <div class="card streak-card">
             <p class="card-kicker">Practice streak</p>
             <p class="streak-num"><span id="streak-count">0</span> <span class="streak-unit">days</span></p>
             <p class="muted" id="streak-sub">Do anything today to start your streak.</p>
-            <button class="primary-btn" id="log-practice-btn">I practiced today ✓</button>
+            <div class="week-cal" id="week-cal" aria-label="This week's practice days"></div>
+            <button class="primary-btn" id="log-practice-btn" data-testid="log-practice-btn">I practiced today ✓</button>
           </div>
 
           <div class="card challenge-card">
@@ -62,18 +92,19 @@
             <p class="challenge-text" id="daily-challenge">…</p>
             <div class="row">
               <button class="ghost-btn" id="new-challenge-btn">Shuffle</button>
-              <button class="primary-btn" id="done-challenge-btn">I did it 🎉</button>
+              <button class="primary-btn" id="done-challenge-btn" data-testid="done-challenge-btn">I did it 🎉</button>
             </div>
           </div>
 
           <div class="card">
-            <p class="card-kicker">Start here</p>
-            <p class="muted">A balanced 10-minute routine, grounded in research.</p>
+            <p class="card-kicker">Quick jumps</p>
+            <p class="muted">Or pick a single tool.</p>
             <ol class="routine">
-              <li><button class="link-btn" data-goto="breathing">2 min — calm breathing</button></li>
-              <li><button class="link-btn" data-goto="techniques">3 min — a technique drill</button></li>
-              <li><button class="link-btn" data-goto="reading">3 min — paced reading</button></li>
-              <li><button class="link-btn" data-goto="confidence">2 min — one brave step</button></li>
+              <li><button class="link-btn" data-goto="breathing">Calm breathing</button></li>
+              <li><button class="link-btn" data-goto="techniques">Technique drill</button></li>
+              <li><button class="link-btn" data-goto="reading">Paced reading</button></li>
+              <li><button class="link-btn" data-goto="interview">Interview Daily 10</button></li>
+              <li><button class="link-btn" data-goto="confidence">Confidence toolkit</button></li>
             </ol>
           </div>
         </div>
@@ -192,6 +223,7 @@
         </header>
 
         <div class="card">
+          <div class="tip-banner" id="last-tip-banner" hidden role="status"></div>
           <div class="row">
             <label class="selectline">Passage <select id="passage-select"></select></label>
             <label class="ctl inline">
@@ -200,12 +232,59 @@
             </label>
           </div>
           <div class="row">
-            <button class="primary-btn" id="read-toggle">Start</button>
+            <button class="primary-btn" id="read-toggle">Start pace</button>
+            <button class="ghost-btn" id="read-aloud">🎙 Practice aloud</button>
+            <button class="ghost-btn" id="combo-echo-pace" data-testid="combo-echo-pace" title="Start Echo + metronome together">Echo + Pace</button>
             <button class="ghost-btn" id="read-new">🔀 Random topic</button>
             <button class="ghost-btn" id="read-speak">🔊 Hear it</button>
           </div>
+          <div class="live-coach" id="live-coach" hidden>
+            <p class="card-kicker">Live coach</p>
+            <p class="live-tip" id="live-tip">Speak the passage — tips appear as you go.</p>
+            <p class="muted small" id="live-heard"></p>
+            <button class="primary-btn" id="live-stop">Stop listening</button>
+          </div>
+          <div class="card feedback-card" id="feedback-card" hidden>
+            <p class="card-kicker">Round feedback</p>
+            <p class="feedback-score" id="feedback-score"></p>
+            <ul class="feedback-tips" id="feedback-tips"></ul>
+            <div class="row">
+              <label class="selectline">Tension
+                <input type="range" id="feedback-tension" min="1" max="10" value="4" />
+                <output id="feedback-tension-val">4</output>
+              </label>
+              <label class="selectline">What was hardest
+                <select id="feedback-hard">
+                  <option value="">Nothing specific</option>
+                  <option value="first-sound">First sounds / onsets</option>
+                  <option value="pace">Speaking too fast</option>
+                  <option value="tension">Tension / blocks</option>
+                  <option value="blocks">Getting stuck mid-word</option>
+                </select>
+              </label>
+              <button class="primary-btn" id="feedback-save">Save &amp; update next-time tips</button>
+            </div>
+          </div>
           <textarea id="custom-text" class="custom-text" placeholder="Paste or type your own text here — a speech, an email, a script, anything you want to practice. It stays on this device." style="display:none"></textarea>
           <div class="reading-box" id="reading-box" aria-live="off"></div>
+        </div>
+      </section>
+
+      <!-- INTERVIEW -->
+      <section class="view" id="view-interview">
+        <header class="view-head">
+          <h2>Interview — Data Engineering</h2>
+          <p class="lead"><strong>10 interview answers every day.</strong> Practice concise data-engineering answers, then send any answer into Reading to rehearse it with pacing, Echo, and live feedback.</p>
+        </header>
+
+        <div class="card">
+          <p class="card-kicker" id="interview-date">Daily interview set</p>
+          <p class="muted">Try answering from memory first, then reveal. Use the timer for a 60-second practice round.</p>
+          <div class="row interview-timer-row">
+            <button class="ghost-btn" id="interview-timer" data-testid="interview-timer">⏱ 60s practice timer</button>
+            <span class="muted" id="interview-timer-label" aria-live="polite"></span>
+          </div>
+          <div class="interview-list" id="interview-list"></div>
         </div>
       </section>
 
@@ -268,9 +347,18 @@
       <section class="view" id="view-progress">
         <header class="view-head">
           <h2>Your progress</h2>
-          <p class="lead">Private and stored only on this device.</p>
+          <p class="lead">Private on this device. Live file: <code>PERSONAL-PROGRESS.md</code> updates after every check-in.</p>
         </header>
         <div class="grid" id="progress-stats"></div>
+        <div class="card" id="personal-progress-card">
+          <p class="card-kicker">Live personal coach</p>
+          <p class="trend" id="progress-trend">Building your personal baseline…</p>
+          <h3>Next-time focus</h3>
+          <ul class="feedback-tips" id="progress-next-tips">
+            <li class="muted">Finish a reading-aloud round to unlock corrections.</li>
+          </ul>
+          <p class="muted small" id="progress-file-meta">Sessions save to PERSONAL-PROGRESS.md in real time.</p>
+        </div>
         <div class="card">
           <h3>Recent activity</h3>
           <ul class="log" id="activity-log"></ul>
@@ -278,10 +366,27 @@
         </div>
       </section>
     </main>
+    <nav class="mobile-nav" aria-label="Mobile sections">
+      <button type="button" class="mobile-nav-btn is-active" data-view="home">Home</button>
+      <button type="button" class="mobile-nav-btn" data-view="reading">Read</button>
+      <button type="button" class="mobile-nav-btn" data-view="interview">Interview</button>
+      <button type="button" class="mobile-nav-btn" data-view="daf">Echo</button>
+      <button type="button" class="mobile-nav-btn" data-view="progress">Progress</button>
+    </nav>
   </div>
 
-  <script src="content.js"></script>
-  <script src="audio.js"></script>
-  <script src="app.js"></script>
+  <div class="coach-bar" id="coach-bar" hidden>
+    <span id="coach-bar-text">Guided session in progress</span>
+    <button class="ghost-btn" id="coach-bar-next">Next →</button>
+    <button class="ghost-btn" id="coach-bar-home">Home</button>
+  </div>
+  <div class="toast" id="toast" hidden role="status" aria-live="polite"></div>
+  <div id="error-banner" class="error-banner" hidden role="alert"></div>
+
+  <script type="module" src="reticle-dev.js?v=5"></script>
+  <script src="content.js?v=5"></script>
+  <script src="audio.js?v=5"></script>
+  <script src="progress-tracker.js?v=5"></script>
+  <script src="app.js?v=5"></script>
 </body>
 </html>

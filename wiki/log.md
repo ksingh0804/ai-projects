@@ -3,12 +3,29 @@ title: Activity Log
 type: overview
 tags: [log, meta]
 created: 2026-05-20
-updated: 2026-06-28
+updated: 2026-07-15
 ---
 
 # Activity Log
 
 Append-only record of wiki and workspace changes.
+
+## [2026-07-15] project | update | steady-voice (v2.0.0 production)
+
+- Shipped 5-day interactive → production plan: guided mission, richer live coach, onboarding/mobile, hardening, PRODUCTION.md.
+- Also includes Interview Daily 10, live PERSONAL-PROGRESS sync, and expanded verify suite.
+- Removed temp shot helpers; verify green; version.json at 2.0.0.
+- Files: `projects/steady-voice/**`, `wiki/projects/steady-voice.md`, `wiki/index.md`, `README.md`
+
+## [2026-07-14] project | enhance | steady-voice (data engineering interview Daily 10)
+
+- Added Interview tab with 10 daily data-engineering Q&A cards from a 30-question bank.
+- Answers can be heard or sent into Reading for paced/live-feedback rehearsal.
+
+## [2026-07-13] project | enhance | steady-voice (live progress + real-time feedback)
+
+- PERSONAL-PROGRESS.md live updates via POST /api/progress; Practice aloud with live coach tips and next-time corrections.
+
 
 ## [2026-06-28] project | enhance | steady-voice (more reading content)
 
