@@ -225,11 +225,37 @@ kbd {
 
 .coach-bar {
   position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%);
-  z-index: 40; display: flex; gap: 10px; align-items: center;
-  background: #0f1c26; border: 1px solid var(--accent); border-radius: 999px;
-  padding: 10px 14px; box-shadow: var(--shadow); max-width: min(920px, 94vw);
+  z-index: 40; width: min(440px, calc(100vw - 24px));
+  display: grid; gap: 12px;
+  background: linear-gradient(180deg, #152a30, #0f1c26);
+  border: 1px solid #3a6b62; border-radius: 18px;
+  padding: 14px 14px 12px; box-shadow: 0 16px 40px rgba(0,0,0,.45);
 }
-.coach-bar span { font-size: 0.92rem; }
+.coach-bar[hidden] { display: none !important; }
+.coach-bar-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.coach-bar-kicker {
+  margin: 0; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--accent); font-weight: 700;
+}
+.coach-bar-close {
+  width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--line);
+  background: transparent; color: var(--muted); cursor: pointer; font-size: 1.1rem; line-height: 1;
+}
+.coach-bar-close:hover { color: var(--text); border-color: var(--accent); }
+.coach-bar-track {
+  height: 6px; border-radius: 999px; background: var(--panel-2); overflow: hidden; margin-top: 8px;
+}
+.coach-bar-fill {
+  height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  transition: width 0.25s ease;
+}
+.coach-bar-title { margin: 10px 0 2px; font-size: 1.05rem; font-weight: 700; }
+.coach-bar-tip { margin: 0; font-size: 0.88rem; color: var(--muted); line-height: 1.35; }
+.coach-bar-actions { display: flex; gap: 8px; }
+.coach-bar-actions .ghost-btn,
+.coach-bar-actions .primary-btn { flex: 1; justify-content: center; }
+body.coach-open .app { padding-bottom: 180px; }
+body.coach-open .app { padding-bottom: 180px; }
 .toast {
   position: fixed; right: 18px; bottom: 18px; z-index: 50;
   background: #163028; border: 1px solid var(--accent); color: var(--text);
@@ -382,7 +408,7 @@ kbd {
     padding: 10px 4px; font-size: 0.72rem; cursor: pointer; border-radius: 8px;
   }
   .mobile-nav-btn.is-active { color: var(--accent); background: var(--panel-2); }
-  .coach-bar { bottom: calc(70px + env(safe-area-inset-bottom, 0px)); }
+  .coach-bar { bottom: calc(78px + env(safe-area-inset-bottom, 0px)); }
   .toast { bottom: calc(70px + env(safe-area-inset-bottom, 0px)); }
 }
 

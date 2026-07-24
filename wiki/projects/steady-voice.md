@@ -3,7 +3,7 @@ title: Steady
 type: project
 tags: [stuttering, speech-therapy, daf, cbt, act, web-app, accessibility]
 created: 2026-06-28
-updated: 2026-07-15
+updated: 2026-07-23
 ---
 
 # Steady
@@ -20,7 +20,7 @@ Research showed the highest-evidence, broadly-useful, hard-to-find-free tools ar
 
 ## What it does
 
-- **Guided session** — Home walkthrough (breathe → technique → reading → interview → check-in) with sticky coach bar; press `G` to start.
+- **Guided session** — Home walkthrough (breathe → technique → reading → interview → check-in) with a card-style coach bar (step label, tip, progress, Mark done / Continue, pause); press `G` to start.
 - **Echo (DAF)** — real-time altered auditory feedback via Web Audio: delay (DAF), pitch shift (FAF, pure-Web-Audio "Jungle" shifter), amplification (AAF), masking noise (MAF). Wired-headphone notice. **Echo + Pace** one-click combo from Reading.
 - **Pacing** — metronome + visual pulse for rhythmic / syllable-timed speech (one of the strongest fluency inducers).
 - **Breathing** — guided belly breathing (box, 4-7-8, speech-breath) with an animated orb.

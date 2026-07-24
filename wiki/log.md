@@ -83,3 +83,8 @@ Append-only record of wiki and workspace changes.
 - Added GitHub Actions workflow to deploy Steady as a public website for sharing.
 - Pages URL target: https://ksingh0804.github.io/ai-projects/
 - Also added iOS shell + Describe tab + iPhone preview in this ship.
+
+## [2026-07-23] project | enhance | steady-voice (coach bar UI)
+
+- Replaced the cramped “Guided session in progress” pill with a clearer bottom coach card: step kicker, progress track, title + tip, Mark done / Continue, and pause (×).
+- Files: `index.html`, `styles.css`, `app.js`, synced `docs/` + iOS `www/`.

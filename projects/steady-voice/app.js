@@ -312,12 +312,29 @@
     });
     if (nextBtn) nextBtn.hidden = !state.mission.active || done.length >= MISSION_STEPS.length;
     if (coachBar) {
-      coachBar.hidden = !state.mission.active || done.length >= MISSION_STEPS.length;
-      if (!coachBar.hidden && coachText) {
-        var step = MISSION_STEPS[Math.min(state.mission.step, MISSION_STEPS.length - 1)];
-        coachText.textContent = "Step " + (Math.min(state.mission.step, MISSION_STEPS.length - 1) + 1) + "/" + MISSION_STEPS.length + ": " + step.tip;
+      var coachOpen = state.mission.active && done.length < MISSION_STEPS.length;
+      coachBar.hidden = !coachOpen;
+      document.body.classList.toggle("coach-open", coachOpen);
+      if (coachOpen) {
+        var stepIdx = Math.min(state.mission.step, MISSION_STEPS.length - 1);
+        var step = MISSION_STEPS[stepIdx];
+        var stepEl = document.getElementById("coach-bar-step");
+        var titleEl = document.getElementById("coach-bar-title");
+        var fillEl = document.getElementById("coach-bar-fill");
+        if (stepEl) stepEl.textContent = "Step " + (stepIdx + 1) + " of " + MISSION_STEPS.length;
+        if (titleEl) titleEl.textContent = step.label;
+        if (coachText) coachText.textContent = step.tip;
+        if (fillEl) fillEl.style.width = pct + "%";
       }
     }
+  }
+
+  function markCurrentMissionDone() {
+    ensureMissionDay();
+    var next = MISSION_STEPS.find(function (s) { return state.mission.done.indexOf(s.id) < 0; });
+    if (!next) { toast("All steps done"); return; }
+    completeMissionStep(next.id);
+    if (state.mission.active) advanceMission();
   }
 
   function startMission() {
@@ -352,7 +369,14 @@
     save(); renderMission(); toast("Today's mission reset");
   });
   document.getElementById("coach-bar-next") && document.getElementById("coach-bar-next").addEventListener("click", advanceMission);
-  document.getElementById("coach-bar-home") && document.getElementById("coach-bar-home").addEventListener("click", function () { go("home"); });
+  document.getElementById("coach-bar-done") && document.getElementById("coach-bar-done").addEventListener("click", markCurrentMissionDone);
+  document.getElementById("coach-bar-home") && document.getElementById("coach-bar-home").addEventListener("click", function () {
+    state.mission.active = false;
+    save();
+    renderMission();
+    go("home");
+    toast("Session paused — resume anytime from Home");
+  });
 
   // Keyboard shortcuts
   var viewKeys = { "1": "home", "2": "daf", "3": "pacing", "4": "breathing", "5": "techniques", "6": "reading", "7": "interview", "8": "confidence", "9": "learn", "0": "progress" };

@@ -6,7 +6,7 @@
   <title>Steady — a free toolkit for people who stutter</title>
   <meta name="description" content="Steady is a free, private, evidence-based toolkit for people who stutter: delayed auditory feedback, pacing metronome, breathing, technique trainers, and a confidence toolkit." />
   <link rel="icon" href="favicon.svg" />
-  <link rel="stylesheet" href="styles.css?v=6" />
+  <link rel="stylesheet" href="styles.css?v=7" />
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -409,18 +409,28 @@
     </nav>
   </div>
 
-  <div class="coach-bar" id="coach-bar" hidden>
-    <span id="coach-bar-text">Guided session in progress</span>
-    <button class="ghost-btn" id="coach-bar-next">Next →</button>
-    <button class="ghost-btn" id="coach-bar-home">Home</button>
+  <div class="coach-bar" id="coach-bar" hidden role="status" aria-live="polite">
+    <div class="coach-bar-main">
+      <div class="coach-bar-top">
+        <span class="coach-bar-kicker" id="coach-bar-step">Step 1 of 5</span>
+        <button type="button" class="coach-bar-close" id="coach-bar-home" title="Pause session & go Home" aria-label="Pause session and go Home">×</button>
+      </div>
+      <div class="coach-bar-track" aria-hidden="true"><div class="coach-bar-fill" id="coach-bar-fill"></div></div>
+      <p class="coach-bar-title" id="coach-bar-title">Breathe (2 min)</p>
+      <p class="coach-bar-tip" id="coach-bar-text">Start a breathing pattern, then mark done.</p>
+    </div>
+    <div class="coach-bar-actions">
+      <button type="button" class="ghost-btn" id="coach-bar-done">Mark done</button>
+      <button type="button" class="primary-btn" id="coach-bar-next">Continue →</button>
+    </div>
   </div>
   <div class="toast" id="toast" hidden role="status" aria-live="polite"></div>
   <div id="error-banner" class="error-banner" hidden role="alert"></div>
 
-  <script type="module" src="reticle-dev.js?v=6"></script>
-  <script src="content.js?v=6"></script>
-  <script src="audio.js?v=6"></script>
-  <script src="progress-tracker.js?v=6"></script>
-  <script src="app.js?v=6"></script>
+  <script type="module" src="reticle-dev.js?v=7"></script>
+  <script src="content.js?v=7"></script>
+  <script src="audio.js?v=7"></script>
+  <script src="progress-tracker.js?v=7"></script>
+  <script src="app.js?v=7"></script>
 </body>
 </html>
