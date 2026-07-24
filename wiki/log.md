@@ -88,3 +88,8 @@ Append-only record of wiki and workspace changes.
 
 - Replaced the cramped “Guided session in progress” pill with a clearer bottom coach card: step kicker, progress track, title + tip, Mark done / Continue, and pause (×).
 - Files: `index.html`, `styles.css`, `app.js`, synced `docs/` + iOS `www/`.
+
+## [2026-07-23] project | enhance | steady-voice (Describe UI)
+
+- Restyled Describe: scene stage with caption chips, numbered 2×2 prompt cards, fill counter, clearer actions and model grid.
+- Files: `index.html`, `styles.css`, `app.js`, synced `docs/` + iOS `www/`.

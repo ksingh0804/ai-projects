@@ -27,7 +27,7 @@ Research showed the highest-evidence, broadly-useful, hard-to-find-free tools ar
 - **Techniques** — trainers for gentle onset, prolonged speech, continuous phonation, light contact, pausing (fluency shaping) + preparatory set, pull-out, cancellation (Van Riper modification), each with steps and tap-to-hear drills.
 - **Reading** — paced reading with moving word highlight; **Practice aloud** with live STT coach tips, mid-session encouragement, score, and next-time corrections; last-round tip banner; Daily 50 topics + custom text.
 - **Interview** — **Daily 10** data-engineering interview Q&A; try-first then reveal; 60s practice timer; answers into Reading for paced/live-feedback rehearsal.
-- **Describe** — structured picture description (who / where / action / details), then a simple model answer to practice again in Reading.
+- **Describe** — structured picture description (who / where / action / details) with a staged picture card, numbered prompt grid, fill counter, and model answer — then practice again in Reading.
 - **Confidence** — avoidance-reduction (exposure) ladder with SUDS, CBT thought reframing, self-disclosure ("advertising") script builder.
 - **Learn** — facts vs myths + links to professional help.
 - **Progress** — streaks + week calendar, activity log (`localStorage`) and **live `PERSONAL-PROGRESS.md`** via `/api/progress`.

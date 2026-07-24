@@ -1116,31 +1116,49 @@
     }).filter(Boolean).join(" ");
   }
 
+  function updateDescribeFill() {
+    var prompts = C.picturePrompts || [];
+    var fields = (state.describe && state.describe.fields) || {};
+    var filled = prompts.filter(function (p) { return (fields[p.id] || "").trim(); }).length;
+    var fillEl = document.getElementById("describe-fill");
+    if (fillEl) fillEl.textContent = filled + " / " + prompts.length + " filled";
+    if (describeForm) {
+      describeForm.querySelectorAll(".describe-field").forEach(function (el) {
+        var id = el.dataset.field;
+        el.classList.toggle("is-filled", !!(fields[id] || "").trim());
+      });
+    }
+  }
+
   function renderDescribe() {
     var scene = currentDescribeScene();
     if (!scene || !pictureFrame || !describeForm) return;
-    if (describeTitle) describeTitle.textContent = "Picture · " + scene.title;
+    if (describeTitle) describeTitle.textContent = scene.title;
     pictureFrame.innerHTML = pictureSvg(scene.scene);
     var fields = state.describe.fields || {};
-    describeForm.innerHTML = (C.picturePrompts || []).map(function (p) {
-      return '<div class="describe-field">' +
+    describeForm.innerHTML = (C.picturePrompts || []).map(function (p, i) {
+      var has = !!(fields[p.id] || "").trim();
+      return '<div class="describe-field' + (has ? " is-filled" : "") + '" data-field="' + p.id + '">' +
+        '<div class="describe-field-head"><span class="describe-step" aria-hidden="true">' + (i + 1) + "</span>" +
         "<label for=\"describe-" + p.id + "\">" + escapeHtml(p.label) +
-        '<span class="hint">' + escapeHtml(p.hint) + "</span></label>" +
-        '<textarea id="describe-' + p.id + '" data-field="' + p.id + '" placeholder="' + escapeAttr(p.hint) + '">' +
+        '<span class="hint">' + escapeHtml(p.hint) + "</span></label></div>" +
+        '<textarea id="describe-' + p.id + '" data-field="' + p.id + '" rows="2" placeholder="' + escapeAttr(p.hint) + '">' +
         escapeHtml(fields[p.id] || "") + "</textarea></div>";
     }).join("");
     describeForm.querySelectorAll("textarea").forEach(function (ta) {
       ta.addEventListener("input", function () {
         if (!state.describe.fields) state.describe.fields = {};
         state.describe.fields[ta.dataset.field] = ta.value;
+        updateDescribeFill();
         save();
       });
     });
+    updateDescribeFill();
     if (describeModel) describeModel.hidden = !state.describe.modelOpen;
     if (describePracticeModel) describePracticeModel.hidden = !state.describe.modelOpen;
     if (state.describe.modelOpen && describeModelBody) {
       describeModelBody.innerHTML = (C.picturePrompts || []).map(function (p) {
-        return '<p class="describe-model-line"><strong>' + escapeHtml(p.label) + "</strong> " +
+        return '<p class="describe-model-line"><strong>' + escapeHtml(p.label) + "</strong>" +
           escapeHtml(scene.model[p.id] || "") + "</p>";
       }).join("");
     }

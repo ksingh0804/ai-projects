@@ -6,7 +6,7 @@
   <title>Steady — a free toolkit for people who stutter</title>
   <meta name="description" content="Steady is a free, private, evidence-based toolkit for people who stutter: delayed auditory feedback, pacing metronome, breathing, technique trainers, and a confidence toolkit." />
   <link rel="icon" href="favicon.svg" />
-  <link rel="stylesheet" href="styles.css?v=7" />
+  <link rel="stylesheet" href="styles.css?v=8" />
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -43,7 +43,7 @@
         <button class="nav-btn" data-view="techniques" data-testid="nav-techniques"><span class="nav-ico">✎</span> Techniques</button>
         <button class="nav-btn" data-view="reading" data-testid="nav-reading"><span class="nav-ico">▤</span> Reading</button>
         <button class="nav-btn" data-view="interview" data-testid="nav-interview"><span class="nav-ico">▣</span> Interview</button>
-        <button class="nav-btn" data-view="describe" data-testid="nav-describe"><span class="nav-ico">◻</span> Describe</button>
+        <button class="nav-btn" data-view="describe" data-testid="nav-describe"><span class="nav-ico">◈</span> Describe</button>
         <button class="nav-btn" data-view="confidence" data-testid="nav-confidence"><span class="nav-ico">♥</span> Confidence</button>
         <button class="nav-btn" data-view="learn" data-testid="nav-learn"><span class="nav-ico">ℹ</span> Learn</button>
         <button class="nav-btn" data-view="progress" data-testid="nav-progress"><span class="nav-ico">▦</span> Progress</button>
@@ -294,31 +294,44 @@
       <section class="view" id="view-describe">
         <header class="view-head">
           <h2>Describe a picture</h2>
-          <p class="lead">Build a short spoken description in four clear parts. Then reveal a simple model answer and practice it aloud in Reading.</p>
+          <p class="lead">Look at the scene, write four short lines, then practice aloud in Reading.</p>
         </header>
 
-        <div class="card">
+        <div class="card describe-stage">
           <div class="row describe-toolbar">
-            <p class="card-kicker" id="describe-title">Today's picture</p>
-            <button class="ghost-btn" id="describe-new" data-testid="describe-new">🔀 New picture</button>
+            <div>
+              <p class="card-kicker">Today's scene</p>
+              <h3 class="describe-scene-title" id="describe-title">Park bench</h3>
+            </div>
+            <button class="ghost-btn" id="describe-new" data-testid="describe-new">New picture</button>
           </div>
-          <div class="picture-frame" id="picture-frame" aria-label="Practice picture"></div>
-          <p class="muted small">Fill each box in order. Keep sentences short and calm — then compare with the model.</p>
+          <div class="picture-stage">
+            <div class="picture-frame" id="picture-frame" aria-label="Practice picture"></div>
+            <ol class="describe-ladder" aria-hidden="true">
+              <li>Who</li><li>Where</li><li>Action</li><li>Details</li>
+            </ol>
+          </div>
+          <p class="muted small" id="describe-caption">Fill the four steps below — short sentences work best.</p>
+        </div>
 
+        <div class="card describe-prompts-card">
+          <div class="describe-prompts-head">
+            <p class="card-kicker">Your description</p>
+            <span class="describe-fill" id="describe-fill">0 / 4 filled</span>
+          </div>
           <div class="describe-form" id="describe-form"></div>
-
-          <div class="row">
-            <button class="primary-btn" id="describe-save" data-testid="describe-save">Save my description</button>
-            <button class="ghost-btn" id="describe-reveal" data-testid="describe-reveal">Show model answer</button>
-            <button class="ghost-btn" id="describe-practice-mine">Practice mine in Reading</button>
-            <button class="ghost-btn" id="describe-practice-model" hidden>Practice model in Reading</button>
+          <div class="describe-actions">
+            <button class="primary-btn" id="describe-save" data-testid="describe-save">Save</button>
+            <button class="ghost-btn" id="describe-reveal" data-testid="describe-reveal">Show model</button>
+            <button class="ghost-btn" id="describe-practice-mine">Practice mine</button>
+            <button class="ghost-btn" id="describe-practice-model" hidden>Practice model</button>
           </div>
+        </div>
 
-          <div class="card describe-model" id="describe-model" hidden>
-            <p class="card-kicker">Simple model answer</p>
-            <div id="describe-model-body"></div>
-            <p class="muted small">Use this as a clear script — not the only “right” answer. Your words can be different.</p>
-          </div>
+        <div class="card describe-model" id="describe-model" hidden>
+          <p class="card-kicker">Model answer</p>
+          <div class="describe-model-grid" id="describe-model-body"></div>
+          <p class="muted small">A clear script — not the only right answer. Your words can differ.</p>
         </div>
       </section>
 
@@ -427,10 +440,10 @@
   <div class="toast" id="toast" hidden role="status" aria-live="polite"></div>
   <div id="error-banner" class="error-banner" hidden role="alert"></div>
 
-  <script type="module" src="reticle-dev.js?v=7"></script>
-  <script src="content.js?v=7"></script>
-  <script src="audio.js?v=7"></script>
-  <script src="progress-tracker.js?v=7"></script>
-  <script src="app.js?v=7"></script>
+  <script type="module" src="reticle-dev.js?v=8"></script>
+  <script src="content.js?v=8"></script>
+  <script src="audio.js?v=8"></script>
+  <script src="progress-tracker.js?v=8"></script>
+  <script src="app.js?v=8"></script>
 </body>
 </html>
