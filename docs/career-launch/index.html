@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Travis Prep — Library TIS Interview Practice</title>
+  <meta name="description" content="Interactive interview practice for Technical Information Specialist at Library Travis AFB. Scenario drills, draft answers, quick-fire tech, and questions to ask them." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="hero">
+    <div class="hero-glow" aria-hidden="true"></div>
+    <p class="eyebrow">Travis AFB · Library</p>
+    <h1>Travis Prep</h1>
+    <p class="tagline">Practice for Technical Information Specialist — keep every public computer ready for the next patron.</p>
+    <div class="hero-actions">
+      <a class="btn primary" href="#practice">Start mock interview</a>
+      <a class="btn ghost" href="#quickfire">Quick-fire</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section id="practice" class="panel practice" aria-labelledby="practice-title">
+      <div class="panel-head">
+        <h2 id="practice-title">Mock interview</h2>
+        <p class="lede">One question at a time. Say your answer out loud, then reveal the draft.</p>
+      </div>
+
+      <div class="progress" aria-live="polite">
+        <span id="progress-label">Question 1 of 10</span>
+        <div class="progress-track"><div class="progress-bar" id="progress-bar"></div></div>
+      </div>
+
+      <article class="prompt" id="prompt-card">
+        <p class="prompt-kicker" id="prompt-kicker">Opening</p>
+        <h3 id="prompt-q"></h3>
+        <div class="prompt-actions">
+          <button type="button" class="btn primary" id="reveal-btn">Show draft answer</button>
+          <button type="button" class="btn ghost" id="hide-btn" hidden>Hide draft</button>
+        </div>
+        <div class="draft" id="draft" hidden>
+          <p class="draft-label">Draft to practice</p>
+          <div id="draft-body"></div>
+          <p class="keywords" id="keywords"></p>
+        </div>
+      </article>
+
+      <div class="nav-row">
+        <button type="button" class="btn ghost" id="prev-btn">← Previous</button>
+        <button type="button" class="btn primary" id="next-btn">Next →</button>
+      </div>
+    </section>
+
+    <section id="roleplay" class="panel" aria-labelledby="roleplay-title">
+      <h2 id="roleplay-title">Role-play</h2>
+      <p class="lede">Practice this out loud in under 30 seconds.</p>
+      <blockquote class="roleplay-q">
+        “I’m a spouse, my CAC won’t read, and I need to print my spouse’s orders in 15 minutes.”
+      </blockquote>
+      <button type="button" class="btn primary" id="roleplay-reveal">Show strong response</button>
+      <div class="draft" id="roleplay-draft" hidden>
+        <p>“I hear you — fifteen minutes is tight. Let’s get your orders printed first. Try this other station with a working reader; if the card still won’t read, we’ll use the guest or staff print path if policy allows. I won’t need your PIN. While you print, I’ll check this reader and put in a ticket. Stay right here — I’ll make sure you walk out with that document.”</p>
+      </div>
+    </section>
+
+    <section id="quickfire" class="panel" aria-labelledby="quickfire-title">
+      <h2 id="quickfire-title">Quick-fire tech</h2>
+      <p class="lede">Tap a term to flip the answer.</p>
+      <div class="flash-grid" id="flash-grid"></div>
+    </section>
+
+    <section id="ask-them" class="panel" aria-labelledby="ask-title">
+      <h2 id="ask-title">Questions to ask them</h2>
+      <p class="lede">Pick three or four. Best set highlighted.</p>
+      <ul class="ask-list" id="ask-list"></ul>
+    </section>
+
+    <section class="panel close-panel" aria-labelledby="close-title">
+      <h2 id="close-title">Closing line</h2>
+      <blockquote>
+        “I’m reliable, I already work on Travis, and I’d treat every public computer like mission equipment — checked, documented, and ready for the next patron.”
+      </blockquote>
+    </section>
+  </main>
+
+  <footer class="site-foot">
+    <p>Career Launch · <a href="https://github.com/ksingh0804/ai-projects">ai-projects</a> · Personal interview prep</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

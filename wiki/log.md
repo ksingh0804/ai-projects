@@ -62,6 +62,13 @@ Append-only record of wiki and workspace changes.
 - Automated 4-hour verify/fix/improve cycle (`scripts/`), `/health` endpoint, `version.json` v1.7.0, pulse streak counter.
 - Files: `projects/stutter-coach/**`, `wiki/projects/stutter-coach.md`, `wiki/index.md`, `README.md`
 
+## [2026-07-24] project | publish | career-launch (GitHub Pages interview site)
+
+- Published **Travis Prep** interactive interview practice site under `docs/career-launch/` for GitHub Pages.
+- Features: 10-question mock interview with draft answers, CAC role-play, quick-fire flashcards, questions to ask them.
+- Live URL: https://ksingh0804.github.io/ai-projects/career-launch/
+- Files: `docs/career-launch/{index.html,styles.css,app.js,README.md}`, `projects/career-launch/README.md`, `wiki/projects/career-launch.md`
+
 ## [2026-07-22] project | enhance | career-launch (Travis Library interview prep)
 
 - Added practical interview scenario Q&A for **Technical Information Specialist** at Library Travis AFB (PC triage, printers, CAC/OPSEC, prioritization, behavioral STAR hooks).
