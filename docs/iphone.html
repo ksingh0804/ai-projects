@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Steady — iPhone preview</title>
+  <style>
+    :root {
+      --bezel: #1a1c1e;
+      --frame: #0b0c0e;
+      --screen: #0a1218;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh;
+      display: grid; place-items: center;
+      font-family: "SF Pro Display", "Segoe UI", system-ui, sans-serif;
+      background:
+        radial-gradient(ellipse at 30% 20%, #1a3a36 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, #1a2438 0%, transparent 45%),
+        #0a0e14;
+      color: #e8eef2;
+      padding: 24px 16px 40px;
+    }
+    .wrap { text-align: center; }
+    h1 { margin: 0 0 6px; font-size: 1.35rem; font-weight: 650; letter-spacing: -0.02em; }
+    .sub { margin: 0 0 22px; color: #8aa0ad; font-size: 0.92rem; }
+    .phone {
+      width: min(390px, 92vw);
+      aspect-ratio: 390 / 844;
+      margin: 0 auto;
+      position: relative;
+      border-radius: 54px;
+      background: linear-gradient(160deg, #2a2d32, #111315 40%, #0a0b0c);
+      padding: 12px;
+      box-shadow:
+        0 0 0 2px #3a3d42,
+        0 28px 60px rgba(0,0,0,.55),
+        inset 0 1px 0 rgba(255,255,255,.12);
+    }
+    .phone::before {
+      content: "";
+      position: absolute; right: -3px; top: 160px;
+      width: 3px; height: 70px; border-radius: 2px;
+      background: #2c2f34;
+    }
+    .phone::after {
+      content: "";
+      position: absolute; left: -3px; top: 140px;
+      width: 3px; height: 36px; border-radius: 2px;
+      background: #2c2f34;
+      box-shadow: 0 52px 0 #2c2f34, 0 100px 0 #2c2f34;
+    }
+    .screen {
+      position: relative;
+      width: 100%; height: 100%;
+      border-radius: 42px;
+      overflow: hidden;
+      background: var(--screen);
+      isolation: isolate;
+    }
+    .island {
+      position: absolute; z-index: 5;
+      top: 11px; left: 50%; transform: translateX(-50%);
+      width: 118px; height: 34px; border-radius: 20px;
+      background: #000;
+    }
+    .status {
+      position: absolute; z-index: 4;
+      top: 0; left: 0; right: 0; height: 54px;
+      display: flex; align-items: flex-end; justify-content: space-between;
+      padding: 0 28px 10px;
+      font-size: 14px; font-weight: 600;
+      color: #f3f7fa;
+      pointer-events: none;
+      text-shadow: 0 1px 2px rgba(0,0,0,.45);
+    }
+    .status .right { display: flex; gap: 6px; align-items: center; }
+    iframe {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      border: 0;
+      background: var(--screen);
+    }
+    .home-bar {
+      position: absolute; z-index: 5;
+      left: 50%; bottom: 8px; transform: translateX(-50%);
+      width: 128px; height: 5px; border-radius: 99px;
+      background: rgba(255,255,255,.35);
+      pointer-events: none;
+    }
+    .hint {
+      margin: 18px auto 0; max-width: 420px;
+      color: #8aa0ad; font-size: 0.85rem; line-height: 1.45;
+    }
+    .hint code { color: #b7d4c8; }
+    .actions { margin-top: 14px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .actions a {
+      color: #0b1c18; background: #5ec4b0; text-decoration: none;
+      padding: 10px 14px; border-radius: 999px; font-weight: 650; font-size: 0.88rem;
+    }
+    .actions a.ghost { background: transparent; color: #9ec9bc; border: 1px solid #2f5c55; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Steady on iPhone</h1>
+    <p class="sub">Live mobile layout — same UI the native iOS app wraps</p>
+
+    <div class="phone" aria-label="iPhone preview of Steady">
+      <div class="screen">
+        <div class="status">
+          <span id="clock">9:41</span>
+          <span class="right" aria-hidden="true">▮▮▮ · ████</span>
+        </div>
+        <div class="island" aria-hidden="true"></div>
+        <iframe
+          id="app"
+          title="Steady"
+          src="./index.html?iphone=1"
+          allow="microphone; autoplay"
+        ></iframe>
+        <div class="home-bar" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <p class="hint">
+      Native project: <code>ios/Steady.xcodeproj</code> — open in full Xcode, pick an iPhone Simulator, Run.
+      Sync web changes with <code>./scripts/sync-ios-www.sh</code>.
+    </p>
+    <div class="actions">
+      <a href="./index.html#home" target="_blank" rel="noopener">Open full app</a>
+      <a class="ghost" href="./index.html#describe" target="appframe">Jump to Describe</a>
+    </div>
+  </div>
+  <script>
+    (function () {
+      function tick() {
+        var d = new Date();
+        document.getElementById("clock").textContent =
+          d.getHours().toString().padStart(2, "0") + ":" +
+          d.getMinutes().toString().padStart(2, "0");
+      }
+      tick();
+      setInterval(tick, 30000);
+
+      // Deep-link helper: ghost button targets hash inside iframe
+      document.querySelectorAll('a[target="appframe"]').forEach(function (a) {
+        a.addEventListener("click", function (e) {
+          e.preventDefault();
+          var frame = document.getElementById("app");
+          frame.src = a.getAttribute("href");
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

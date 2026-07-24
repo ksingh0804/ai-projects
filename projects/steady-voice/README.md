@@ -1,12 +1,18 @@
 # Steady — a free toolkit for people who stutter
 
-**Speak on your terms.** Steady is a free, private, offline web app that bundles the most useful, *evidence-based* tools for people who stutter (PWS). No accounts, no paid APIs, nothing uploaded — everything runs in your browser and saves only to your device.
+**Speak on your terms.** Steady is a free, private web app that bundles useful, *evidence-based* tools for people who stutter (PWS). No accounts, no paid APIs — everything runs in your browser.
 
-It was designed from a [research synthesis](../../wiki/sources/stuttering-research.md) of the stuttering literature (therapy approaches, rhythm/pacing, altered auditory feedback, and the psychology of avoidance).
+> Steady is **not** medical advice and does not replace a speech-language pathologist (SLP).
 
-> Steady is **not** medical advice and does not replace a speech-language pathologist (SLP). It works best alongside one.
+## Try it online
 
-## Quick start
+Public site (GitHub Pages): **https://ksingh0804.github.io/ai-projects/**
+
+iPhone-framed preview: **https://ksingh0804.github.io/ai-projects/iphone.html**
+
+Open in **Chrome** or **Safari**. Allow the microphone if you try Echo or Practice aloud. Wired headphones recommended for Echo.
+
+## Quick start (local)
 
 ```bash
 cd projects/steady-voice

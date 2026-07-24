@@ -61,3 +61,25 @@ Append-only record of wiki and workspace changes.
 - Real-time live coaching, 7-day weekly plan, 4-hour pulse system, bundled `app.bundle.js`.
 - Automated 4-hour verify/fix/improve cycle (`scripts/`), `/health` endpoint, `version.json` v1.7.0, pulse streak counter.
 - Files: `projects/stutter-coach/**`, `wiki/projects/stutter-coach.md`, `wiki/index.md`, `README.md`
+
+## [2026-07-22] project | enhance | career-launch (Travis Library interview prep)
+
+- Added practical interview scenario Q&A for **Technical Information Specialist** at Library Travis AFB (PC triage, printers, CAC/OPSEC, prioritization, behavioral STAR hooks).
+- Files: `projects/career-launch/jobs/travis-afb-library-tis-interview.md`, `wiki/projects/career-launch.md`
+
+## [2026-07-22] project | enhance | steady-voice (Describe picture)
+
+- Added **Describe** tab: structured who/where/action/details prompts for offline SVG scenes, model answer reveal, practice in Reading.
+- Files: `content.js`, `index.html`, `app.js`, `styles.css`, `scripts/verify-app.mjs`, `wiki/projects/steady-voice.md`
+
+## [2026-07-23] project | add | steady-voice (iOS app shell + iPhone preview)
+
+- Added SwiftUI + WKWebView iOS project at `ios/Steady.xcodeproj` bundling offline `www/` UI.
+- Added live iPhone frame preview: `iphone.html`. Sync script: `scripts/sync-ios-www.sh`.
+- Mobile CSS: safe-area insets for notch/home indicator.
+
+## [2026-07-23] project | publish | steady-voice (GitHub Pages)
+
+- Added GitHub Actions workflow to deploy Steady as a public website for sharing.
+- Pages URL target: https://ksingh0804.github.io/ai-projects/
+- Also added iOS shell + Describe tab + iPhone preview in this ship.

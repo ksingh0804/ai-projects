@@ -6,7 +6,7 @@ import pkg from "../../toy-product-research/video/node_modules/playwright-core/i
 const { chromium } = pkg;
 
 const URL = "http://127.0.0.1:8788/";
-const views = ["home", "daf", "pacing", "breathing", "techniques", "reading", "interview", "confidence", "learn", "progress"];
+const views = ["home", "daf", "pacing", "breathing", "techniques", "reading", "interview", "describe", "confidence", "learn", "progress"];
 const errors = [];
 
 function ok(msg) { console.log("  ✓", msg); }
@@ -140,6 +140,26 @@ try {
   if (readingActiveAfterInterview !== 1 || interviewPracticeWords < 20) {
     fail("Interview Practice in Reading did not load answer into Reading");
   } else ok("Interview answer can be practiced in Reading");
+
+  await page.click('.nav-btn[data-view="describe"]');
+  const describeFields = await page.locator("#describe-form textarea").count();
+  if (describeFields !== 4) fail("Describe form: expected 4 fields, got " + describeFields);
+  else ok("Describe: 4 structured fields");
+  await page.fill('#describe-who', "A person and a dog.");
+  await page.fill('#describe-where', "In a park.");
+  await page.fill('#describe-action', "They are resting.");
+  await page.fill('#describe-details', "It feels calm.");
+  await page.click("#describe-reveal");
+  const modelVisible = await page.locator("#describe-model:not([hidden])").count();
+  if (!modelVisible) fail("Describe model answer did not reveal");
+  else ok("Describe model answer reveals");
+  await page.click("#describe-practice-model");
+  await page.waitForTimeout(100);
+  const readingAfterDescribe = await page.locator("#view-reading.is-active").count();
+  const describePracticeWords = await page.locator("#reading-box .w").count();
+  if (readingAfterDescribe !== 1 || describePracticeWords < 10) {
+    fail("Describe Practice model in Reading failed");
+  } else ok("Describe model can be practiced in Reading");
 
   // Progress stats render
   await page.click('.nav-btn[data-view="progress"]');
