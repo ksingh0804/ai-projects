@@ -3,7 +3,7 @@ title: Career Launch — Job search, resume, LinkedIn
 type: project
 tags: [careers, data-engineering, ai-agents, linkedin, resume]
 created: 2026-07-11
-updated: 2026-07-22
+updated: 2026-07-24
 ---
 
 # Career Launch
@@ -24,6 +24,7 @@ Project path: `projects/career-launch/`
 | Target roles | `jobs/target-roles.md` |
 | Application tracker | `jobs/applications-tracker.md` |
 | Travis AFB Library interview | `jobs/travis-afb-library-tis-interview.md` — Technical Information Specialist Q&A scenarios |
+| Live practice site (GitHub Pages) | https://ksingh0804.github.io/ai-projects/career-launch/ |
 
 ## Resume status (2026-07-12)
 
