@@ -1,14 +1,15 @@
 {
-  "version": "2.0.0",
-  "iteration": 5,
+  "version": "2.1.0",
+  "iteration": 6,
   "completedImprovements": [
     "day1-guided-session",
     "day2-interactive-coach",
     "day3-engagement-polish",
     "day4-production-hardening",
-    "day5-production-release"
+    "day5-production-release",
+    "talk-daily-life-conversations"
   ],
-  "plan": "5-day interactive → production",
+  "plan": "Talk section: free browser TTS/STT daily-life practice",
   "day": 5,
-  "updated": "2026-07-15"
+  "updated": "2026-07-24"
 }

@@ -3,7 +3,7 @@ title: Steady
 type: project
 tags: [stuttering, speech-therapy, daf, cbt, act, web-app, accessibility]
 created: 2026-06-28
-updated: 2026-07-23
+updated: 2026-07-24
 ---
 
 # Steady
@@ -28,6 +28,7 @@ Research showed the highest-evidence, broadly-useful, hard-to-find-free tools ar
 - **Reading** — paced reading with moving word highlight; **Practice aloud** with live STT coach tips, mid-session encouragement, score, and next-time corrections; last-round tip banner; Daily 50 topics + custom text.
 - **Interview** — **Daily 10** data-engineering interview Q&A; try-first then reveal; 60s practice timer; answers into Reading for paced/live-feedback rehearsal.
 - **Describe** — structured picture description (who / where / action / details) with a staged picture card, numbered prompt grid, fill counter, and model answer — then practice again in Reading.
+- **Talk** — two-way daily-life scenarios (coffee, neighbor, pharmacy, directions, checkout, work chat, reservation, clinic). Partner speaks via free browser **Speech Synthesis**; you reply with **Speech Recognition** (or type). No paid voice API.
 - **Confidence** — avoidance-reduction (exposure) ladder with SUDS, CBT thought reframing, self-disclosure ("advertising") script builder.
 - **Learn** — facts vs myths + links to professional help.
 - **Progress** — streaks + week calendar, activity log (`localStorage`) and **live `PERSONAL-PROGRESS.md`** via `/api/progress`.
