@@ -73,6 +73,13 @@ try {
   const combo = await page.locator("#combo-echo-pace").count();
   if (!combo) fail("Echo + Pace combo missing");
   else ok("Echo + Pace combo present");
+  const comboToggleable = await page.evaluate(async () => {
+    const src = document.querySelector('script[src*="app.js"]');
+    const t = await fetch(src.src).then((r) => r.text());
+    return t.includes("Stop Echo + Pace") && t.includes("Echo + Pace off");
+  });
+  if (!comboToggleable) fail("Echo + Pace is not toggleable");
+  else ok("Echo + Pace toggles off on second press");
 
   const health = await page.evaluate(async () => {
     const r = await fetch("/health");

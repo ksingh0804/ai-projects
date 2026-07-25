@@ -105,3 +105,8 @@ Append-only record of wiki and workspace changes.
 
 - Talk no longer uses push-to-talk: mic auto-listens after the partner speaks, shows live transcript, clarifies if unclear, and gives short adaptive partner replies.
 - Files: `app.js`, `index.html`, `styles.css`, docs/iOS sync.
+
+## [2026-07-24] project | fix | steady-voice (toggle Echo + Pace / speak)
+
+- Echo + Pace second press stops both; Hear it / Practice it / interview Hear answer also toggle stop; speak() same-button cancel.
+- Files: `app.js`, `index.html`, verify, docs/iOS sync.

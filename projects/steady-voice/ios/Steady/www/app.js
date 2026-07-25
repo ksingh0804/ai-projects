@@ -217,6 +217,7 @@
 
   /* ---------------- TTS helper (browser Speech Synthesis — free, no API key) ---------------- */
   var partnerVoice = null;
+  var speakToken = 0;
   function pickPartnerVoice() {
     if (!("speechSynthesis" in window)) return null;
     if (partnerVoice) return partnerVoice;
@@ -235,9 +236,19 @@
   if ("speechSynthesis" in window) {
     window.speechSynthesis.addEventListener("voiceschanged", function () { partnerVoice = null; pickPartnerVoice(); });
   }
+  function isSpeaking() {
+    return !!("speechSynthesis" in window && (window.speechSynthesis.speaking || window.speechSynthesis.pending));
+  }
+  /** @returns {boolean} true if speech started, false if toggled off / unavailable */
   function speak(text, rate, onEnd) {
-    if (!("speechSynthesis" in window)) { if (onEnd) onEnd(); return; }
-    window.speechSynthesis.cancel();
+    if (!("speechSynthesis" in window)) { if (onEnd) onEnd(); return false; }
+    // Same-button toggle: press again while speaking to stop.
+    if (isSpeaking()) {
+      speakToken++;
+      window.speechSynthesis.cancel();
+      return false;
+    }
+    var myToken = ++speakToken;
     var u = new SpeechSynthesisUtterance(text);
     u.rate = rate || 0.92;
     u.pitch = 1.02;
@@ -245,7 +256,11 @@
     if (voice) u.voice = voice;
     if (onEnd) {
       var done = false;
-      var finish = function () { if (done) return; done = true; onEnd(); };
+      var finish = function () {
+        if (done || myToken !== speakToken) return;
+        done = true;
+        onEnd();
+      };
       u.onend = finish;
       u.onerror = finish;
       // ponytail: headless / some browsers never fire onend — unlock after a short ceiling
@@ -255,6 +270,7 @@
       setTimeout(finish, Math.min(12000, 900 + String(text).length * 70));
     }
     window.speechSynthesis.speak(u);
+    return true;
   }
 
   /* ---------------- Toast + guided mission ---------------- */
@@ -487,6 +503,7 @@
       dafDot.classList.remove("live");
       dafStateEl.textContent = "Stopped";
       dafControls.setAttribute("aria-hidden", "true");
+      syncComboBtn();
       return;
     }
     try {
@@ -496,6 +513,7 @@
       dafStateEl.textContent = "Live — speak into your mic";
       dafControls.setAttribute("aria-hidden", "false");
       markPractice("Used Echo (altered auditory feedback)");
+      syncComboBtn();
     } catch (e) {
       dafStateEl.textContent = "Mic blocked — allow microphone access and use http (not file://).";
       showError("Echo needs microphone permission on http://127.0.0.1:8788");
@@ -516,6 +534,14 @@
   var pulse = document.getElementById("pulse");
   var bpmInput = document.getElementById("bpm");
   var bpmVal = document.getElementById("bpm-val");
+  var comboBtn = document.getElementById("combo-echo-pace");
+  function syncComboBtn() {
+    if (!comboBtn) return;
+    var on = window.SteadyAudio.isRunning() || window.SteadyMetronome.isRunning();
+    comboBtn.textContent = on ? "Stop Echo + Pace" : "Echo + Pace";
+    comboBtn.title = on ? "Stop Echo and metronome" : "Start Echo + metronome together";
+    comboBtn.setAttribute("aria-pressed", on ? "true" : "false");
+  }
   bpmInput.addEventListener("input", function () {
     bpmVal.textContent = bpmInput.value;
     if (window.SteadyMetronome.isRunning()) window.SteadyMetronome.setBpm(+bpmInput.value);
@@ -524,6 +550,7 @@
     window.SteadyMetronome.stop();
     metroBtn.textContent = "Start metronome";
     pulse.classList.remove("beat", "accent");
+    syncComboBtn();
   }
   metroBtn.addEventListener("click", function () {
     if (window.SteadyMetronome.isRunning()) { stopMetro(); return; }
@@ -536,8 +563,9 @@
     }, accent);
     metroBtn.textContent = "Stop metronome";
     markPractice("Practiced rhythmic pacing");
+    syncComboBtn();
   });
-
+  syncComboBtn();
   /* ---------------- Breathing ---------------- */
   var breathSelect = document.getElementById("breath-pattern");
   var breathBtn = document.getElementById("breath-toggle");
@@ -720,7 +748,7 @@
   function stopReading() {
     if (readTimer) clearInterval(readTimer);
     readTimer = null;
-    readBtn.textContent = "Start";
+    readBtn.textContent = "Start pace";
     readBox.querySelectorAll(".w").forEach(function (w) { w.classList.remove("active", "done"); });
   }
   function updateNewBtn() {
@@ -741,7 +769,7 @@
     words = readBox.querySelectorAll(".w");
     var i = 0;
     var interval = 60000 / (+wpmInput.value);
-    readBtn.textContent = "Stop";
+    readBtn.textContent = "Stop pace";
     markPractice("Paced reading practice", { missionStep: "reading" });
     readTimer = setInterval(function () {
       words.forEach(function (w, j) { w.classList.toggle("active", j === i); w.classList.toggle("done", j < i); });
@@ -755,8 +783,12 @@
     passageSelect.value = "d" + idx;
     stopReading(); updateNewBtn(); renderPassage();
   });
-  document.getElementById("read-speak").addEventListener("click", function () {
-    speak(currentPassage().text, 0.7);
+  var readSpeakBtn = document.getElementById("read-speak");
+  if (readSpeakBtn) readSpeakBtn.addEventListener("click", function () {
+    var started = speak(currentPassage().text, 0.7, function () {
+      readSpeakBtn.textContent = "🔊 Hear it";
+    });
+    readSpeakBtn.textContent = started ? "⏹ Stop hearing" : "🔊 Hear it";
   });
 
   /* -------- Reading aloud: live STT coach + next-time corrections -------- */
@@ -886,10 +918,16 @@
   }
   document.getElementById("combo-echo-pace") && document.getElementById("combo-echo-pace").addEventListener("click", async function () {
     go("reading");
-    if (!window.SteadyAudio.isRunning()) {
-      try { await toggleDaf(false); } catch (e) {}
+    if (window.SteadyAudio.isRunning() || window.SteadyMetronome.isRunning()) {
+      await toggleDaf(true);
+      if (window.SteadyMetronome.isRunning()) stopMetro();
+      syncComboBtn();
+      toast("Echo + Pace off");
+      return;
     }
+    try { await toggleDaf(false); } catch (e) {}
     if (!window.SteadyMetronome.isRunning()) metroBtn.click();
+    syncComboBtn();
     toast("Echo + Pace on — speak one syllable per beat");
   });
   function finishLiveListen() {
@@ -1000,9 +1038,16 @@
         }
         var script = "Question: " + item.question + " Answer: " + item.answer;
         if (btn.dataset.action === "speak") {
-          speak(script, 0.82);
-          markPractice("Reviewed interview answer: " + item.question);
-          completeMissionStep("interview");
+          var started = speak(script, 0.82);
+          if (started) {
+            btn.textContent = "⏹ Stop";
+            markPractice("Reviewed interview answer: " + item.question);
+            completeMissionStep("interview");
+            var resetLabel = function () { btn.textContent = "🔊 Hear answer"; };
+            setTimeout(resetLabel, Math.min(20000, 900 + script.length * 70));
+          } else {
+            btn.textContent = "🔊 Hear answer";
+          }
           return;
         }
         if (customText) {
@@ -1664,7 +1709,13 @@
   C.disclosureTemplates.forEach(function (t, i) { var o = document.createElement("option"); o.value = i; o.textContent = t; discSelect.appendChild(o); });
   function renderDisclosure() { discPreview.textContent = "“" + C.disclosureTemplates[+discSelect.value] + "”"; }
   discSelect.addEventListener("change", renderDisclosure);
-  document.getElementById("disclosure-speak").addEventListener("click", function () { speak(C.disclosureTemplates[+discSelect.value], 0.85); });
+  document.getElementById("disclosure-speak").addEventListener("click", function () {
+    var btn = document.getElementById("disclosure-speak");
+    var started = speak(C.disclosureTemplates[+discSelect.value], 0.85, function () {
+      if (btn) btn.textContent = "🔊 Practice it";
+    });
+    if (btn) btn.textContent = started ? "⏹ Stop" : "🔊 Practice it";
+  });
 
   /* ---------------- Confidence: CBT ---------------- */
   var cbtSelect = document.getElementById("cbt-select");
