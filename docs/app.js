@@ -3,7 +3,7 @@
   "use strict";
   var C = window.STEADY_CONTENT;
   var KEY = "steady_v1";
-  var talkState = { scenario: null, turn: 0, listening: false, recog: null };
+  var talkState = { scenario: null, turn: 0, listening: false, recog: null, paused: false, awaitingReply: false, clarifyCount: 0, debounce: null };
   var DEFAULT_STATE = {
     streak: { count: 0, lastDay: null },
     log: [],
@@ -1256,22 +1256,46 @@
   var talkMic = document.getElementById("talk-mic");
   var talkHint = document.getElementById("talk-hint");
   var talkHeard = document.getElementById("talk-heard");
-  var talkSkip = document.getElementById("talk-skip");
   var talkTypeRow = document.getElementById("talk-type-row");
   var talkTypeInput = document.getElementById("talk-type-input");
+  var talkListenStatus = document.getElementById("talk-listen-status");
+  var talkListenLabel = document.getElementById("talk-listen-label");
+  var talkInterim = document.getElementById("talk-interim");
 
   function getSpeechRecognition() {
     return window.SpeechRecognition || window.webkitSpeechRecognition || null;
   }
 
+  function clearTalkDebounce() {
+    if (talkState.debounce) { clearTimeout(talkState.debounce); talkState.debounce = null; }
+  }
+
+  function setTalkListenUi(mode) {
+    // mode: listening | paused | unavailable | hidden
+    if (talkListenStatus) {
+      talkListenStatus.hidden = mode === "hidden";
+      talkListenStatus.classList.toggle("is-paused", mode === "paused" || mode === "unavailable");
+    }
+    if (talkListenLabel) {
+      talkListenLabel.textContent =
+        mode === "listening" ? "Listening — speak naturally" :
+        mode === "paused" ? "Mic paused" :
+        mode === "unavailable" ? "Mic unavailable — type your reply" :
+        "";
+    }
+    if (talkMic) {
+      talkMic.hidden = mode === "unavailable" || mode === "hidden";
+      talkMic.textContent = mode === "paused" ? "Resume listening" : "Pause mic";
+    }
+  }
+
   function stopTalkListen() {
     talkState.listening = false;
-    if (talkMic) {
-      talkMic.classList.remove("talk-mic-live");
-      talkMic.textContent = "🎙 Tap to speak";
-    }
+    clearTalkDebounce();
+    try { if (talkState.recog) talkState.recog.onend = null; } catch (e) {}
     try { if (talkState.recog) talkState.recog.stop(); } catch (e) {}
     talkState.recog = null;
+    if (talkInterim) { talkInterim.hidden = true; talkInterim.textContent = ""; }
   }
 
   function renderTalkPicker() {
@@ -1302,23 +1326,33 @@
   }
 
   function showYouTurn(turn) {
+    talkState.awaitingReply = true;
+    talkState.clarifyCount = talkState.clarifyCount || 0;
     if (talkYouPanel) talkYouPanel.hidden = false;
     if (talkDone) talkDone.hidden = true;
-    if (talkHint) talkHint.textContent = "Your turn — " + (turn.hint || "Reply naturally.");
+    if (talkHint) talkHint.textContent = turn.hint || "Reply naturally — I'm listening.";
     if (talkHeard) { talkHeard.hidden = true; talkHeard.textContent = ""; }
-    if (talkSkip) talkSkip.hidden = true;
+    if (talkInterim) { talkInterim.hidden = true; talkInterim.textContent = ""; }
     if (talkTypeRow) talkTypeRow.hidden = true;
     if (talkTypeInput) talkTypeInput.value = "";
-    if (talkMic) {
-      var SR = getSpeechRecognition();
-      talkMic.disabled = !SR;
-      talkMic.textContent = SR ? "🎙 Tap to speak" : "Mic unavailable — type instead";
-      if (!SR && talkTypeRow) talkTypeRow.hidden = false;
+    var SR = getSpeechRecognition();
+    if (!SR) {
+      setTalkListenUi("unavailable");
+      if (talkTypeRow) talkTypeRow.hidden = false;
+      return;
     }
+    if (talkState.paused) {
+      setTalkListenUi("paused");
+      return;
+    }
+    setTalkListenUi("listening");
+    startTalkListen();
   }
 
   function finishTalk() {
+    talkState.awaitingReply = false;
     stopTalkListen();
+    setTalkListenUi("hidden");
     if (talkYouPanel) talkYouPanel.hidden = true;
     if (talkDone) talkDone.hidden = false;
     var title = talkState.scenario ? talkState.scenario.title : "conversation";
@@ -1330,6 +1364,7 @@
 
   function advanceTalk() {
     talkState.turn += 1;
+    talkState.clarifyCount = 0;
     playTalkTurn();
   }
 
@@ -1337,7 +1372,10 @@
     var turn = currentTalkTurn();
     if (!turn) { finishTalk(); return; }
     if (turn.role === "partner") {
+      talkState.awaitingReply = false;
+      stopTalkListen();
       if (talkYouPanel) talkYouPanel.hidden = true;
+      setTalkListenUi("hidden");
       appendTalkBubble("partner", talkState.scenario.partner, turn.text);
       speak(turn.text, 0.94, function () {
         talkState.turn += 1;
@@ -1354,22 +1392,75 @@
     return match.some(function (m) { return lower.indexOf(String(m).toLowerCase()) >= 0; });
   }
 
-  function acceptUserReply(text) {
-    var cleaned = String(text || "").trim();
-    if (!cleaned) { toast("Say or type a short reply"); return; }
+  function adaptiveAck(userText, turn) {
+    if (turn && turn.ack) return turn.ack;
+    var t = String(userText || "").toLowerCase();
+    if (/\blatte\b/.test(t)) return "A latte — nice choice.";
+    if (/\b(cappuccino|americano|mocha|espresso)\b/.test(t)) return "Got it — one of those coming up.";
+    if (/\b(iced|ice)\b/.test(t)) return "Iced it is.";
+    if (/\bhot\b/.test(t)) return "Hot — perfect.";
+    if (/\b(paper|plastic|reusable|own bag)\b/.test(t)) return "Bags noted.";
+    if (/\b(card|debit|credit)\b/.test(t)) return "Card works.";
+    if (/\bcash\b/.test(t)) return "Cash is fine.";
+    if (/\b(library|station|train|bus)\b/.test(t)) return "I know that spot.";
+    if (/\b(thank|thanks)\b/.test(t)) return "You're welcome.";
+    if (/\b(yes|yeah|yep|sure|okay|ok)\b/.test(t)) return "Sounds good.";
+    if (/\b(no|nope|not really)\b/.test(t)) return "Okay, no problem.";
+    if (/\b(busy|hectic)\b/.test(t)) return "Busy weeks — I get it.";
+    if (/\b(good|great|fine|alright|okay)\b/.test(t)) return "Glad to hear it.";
+    return null;
+  }
+
+  function clarifyLine(turn, count) {
+    if (turn && turn.clarify) return turn.clarify;
+    if (count >= 2) return "No worries — I think I follow. Let's keep going.";
+    return "Sorry, could you say that again a little clearer?";
+  }
+
+  function partnerSayThen(text, thenFn) {
     stopTalkListen();
+    if (talkYouPanel) talkYouPanel.hidden = true;
+    setTalkListenUi("hidden");
+    appendTalkBubble("partner", talkState.scenario.partner, text);
+    speak(text, 0.94, function () { if (thenFn) thenFn(); });
+  }
+
+  function acceptUserReply(text) {
+    if (!talkState.awaitingReply) return;
+    var cleaned = String(text || "").trim();
+    if (!cleaned) return;
+    clearTalkDebounce();
+    stopTalkListen();
+    talkState.awaitingReply = false;
     var turn = currentTalkTurn();
     appendTalkBubble("you", "You", cleaned);
     if (talkHeard) {
       talkHeard.hidden = false;
       talkHeard.textContent = "Heard: “" + cleaned + "”";
     }
-    if (turn && turn.role === "you" && !replyMatches(cleaned, turn.match)) {
-      if (talkSkip) talkSkip.hidden = false;
-      toast("Close enough to try again — or Continue anyway");
+    if (talkTypeInput) talkTypeInput.value = "";
+
+    var matched = !turn || turn.role !== "you" || replyMatches(cleaned, turn.match);
+    if (!matched) {
+      talkState.clarifyCount = (talkState.clarifyCount || 0) + 1;
+      var line = clarifyLine(turn, talkState.clarifyCount);
+      if (talkState.clarifyCount >= 2) {
+        partnerSayThen(line, function () { advanceTalk(); });
+        return;
+      }
+      partnerSayThen(line, function () {
+        talkState.awaitingReply = true;
+        showYouTurn(turn);
+      });
       return;
     }
-    advanceTalk();
+
+    var ack = adaptiveAck(cleaned, turn);
+    if (ack) {
+      partnerSayThen(ack, function () { advanceTalk(); });
+    } else {
+      advanceTalk();
+    }
   }
 
   function startTalk(id) {
@@ -1378,12 +1469,16 @@
     if (!scene) return;
     stopTalkListen();
     if ("speechSynthesis" in window) window.speechSynthesis.cancel();
-    talkState = { scenario: scene, turn: 0, listening: false, recog: null };
+    talkState = {
+      scenario: scene, turn: 0, listening: false, recog: null,
+      paused: false, awaitingReply: false, clarifyCount: 0, debounce: null, pendingReply: ""
+    };
     if (talkPicker) talkPicker.hidden = true;
     if (talkSession) talkSession.hidden = false;
     if (talkDone) talkDone.hidden = true;
     if (talkYouPanel) talkYouPanel.hidden = true;
     if (talkThread) talkThread.innerHTML = "";
+    setTalkListenUi("hidden");
     var title = document.getElementById("talk-scene-title");
     var setting = document.getElementById("talk-scene-setting");
     var partnerLabel = document.getElementById("talk-partner-label");
@@ -1397,46 +1492,111 @@
   function endTalkToPicker() {
     stopTalkListen();
     if ("speechSynthesis" in window) window.speechSynthesis.cancel();
-    talkState = { scenario: null, turn: 0, listening: false, recog: null };
+    talkState = {
+      scenario: null, turn: 0, listening: false, recog: null,
+      paused: false, awaitingReply: false, clarifyCount: 0, debounce: null
+    };
     if (talkSession) talkSession.hidden = true;
     if (talkPicker) talkPicker.hidden = false;
+    setTalkListenUi("hidden");
     renderTalkPicker();
   }
 
   function startTalkListen() {
     var SR = getSpeechRecognition();
-    if (!SR) { toast("Speech recognition needs Chrome or Edge"); if (talkTypeRow) talkTypeRow.hidden = false; return; }
+    if (!SR) {
+      setTalkListenUi("unavailable");
+      if (talkTypeRow) talkTypeRow.hidden = false;
+      return;
+    }
+    if (talkState.paused || !talkState.awaitingReply) return;
     stopTalkListen();
-    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
     var recog = new SR();
     talkState.recog = recog;
     talkState.listening = true;
     recog.lang = "en-US";
-    recog.interimResults = false;
+    recog.continuous = true;
+    recog.interimResults = true;
     recog.maxAlternatives = 1;
-    if (talkMic) {
-      talkMic.classList.add("talk-mic-live");
-      talkMic.textContent = "Listening… tap to stop";
-    }
+    setTalkListenUi("listening");
+
     recog.onresult = function (ev) {
-      var text = "";
-      try { text = ev.results[0][0].transcript || ""; } catch (e) {}
-      acceptUserReply(text);
+      if (!talkState.awaitingReply || talkState.paused) return;
+      var interim = "";
+      var finalText = "";
+      for (var i = ev.resultIndex; i < ev.results.length; i++) {
+        var piece = ev.results[i][0].transcript || "";
+        if (ev.results[i].isFinal) finalText += piece + " ";
+        else interim += piece;
+      }
+      var live = (finalText + " " + interim).trim();
+      if (talkInterim) {
+        talkInterim.hidden = !live;
+        talkInterim.textContent = live ? ("“" + live + "”") : "";
+      }
+      if (finalText.trim()) {
+        clearTalkDebounce();
+        talkState.pendingReply = ((talkState.pendingReply || "") + " " + finalText).trim();
+        var captured = talkState.pendingReply;
+        // Wait briefly so multi-phrase replies can finish before we respond.
+        talkState.debounce = setTimeout(function () {
+          talkState.debounce = null;
+          talkState.pendingReply = "";
+          acceptUserReply(captured);
+        }, 1100);
+      }
     };
-    recog.onerror = function () {
-      stopTalkListen();
-      if (talkSkip) talkSkip.hidden = false;
-      toast("Couldn't catch that — try again or type");
+    recog.onerror = function (ev) {
+      var err = ev && ev.error;
+      if (err === "aborted" || err === "no-speech") {
+        // Keep listening on your turn unless paused.
+        if (talkState.awaitingReply && !talkState.paused && talkState.listening) {
+          try { recog.start(); } catch (e) {}
+        }
+        return;
+      }
+      if (err === "not-allowed") {
+        stopTalkListen();
+        setTalkListenUi("unavailable");
+        if (talkTypeRow) talkTypeRow.hidden = false;
+        toast("Mic blocked — allow microphone or type instead");
+        return;
+      }
+      if (talkTypeRow) talkTypeRow.hidden = false;
     };
     recog.onend = function () {
-      if (talkState.listening) stopTalkListen();
+      // Chrome ends recognition often; restart while still your turn.
+      if (talkState.awaitingReply && !talkState.paused && talkState.listening) {
+        try { recog.start(); } catch (e) {
+          setTimeout(function () {
+            if (talkState.awaitingReply && !talkState.paused) startTalkListen();
+          }, 250);
+        }
+      }
     };
-    try { recog.start(); } catch (e) { stopTalkListen(); toast("Mic start failed"); }
+    try { recog.start(); } catch (e) {
+      setTimeout(function () {
+        if (talkState.awaitingReply && !talkState.paused) {
+          try { recog.start(); } catch (e2) {
+            setTalkListenUi("unavailable");
+            if (talkTypeRow) talkTypeRow.hidden = false;
+          }
+        }
+      }, 300);
+    }
   }
 
   document.getElementById("talk-mic") && document.getElementById("talk-mic").addEventListener("click", function () {
-    if (talkState.listening) { stopTalkListen(); return; }
-    startTalkListen();
+    if (!talkState.awaitingReply) return;
+    if (talkState.paused) {
+      talkState.paused = false;
+      setTalkListenUi("listening");
+      startTalkListen();
+      return;
+    }
+    talkState.paused = true;
+    stopTalkListen();
+    setTalkListenUi("paused");
   });
   document.getElementById("talk-type-toggle") && document.getElementById("talk-type-toggle").addEventListener("click", function () {
     if (talkTypeRow) talkTypeRow.hidden = !talkTypeRow.hidden;
@@ -1447,9 +1607,6 @@
   });
   talkTypeInput && talkTypeInput.addEventListener("keydown", function (e) {
     if (e.key === "Enter") { e.preventDefault(); acceptUserReply(talkTypeInput.value); }
-  });
-  document.getElementById("talk-skip") && document.getElementById("talk-skip").addEventListener("click", function () {
-    advanceTalk();
   });
   document.getElementById("talk-end") && document.getElementById("talk-end").addEventListener("click", endTalkToPicker);
   document.getElementById("talk-pick-other") && document.getElementById("talk-pick-other").addEventListener("click", endTalkToPicker);

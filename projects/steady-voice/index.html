@@ -6,7 +6,7 @@
   <title>Steady — a free toolkit for people who stutter</title>
   <meta name="description" content="Steady is a free, private, evidence-based toolkit for people who stutter: delayed auditory feedback, pacing metronome, breathing, technique trainers, and a confidence toolkit." />
   <link rel="icon" href="favicon.svg" />
-  <link rel="stylesheet" href="styles.css?v=9" />
+  <link rel="stylesheet" href="styles.css?v=10" />
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -341,11 +341,11 @@
       <section class="view" id="view-talk">
         <header class="view-head">
           <h2>Talk — daily life practice</h2>
-          <p class="lead">Two-way chats for real situations. Your partner speaks with the browser’s free voice; you reply with your mic (Chrome works best).</p>
+          <p class="lead">Two-way chats for real situations. Your partner speaks, then the mic stays open and listens — reply naturally (Chrome works best).</p>
         </header>
 
         <div class="callout" id="talk-voice-note">
-          <strong>Free voice:</strong> uses built-in <em>Speech Synthesis</em> (partner) and <em>Speech Recognition</em> (you). No account, no paid API. Allow the microphone when asked.
+          <strong>Active listener:</strong> free browser voice for the partner, continuous speech recognition for you. No push-to-talk. Pause the mic anytime, or type if needed.
         </div>
 
         <div class="card" id="talk-picker">
@@ -367,11 +367,15 @@
           <div class="talk-thread" id="talk-thread" aria-live="polite"></div>
 
           <div class="talk-you-panel" id="talk-you-panel" hidden>
+            <div class="talk-listen-status" id="talk-listen-status" aria-live="polite">
+              <span class="talk-pulse" aria-hidden="true"></span>
+              <span id="talk-listen-label">Listening…</span>
+            </div>
             <p class="talk-hint" id="talk-hint"></p>
+            <p class="talk-interim" id="talk-interim" hidden></p>
             <div class="talk-controls">
-              <button type="button" class="primary-btn big" id="talk-mic" data-testid="talk-mic">🎙 Hold to speak</button>
+              <button type="button" class="ghost-btn" id="talk-mic" data-testid="talk-mic">Pause mic</button>
               <button type="button" class="ghost-btn" id="talk-type-toggle">Type instead</button>
-              <button type="button" class="ghost-btn" id="talk-skip" hidden>Continue anyway</button>
             </div>
             <div class="talk-type-row" id="talk-type-row" hidden>
               <input type="text" id="talk-type-input" placeholder="Type your reply…" autocomplete="off" />
@@ -496,10 +500,10 @@
   <div class="toast" id="toast" hidden role="status" aria-live="polite"></div>
   <div id="error-banner" class="error-banner" hidden role="alert"></div>
 
-  <script type="module" src="reticle-dev.js?v=9"></script>
-  <script src="content.js?v=9"></script>
-  <script src="audio.js?v=9"></script>
-  <script src="progress-tracker.js?v=9"></script>
-  <script src="app.js?v=9"></script>
+  <script type="module" src="reticle-dev.js?v=10"></script>
+  <script src="content.js?v=10"></script>
+  <script src="audio.js?v=10"></script>
+  <script src="progress-tracker.js?v=10"></script>
+  <script src="app.js?v=10"></script>
 </body>
 </html>
