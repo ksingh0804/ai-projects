@@ -36,6 +36,8 @@ Manual server: `python3 serve.py`
 | **Techniques** | Trainers for gentle onset, prolonged/stretched speech, continuous phonation, light contact, pausing — plus modification: preparatory set, pull-out, cancellation. Each with steps and tap-to-hear drills. | Fluency shaping + Van Riper modification |
 | **Reading** | Paced reading + **Practice aloud** with live speech tips, score, and next-time corrections. Daily 50 topics + custom text. | Daily practice + transfer |
 | **Interview** | **Daily 10** data-engineering interview questions and speakable answers; any answer can be sent into Reading practice. | Career prep + speech carryover |
+| **Talk** | Two-way daily-life conversations (coffee, pharmacy, checkout…). Partner uses free browser TTS; you reply with mic or type. | Carryover / real-world speaking |
+| **Describe** | Structured picture description (who / where / action / details) then practice in Reading. | Narrative speech practice |
 | **Confidence** | CBT/ACT tools: an avoidance-reduction (exposure) ladder, thought reframing, and a self-disclosure ("advertising") script builder. | CBT/ACT for social anxiety & avoidance |
 | **Learn** | Facts vs myths and pointers to professional help. | Public-health facts |
 | **Progress** | Streaks, activity log, and **live PERSONAL-PROGRESS.md** with trend + next-time focus (rewritten after every check-in). | Consistency + carry-over corrections |

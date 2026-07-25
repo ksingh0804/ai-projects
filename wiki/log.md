@@ -100,3 +100,8 @@ Append-only record of wiki and workspace changes.
 
 - Restyled Describe: scene stage with caption chips, numbered 2×2 prompt cards, fill counter, clearer actions and model grid.
 - Files: `index.html`, `styles.css`, `app.js`, synced `docs/` + iOS `www/`.
+
+## [2026-07-24] project | add | steady-voice (Talk conversations)
+
+- Added **Talk** tab: 8 human-like daily-life two-way scenarios using free browser Speech Synthesis (partner) + Speech Recognition (user), with type fallback.
+- Version bump 2.1.0. Files: `content.js`, `index.html`, `styles.css`, `app.js`, verify, wiki, docs/iOS sync.

@@ -6,7 +6,7 @@ import pkg from "../../toy-product-research/video/node_modules/playwright-core/i
 const { chromium } = pkg;
 
 const URL = "http://127.0.0.1:8788/";
-const views = ["home", "daf", "pacing", "breathing", "techniques", "reading", "interview", "describe", "confidence", "learn", "progress"];
+const views = ["home", "daf", "pacing", "breathing", "techniques", "reading", "interview", "describe", "talk", "confidence", "learn", "progress"];
 const errors = [];
 
 function ok(msg) { console.log("  ✓", msg); }
@@ -160,6 +160,25 @@ try {
   if (readingAfterDescribe !== 1 || describePracticeWords < 10) {
     fail("Describe Practice model in Reading failed");
   } else ok("Describe model can be practiced in Reading");
+
+  // Talk: daily-life scenarios
+  await page.click('.nav-btn[data-view="talk"]');
+  const talkScenes = await page.locator("#talk-scenario-list .talk-scenario-btn").count();
+  if (talkScenes < 6) fail("Talk scenarios: expected ≥6, got " + talkScenes);
+  else ok("Talk: " + talkScenes + " daily-life scenarios");
+  await page.locator("#talk-scenario-list .talk-scenario-btn").first().click();
+  await page.locator("#talk-you-panel:not([hidden])").waitFor({ timeout: 8000 });
+  const talkActive = await page.locator("#talk-session:not([hidden])").count();
+  const talkBubbles = await page.locator("#talk-thread .talk-bubble").count();
+  if (!talkActive || talkBubbles < 1) fail("Talk session did not start");
+  else ok("Talk session starts with partner line");
+  await page.click("#talk-type-toggle");
+  await page.fill("#talk-type-input", "A medium latte please");
+  await page.click("#talk-type-send");
+  await page.waitForTimeout(300);
+  const youBubbles = await page.locator("#talk-thread .talk-bubble.you").count();
+  if (youBubbles < 1) fail("Talk typed reply not shown");
+  else ok("Talk accepts typed replies");
 
   // Progress stats render
   await page.click('.nav-btn[data-view="progress"]');

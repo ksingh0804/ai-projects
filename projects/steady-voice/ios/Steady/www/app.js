@@ -3,6 +3,7 @@
   "use strict";
   var C = window.STEADY_CONTENT;
   var KEY = "steady_v1";
+  var talkState = { scenario: null, turn: 0, listening: false, recog: null };
   var DEFAULT_STATE = {
     streak: { count: 0, lastDay: null },
     log: [],
@@ -181,7 +182,12 @@
     // them from their own tab. Only stop the view-local animations/timers on navigation.
     if (view !== "breathing") stopBreath();
     if (view !== "reading") { stopReading(); stopLiveListen(); }
+    if (view !== "talk") {
+      stopTalkListen();
+      if (talkState.scenario && "speechSynthesis" in window) window.speechSynthesis.cancel();
+    }
     if (view === "reading") renderLastTipBanner();
+    if (view === "talk") renderTalkPicker();
     if (("#" + view) !== location.hash) location.hash = view;
     document.getElementById("main").focus();
   }
@@ -209,13 +215,45 @@
   tsBtn.addEventListener("click", function () { state.largeText = !state.largeText; applyTextSize(); save(); });
   applyTextSize();
 
-  /* ---------------- TTS helper ---------------- */
-  function speak(text, rate) {
-    if (!("speechSynthesis" in window)) return;
+  /* ---------------- TTS helper (browser Speech Synthesis — free, no API key) ---------------- */
+  var partnerVoice = null;
+  function pickPartnerVoice() {
+    if (!("speechSynthesis" in window)) return null;
+    if (partnerVoice) return partnerVoice;
+    var voices = window.speechSynthesis.getVoices() || [];
+    var prefer = [
+      /Samantha/i, /Google US English/i, /Microsoft (Aria|Jenny|Guy)/i,
+      /Karen/i, /Moira/i, /Alex/i, /en-US/i, /^en/i
+    ];
+    for (var i = 0; i < prefer.length; i++) {
+      var hit = voices.find(function (v) { return prefer[i].test(v.name) || prefer[i].test(v.lang); });
+      if (hit) { partnerVoice = hit; return hit; }
+    }
+    partnerVoice = voices.find(function (v) { return /^en/i.test(v.lang); }) || voices[0] || null;
+    return partnerVoice;
+  }
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.addEventListener("voiceschanged", function () { partnerVoice = null; pickPartnerVoice(); });
+  }
+  function speak(text, rate, onEnd) {
+    if (!("speechSynthesis" in window)) { if (onEnd) onEnd(); return; }
     window.speechSynthesis.cancel();
     var u = new SpeechSynthesisUtterance(text);
-    u.rate = rate || 0.8;
-    u.pitch = 1;
+    u.rate = rate || 0.92;
+    u.pitch = 1.02;
+    var voice = pickPartnerVoice();
+    if (voice) u.voice = voice;
+    if (onEnd) {
+      var done = false;
+      var finish = function () { if (done) return; done = true; onEnd(); };
+      u.onend = finish;
+      u.onerror = finish;
+      // ponytail: headless / some browsers never fire onend — unlock after a short ceiling
+      setTimeout(function () {
+        if (!window.speechSynthesis.speaking) finish();
+      }, 450);
+      setTimeout(finish, Math.min(12000, 900 + String(text).length * 70));
+    }
     window.speechSynthesis.speak(u);
   }
 
@@ -1208,6 +1246,218 @@
     sendDescribeToReading(describeScript(scene.model), "Practice model picture answer");
   });
 
+  /* ---------------- Talk: daily-life two-way conversation ---------------- */
+  var talkList = document.getElementById("talk-scenario-list");
+  var talkPicker = document.getElementById("talk-picker");
+  var talkSession = document.getElementById("talk-session");
+  var talkThread = document.getElementById("talk-thread");
+  var talkYouPanel = document.getElementById("talk-you-panel");
+  var talkDone = document.getElementById("talk-done");
+  var talkMic = document.getElementById("talk-mic");
+  var talkHint = document.getElementById("talk-hint");
+  var talkHeard = document.getElementById("talk-heard");
+  var talkSkip = document.getElementById("talk-skip");
+  var talkTypeRow = document.getElementById("talk-type-row");
+  var talkTypeInput = document.getElementById("talk-type-input");
+
+  function getSpeechRecognition() {
+    return window.SpeechRecognition || window.webkitSpeechRecognition || null;
+  }
+
+  function stopTalkListen() {
+    talkState.listening = false;
+    if (talkMic) {
+      talkMic.classList.remove("talk-mic-live");
+      talkMic.textContent = "🎙 Tap to speak";
+    }
+    try { if (talkState.recog) talkState.recog.stop(); } catch (e) {}
+    talkState.recog = null;
+  }
+
+  function renderTalkPicker() {
+    if (!talkList) return;
+    var scenes = C.talkScenarios || [];
+    talkList.innerHTML = scenes.map(function (s) {
+      return '<button type="button" class="talk-scenario-btn" data-id="' + escapeAttr(s.id) + '">' +
+        "<strong>" + escapeHtml(s.title) + "</strong>" +
+        "<span>" + escapeHtml(s.partner) + " · " + escapeHtml(s.partnerRole) + "</span></button>";
+    }).join("");
+    talkList.querySelectorAll(".talk-scenario-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () { startTalk(btn.dataset.id); });
+    });
+  }
+
+  function appendTalkBubble(role, who, text) {
+    if (!talkThread) return;
+    var div = document.createElement("div");
+    div.className = "talk-bubble " + role;
+    div.innerHTML = '<span class="who">' + escapeHtml(who) + "</span>" + escapeHtml(text);
+    talkThread.appendChild(div);
+    talkThread.scrollTop = talkThread.scrollHeight;
+  }
+
+  function currentTalkTurn() {
+    if (!talkState.scenario) return null;
+    return talkState.scenario.turns[talkState.turn] || null;
+  }
+
+  function showYouTurn(turn) {
+    if (talkYouPanel) talkYouPanel.hidden = false;
+    if (talkDone) talkDone.hidden = true;
+    if (talkHint) talkHint.textContent = "Your turn — " + (turn.hint || "Reply naturally.");
+    if (talkHeard) { talkHeard.hidden = true; talkHeard.textContent = ""; }
+    if (talkSkip) talkSkip.hidden = true;
+    if (talkTypeRow) talkTypeRow.hidden = true;
+    if (talkTypeInput) talkTypeInput.value = "";
+    if (talkMic) {
+      var SR = getSpeechRecognition();
+      talkMic.disabled = !SR;
+      talkMic.textContent = SR ? "🎙 Tap to speak" : "Mic unavailable — type instead";
+      if (!SR && talkTypeRow) talkTypeRow.hidden = false;
+    }
+  }
+
+  function finishTalk() {
+    stopTalkListen();
+    if (talkYouPanel) talkYouPanel.hidden = true;
+    if (talkDone) talkDone.hidden = false;
+    var title = talkState.scenario ? talkState.scenario.title : "conversation";
+    var msg = document.getElementById("talk-done-msg");
+    if (msg) msg.textContent = "You finished “" + title + "”. Real chats are rarely perfect — showing up is the practice.";
+    markPractice("Talk practice: " + title);
+    toast("Conversation complete");
+  }
+
+  function advanceTalk() {
+    talkState.turn += 1;
+    playTalkTurn();
+  }
+
+  function playTalkTurn() {
+    var turn = currentTalkTurn();
+    if (!turn) { finishTalk(); return; }
+    if (turn.role === "partner") {
+      if (talkYouPanel) talkYouPanel.hidden = true;
+      appendTalkBubble("partner", talkState.scenario.partner, turn.text);
+      speak(turn.text, 0.94, function () {
+        talkState.turn += 1;
+        playTalkTurn();
+      });
+      return;
+    }
+    showYouTurn(turn);
+  }
+
+  function replyMatches(text, match) {
+    if (!match || !match.length) return (text || "").trim().length >= 2;
+    var lower = String(text || "").toLowerCase();
+    return match.some(function (m) { return lower.indexOf(String(m).toLowerCase()) >= 0; });
+  }
+
+  function acceptUserReply(text) {
+    var cleaned = String(text || "").trim();
+    if (!cleaned) { toast("Say or type a short reply"); return; }
+    stopTalkListen();
+    var turn = currentTalkTurn();
+    appendTalkBubble("you", "You", cleaned);
+    if (talkHeard) {
+      talkHeard.hidden = false;
+      talkHeard.textContent = "Heard: “" + cleaned + "”";
+    }
+    if (turn && turn.role === "you" && !replyMatches(cleaned, turn.match)) {
+      if (talkSkip) talkSkip.hidden = false;
+      toast("Close enough to try again — or Continue anyway");
+      return;
+    }
+    advanceTalk();
+  }
+
+  function startTalk(id) {
+    var scenes = C.talkScenarios || [];
+    var scene = scenes.find(function (s) { return s.id === id; }) || scenes[0];
+    if (!scene) return;
+    stopTalkListen();
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    talkState = { scenario: scene, turn: 0, listening: false, recog: null };
+    if (talkPicker) talkPicker.hidden = true;
+    if (talkSession) talkSession.hidden = false;
+    if (talkDone) talkDone.hidden = true;
+    if (talkYouPanel) talkYouPanel.hidden = true;
+    if (talkThread) talkThread.innerHTML = "";
+    var title = document.getElementById("talk-scene-title");
+    var setting = document.getElementById("talk-scene-setting");
+    var partnerLabel = document.getElementById("talk-partner-label");
+    if (title) title.textContent = scene.title;
+    if (setting) setting.textContent = scene.setting;
+    if (partnerLabel) partnerLabel.textContent = scene.partner + " · " + scene.partnerRole;
+    markPractice("Started talk: " + scene.title);
+    playTalkTurn();
+  }
+
+  function endTalkToPicker() {
+    stopTalkListen();
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    talkState = { scenario: null, turn: 0, listening: false, recog: null };
+    if (talkSession) talkSession.hidden = true;
+    if (talkPicker) talkPicker.hidden = false;
+    renderTalkPicker();
+  }
+
+  function startTalkListen() {
+    var SR = getSpeechRecognition();
+    if (!SR) { toast("Speech recognition needs Chrome or Edge"); if (talkTypeRow) talkTypeRow.hidden = false; return; }
+    stopTalkListen();
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    var recog = new SR();
+    talkState.recog = recog;
+    talkState.listening = true;
+    recog.lang = "en-US";
+    recog.interimResults = false;
+    recog.maxAlternatives = 1;
+    if (talkMic) {
+      talkMic.classList.add("talk-mic-live");
+      talkMic.textContent = "Listening… tap to stop";
+    }
+    recog.onresult = function (ev) {
+      var text = "";
+      try { text = ev.results[0][0].transcript || ""; } catch (e) {}
+      acceptUserReply(text);
+    };
+    recog.onerror = function () {
+      stopTalkListen();
+      if (talkSkip) talkSkip.hidden = false;
+      toast("Couldn't catch that — try again or type");
+    };
+    recog.onend = function () {
+      if (talkState.listening) stopTalkListen();
+    };
+    try { recog.start(); } catch (e) { stopTalkListen(); toast("Mic start failed"); }
+  }
+
+  document.getElementById("talk-mic") && document.getElementById("talk-mic").addEventListener("click", function () {
+    if (talkState.listening) { stopTalkListen(); return; }
+    startTalkListen();
+  });
+  document.getElementById("talk-type-toggle") && document.getElementById("talk-type-toggle").addEventListener("click", function () {
+    if (talkTypeRow) talkTypeRow.hidden = !talkTypeRow.hidden;
+    if (talkTypeInput && !talkTypeRow.hidden) talkTypeInput.focus();
+  });
+  document.getElementById("talk-type-send") && document.getElementById("talk-type-send").addEventListener("click", function () {
+    acceptUserReply(talkTypeInput ? talkTypeInput.value : "");
+  });
+  talkTypeInput && talkTypeInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") { e.preventDefault(); acceptUserReply(talkTypeInput.value); }
+  });
+  document.getElementById("talk-skip") && document.getElementById("talk-skip").addEventListener("click", function () {
+    advanceTalk();
+  });
+  document.getElementById("talk-end") && document.getElementById("talk-end").addEventListener("click", endTalkToPicker);
+  document.getElementById("talk-pick-other") && document.getElementById("talk-pick-other").addEventListener("click", endTalkToPicker);
+  document.getElementById("talk-again") && document.getElementById("talk-again").addEventListener("click", function () {
+    if (talkState.scenario) startTalk(talkState.scenario.id);
+  });
+  renderTalkPicker();
+
   /* ---------------- Confidence: ladder ---------------- */
   var ladderList = document.getElementById("ladder-list");
   function renderLadder() {
@@ -1323,7 +1573,7 @@
 
   /* ---------------- Init ---------------- */
   function renderAll() {
-    renderHome(); renderPassage(); renderInterview(); renderDescribe(); renderLadder(); renderDisclosure(); renderCbt(); renderProgress();
+    renderHome(); renderPassage(); renderInterview(); renderDescribe(); renderTalkPicker(); renderLadder(); renderDisclosure(); renderCbt(); renderProgress();
   }
   async function loadVersionBadge() {
     var el = document.getElementById("version-badge");

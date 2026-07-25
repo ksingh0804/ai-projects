@@ -6,7 +6,7 @@
   <title>Steady — a free toolkit for people who stutter</title>
   <meta name="description" content="Steady is a free, private, evidence-based toolkit for people who stutter: delayed auditory feedback, pacing metronome, breathing, technique trainers, and a confidence toolkit." />
   <link rel="icon" href="favicon.svg" />
-  <link rel="stylesheet" href="styles.css?v=8" />
+  <link rel="stylesheet" href="styles.css?v=9" />
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -44,6 +44,7 @@
         <button class="nav-btn" data-view="reading" data-testid="nav-reading"><span class="nav-ico">▤</span> Reading</button>
         <button class="nav-btn" data-view="interview" data-testid="nav-interview"><span class="nav-ico">▣</span> Interview</button>
         <button class="nav-btn" data-view="describe" data-testid="nav-describe"><span class="nav-ico">◈</span> Describe</button>
+        <button class="nav-btn" data-view="talk" data-testid="nav-talk"><span class="nav-ico">◎</span> Talk</button>
         <button class="nav-btn" data-view="confidence" data-testid="nav-confidence"><span class="nav-ico">♥</span> Confidence</button>
         <button class="nav-btn" data-view="learn" data-testid="nav-learn"><span class="nav-ico">ℹ</span> Learn</button>
         <button class="nav-btn" data-view="progress" data-testid="nav-progress"><span class="nav-ico">▦</span> Progress</button>
@@ -106,6 +107,7 @@
               <li><button class="link-btn" data-goto="reading">Paced reading</button></li>
               <li><button class="link-btn" data-goto="interview">Interview Daily 10</button></li>
               <li><button class="link-btn" data-goto="describe">Describe a picture</button></li>
+              <li><button class="link-btn" data-goto="talk">Talk — daily life chat</button></li>
               <li><button class="link-btn" data-goto="confidence">Confidence toolkit</button></li>
             </ol>
           </div>
@@ -335,6 +337,60 @@
         </div>
       </section>
 
+      <!-- TALK: daily-life two-way conversation -->
+      <section class="view" id="view-talk">
+        <header class="view-head">
+          <h2>Talk — daily life practice</h2>
+          <p class="lead">Two-way chats for real situations. Your partner speaks with the browser’s free voice; you reply with your mic (Chrome works best).</p>
+        </header>
+
+        <div class="callout" id="talk-voice-note">
+          <strong>Free voice:</strong> uses built-in <em>Speech Synthesis</em> (partner) and <em>Speech Recognition</em> (you). No account, no paid API. Allow the microphone when asked.
+        </div>
+
+        <div class="card" id="talk-picker">
+          <p class="card-kicker">Choose a scenario</p>
+          <p class="muted small">Short scripts with natural turns — order coffee, greet a neighbor, call the pharmacy, and more.</p>
+          <div class="talk-scenario-grid" id="talk-scenario-list"></div>
+        </div>
+
+        <div class="card talk-session" id="talk-session" hidden>
+          <div class="talk-session-head">
+            <div>
+              <p class="card-kicker" id="talk-partner-label">Partner</p>
+              <h3 id="talk-scene-title">Scenario</h3>
+              <p class="muted small" id="talk-scene-setting"></p>
+            </div>
+            <button type="button" class="ghost-btn" id="talk-end">End chat</button>
+          </div>
+
+          <div class="talk-thread" id="talk-thread" aria-live="polite"></div>
+
+          <div class="talk-you-panel" id="talk-you-panel" hidden>
+            <p class="talk-hint" id="talk-hint"></p>
+            <div class="talk-controls">
+              <button type="button" class="primary-btn big" id="talk-mic" data-testid="talk-mic">🎙 Hold to speak</button>
+              <button type="button" class="ghost-btn" id="talk-type-toggle">Type instead</button>
+              <button type="button" class="ghost-btn" id="talk-skip" hidden>Continue anyway</button>
+            </div>
+            <div class="talk-type-row" id="talk-type-row" hidden>
+              <input type="text" id="talk-type-input" placeholder="Type your reply…" autocomplete="off" />
+              <button type="button" class="primary-btn" id="talk-type-send">Send</button>
+            </div>
+            <p class="muted small" id="talk-heard" hidden></p>
+          </div>
+
+          <div class="talk-done" id="talk-done" hidden>
+            <p class="card-kicker">Nice work</p>
+            <p id="talk-done-msg">You finished this conversation.</p>
+            <div class="row">
+              <button type="button" class="primary-btn" id="talk-again">Practice again</button>
+              <button type="button" class="ghost-btn" id="talk-pick-other">Pick another scenario</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- CONFIDENCE -->
       <section class="view" id="view-confidence">
         <header class="view-head">
@@ -415,9 +471,9 @@
     </main>
     <nav class="mobile-nav" aria-label="Mobile sections">
       <button type="button" class="mobile-nav-btn is-active" data-view="home">Home</button>
+      <button type="button" class="mobile-nav-btn" data-view="talk">Talk</button>
       <button type="button" class="mobile-nav-btn" data-view="reading">Read</button>
       <button type="button" class="mobile-nav-btn" data-view="interview">Interview</button>
-      <button type="button" class="mobile-nav-btn" data-view="describe">Describe</button>
       <button type="button" class="mobile-nav-btn" data-view="progress">Progress</button>
     </nav>
   </div>
@@ -440,10 +496,10 @@
   <div class="toast" id="toast" hidden role="status" aria-live="polite"></div>
   <div id="error-banner" class="error-banner" hidden role="alert"></div>
 
-  <script type="module" src="reticle-dev.js?v=8"></script>
-  <script src="content.js?v=8"></script>
-  <script src="audio.js?v=8"></script>
-  <script src="progress-tracker.js?v=8"></script>
-  <script src="app.js?v=8"></script>
+  <script type="module" src="reticle-dev.js?v=9"></script>
+  <script src="content.js?v=9"></script>
+  <script src="audio.js?v=9"></script>
+  <script src="progress-tracker.js?v=9"></script>
+  <script src="app.js?v=9"></script>
 </body>
 </html>
