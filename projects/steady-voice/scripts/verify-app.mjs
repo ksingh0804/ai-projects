@@ -178,7 +178,7 @@ try {
   await page.waitForTimeout(300);
   const youBubbles = await page.locator("#talk-thread .talk-bubble.you").count();
   if (youBubbles < 1) fail("Talk typed reply not shown");
-  else ok("Talk accepts typed replies");
+  else ok("Talk accepts typed replies (active listener)");
 
   // Progress stats render
   await page.click('.nav-btn[data-view="progress"]');
