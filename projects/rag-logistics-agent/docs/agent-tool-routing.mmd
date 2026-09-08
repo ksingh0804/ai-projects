@@ -1,0 +1,46 @@
+%%{init: {
+  "theme": "base",
+  "flowchart": { "htmlLabels": true, "curve": "basis" },
+  "themeVariables": {
+    "fontFamily": "IBM Plex Sans, Segoe UI, sans-serif",
+    "fontSize": "14px",
+    "primaryTextColor": "#111",
+    "lineColor": "#333"
+  }
+}}%%
+%% Supporting diagram: how the agent routes work for Nancy.
+%% Letter tags + Okabe–Ito colors for color-blind readers.
+flowchart TB
+  Q["[N] NANCY QUESTION<br/>Plain English ops ask"]
+  LLM["[A] LOCAL LLM · llama3.1<br/>Reads system rules · chooses tools"]
+  R{"[?] QUESTION TYPE?"}
+
+  INV["[A] lookup_sample_inventory<br/>CSV SKU table<br/>on_hand · ROP · lead time · status"]
+  EOQ["[A] eoq_calculator<br/>EOQ = √(2DS/H)"]
+  SS["[A] safety_stock_estimator<br/>SS = z · σ · √L"]
+  DOC["[A] search_logistics_docs<br/>Chroma top-k SOP chunks"]
+
+  ANS["[=] GROUNDED ANSWER<br/>Numbers from tools<br/>Policy from docs — else: I don't know"]
+  NANCY["[N] NANCY ACTS<br/>Reorder · set buffer · cite SOP"]
+
+  Q --> LLM --> R
+  R -->|SKU status| INV
+  R -->|order quantity| EOQ
+  R -->|buffer stock| SS
+  R -->|SOP / cold chain / carrier| DOC
+  INV --> ANS
+  EOQ --> ANS
+  SS --> ANS
+  DOC --> ANS
+  ANS --> NANCY
+
+  classDef nancy fill:#0072B2,stroke:#003D66,stroke-width:2px,color:#fff
+  classDef agent fill:#E69F00,stroke:#8A5A00,stroke-width:2px,color:#111
+  classDef decide fill:#F0E442,stroke:#8A7A00,stroke-width:2px,color:#111
+  classDef outcome fill:#CC79A7,stroke:#7A3A5A,stroke-width:2px,color:#111
+  classDef action fill:#009E73,stroke:#005F45,stroke-width:2px,color:#fff
+
+  class Q,NANCY nancy
+  class LLM,INV,EOQ,SS,DOC agent
+  class R decide
+  class ANS outcome

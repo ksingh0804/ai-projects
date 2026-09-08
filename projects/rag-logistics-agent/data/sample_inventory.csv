@@ -1,0 +1,7 @@
+sku,description,on_hand,reorder_point,lead_time_days,unit_cost
+SKU-1001,Cold-chain yogurt case,420,150,5,12.50
+SKU-1002,Dry pasta carton,80,200,10,4.25
+SKU-1003,Frozen pizza pallet,55,40,7,38.00
+SKU-2001,Paper towel bulk,1200,500,14,18.75
+SKU-2002,Hand sanitizer case,15,60,8,22.00
+SKU-3001,Banana box,0,100,3,9.40

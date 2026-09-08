@@ -1,0 +1,96 @@
+%%{init: {
+  "theme": "base",
+  "flowchart": { "htmlLabels": true, "curve": "basis", "nodeSpacing": 28, "rankSpacing": 40 },
+  "themeVariables": {
+    "fontFamily": "IBM Plex Sans, Segoe UI, sans-serif",
+    "fontSize": "15px",
+    "primaryTextColor": "#111",
+    "lineColor": "#333",
+    "clusterBkg": "#F7F7F7",
+    "clusterBorder": "#555"
+  }
+}}%%
+%% Color-blind safe palette (Okabe–Ito):
+%%   Nancy / human  = blue     #0072B2  shape: stadium  prefix [N]
+%%   Agent / AI     = orange   #E69F00  shape: hexagon  prefix [A]
+%%   Ops systems    = bluish   #56B4E9  shape: rect     prefix [S]
+%%   Decision       = yellow   #F0E442  shape: diamond  prefix [?]
+%%   Action / buy   = green    #009E73  shape: stadium  prefix [!]
+%%   Risk / alert   = vermil.  #D55E00  shape: rect     prefix [!]
+%%   Outcome        = purple   #CC79A7  shape: stadium  prefix [=]
+%% Do not rely on color alone — every node has a letter tag + shape.
+flowchart TB
+  %% ===== INTERVIEW BEAT 1: WHO / WHY =====
+  subgraph BEAT1["BEAT 1 — Who & why  ·  pause · say this slowly"]
+    direction TB
+    N0["[N] NANCY<br/>Inventory & replenishment lead<br/>DC ops · morning shift"]
+    Pain["[!] PAIN WITHOUT AGENT<br/>PDFs + spreadsheets + tribal memory<br/>Slow answers · easy to invent numbers"]
+    Goal["[=] BUSINESS GOAL<br/>Right stock · on policy · on time<br/>Fewer stockouts · fewer rushed orders"]
+  end
+
+  %% ===== INTERVIEW BEAT 2: MORNING TRIAGE =====
+  subgraph BEAT2["BEAT 2 — Morning triage  ·  pause · point at the alert"]
+    direction TB
+    Inbox["[S] SYSTEMS INBOX<br/>WMS alerts · buyer emails · carrier notes"]
+    Alert["[!] ALERT<br/>SKU-2002 Hand sanitizer<br/>On-hand 15  below  ROP 60"]
+    Ask1["[N] NANCY ASKS AGENT<br/>Is SKU-2002 below reorder?<br/>What is lead time and unit cost?"]
+  end
+
+  %% ===== INTERVIEW BEAT 3: AGENT ROUTES =====
+  subgraph BEAT3["BEAT 3 — Agent chooses a tool  ·  pause · name the tool"]
+    direction TB
+    Agent["[A] LOGISTICS RAG AGENT<br/>Local LLM · tool-calling · grounded docs"]
+    Route{"[?] WHICH KIND OF QUESTION?"}
+    TInv["[A] TOOL · lookup_sample_inventory<br/>Trusted SKU table · no guessing"]
+    TEoq["[A] TOOL · eoq_calculator<br/>sqrt 2DS / H · order size math"]
+    TSs["[A] TOOL · safety_stock_estimator<br/>z · σ · √L · buffer math"]
+    TDoc["[A] TOOL · search_logistics_docs<br/>SOP / PDF chunks from Chroma"]
+  end
+
+  %% ===== INTERVIEW BEAT 4: NANCY'S DAY CASES =====
+  subgraph BEAT4["BEAT 4 — Three real jobs in one day  ·  pause between each"]
+    direction TB
+    CaseA["[N] CASE A · Reorder check<br/>Lookup SKU-2002 → status REORDER<br/>Lead time 8 days · cost 22.00"]
+    CaseB["[N] CASE B · How much to order?<br/>EOQ from demand · order cost · hold cost<br/>Agent returns EOQ + orders/year"]
+    CaseC["[N] CASE C · Cold-chain rule<br/>Search DeCA SOP-07<br/>Answer only from docs — or I don't know"]
+  end
+
+  %% ===== INTERVIEW BEAT 5: BUSINESS OUTCOME =====
+  subgraph BEAT5["BEAT 5 — Close the loop  ·  pause · land the punchline"]
+    direction TB
+    Decide["[N] NANCY DECIDES<br/>Approve PO · set buffer · brief buyer"]
+    Write["[!] ACTION<br/>Create purchase order<br/>Note SOP citation on ticket"]
+    Outcome["[=] OUTCOME<br/>Faster confident decisions<br/>Policy-grounded · math-correct<br/>Less stammering over unknown numbers"]
+  end
+
+  N0 --> Pain --> Goal
+  Goal --> Inbox --> Alert --> Ask1
+  Ask1 --> Agent --> Route
+  Route -->|SKU / on-hand / ROP| TInv
+  Route -->|EOQ / order qty math| TEoq
+  Route -->|safety / buffer stock| TSs
+  Route -->|policy / SOP / procedure| TDoc
+  TInv --> CaseA
+  TEoq --> CaseB
+  TSs --> CaseB
+  TDoc --> CaseC
+  CaseA --> Decide
+  CaseB --> Decide
+  CaseC --> Decide
+  Decide --> Write --> Outcome
+
+  classDef nancy fill:#0072B2,stroke:#003D66,stroke-width:2px,color:#fff
+  classDef agent fill:#E69F00,stroke:#8A5A00,stroke-width:2px,color:#111
+  classDef system fill:#56B4E9,stroke:#1A6A96,stroke-width:2px,color:#111
+  classDef decide fill:#F0E442,stroke:#8A7A00,stroke-width:2px,color:#111
+  classDef action fill:#009E73,stroke:#005F45,stroke-width:2px,color:#fff
+  classDef risk fill:#D55E00,stroke:#7A3000,stroke-width:2px,color:#fff
+  classDef outcome fill:#CC79A7,stroke:#7A3A5A,stroke-width:2px,color:#111
+
+  class N0,Ask1,CaseA,CaseB,CaseC,Decide nancy
+  class Agent,TInv,TEoq,TSs,TDoc agent
+  class Inbox system
+  class Route decide
+  class Write,Goal action
+  class Pain,Alert risk
+  class Outcome outcome

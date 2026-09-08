@@ -1,0 +1,62 @@
+%%{init: {
+  "theme": "base",
+  "flowchart": { "htmlLabels": true, "curve": "basis", "nodeSpacing": 36, "rankSpacing": 50 },
+  "themeVariables": {
+    "fontFamily": "IBM Plex Sans, Segoe UI, sans-serif",
+    "fontSize": "16px",
+    "primaryTextColor": "#111",
+    "lineColor": "#333"
+  }
+}}%%
+%% Interview storyboard — designed for light stammering:
+%% Each box is ONE short speaking beat. Stop. Breathe. Point. Speak the line.
+%% Tags: [SAY] spoken line · [POINT] gesture · [BREATHE] intentional pause
+%% Colors (Okabe–Ito) + letter tags — never color-only.
+flowchart LR
+  subgraph S1["1 · OPEN"]
+    direction TB
+    B1["[SAY] I built a logistics ops agent<br/>for people like Nancy — an inventory lead."]
+    P1["[BREATHE] · 2 seconds"]
+  end
+
+  subgraph S2["2 · PROBLEM"]
+    direction TB
+    B2["[SAY] Her day is alerts, SOPs, and math.<br/>Without help she digs through PDFs and guesses."]
+    P2["[BREATHE] · 2 seconds"]
+  end
+
+  subgraph S3["3 · DEMO HOOK"]
+    direction TB
+    B3["[SAY] Morning alert: sanitizer SKU-2002<br/>is below reorder point."]
+    P3["[POINT] at the REORDER box"]
+  end
+
+  subgraph S4["4 · AGENT VALUE"]
+    direction TB
+    B4["[SAY] Nancy asks the agent in plain English.<br/>It picks a tool — lookup, EOQ, safety stock, or docs."]
+    P4["[BREATHE] · 2 seconds"]
+  end
+
+  subgraph S5["5 · TRUST"]
+    direction TB
+    B5["[SAY] Math comes from calculators.<br/>Policy comes from ingested SOPs. No invented numbers."]
+    P5["[POINT] at grounded docs"]
+  end
+
+  subgraph S6["6 · CLOSE"]
+    direction TB
+    B6["[SAY] Nancy leaves with a PO decision<br/>that is fast, cited, and auditable."]
+    P6["[=] STOP · smile · invite questions"]
+  end
+
+  B1 --> P1 --> B2 --> P2 --> B3 --> P3 --> B4 --> P4 --> B5 --> P5 --> B6 --> P6
+
+  classDef say fill:#0072B2,stroke:#003D66,stroke-width:2px,color:#fff
+  classDef pause fill:#F0E442,stroke:#8A7A00,stroke-width:2px,color:#111
+  classDef point fill:#E69F00,stroke:#8A5A00,stroke-width:2px,color:#111
+  classDef close fill:#009E73,stroke:#005F45,stroke-width:2px,color:#fff
+
+  class B1,B2,B3,B4,B5 say
+  class P1,P2,P4 pause
+  class P3,P5 point
+  class B6,P6 close

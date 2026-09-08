@@ -1,0 +1,11 @@
+.DS_Store
+.env
+.env.*
+.venv/
+rag-env/
+__pycache__/
+*.pyc
+.pytest_cache/
+.vscode/
+chroma_db/
+*.log

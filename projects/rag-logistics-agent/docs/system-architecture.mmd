@@ -1,0 +1,115 @@
+%%{init: {
+  "theme": "base",
+  "flowchart": { "htmlLabels": true, "curve": "basis", "nodeSpacing": 24, "rankSpacing": 36 },
+  "themeVariables": {
+    "fontFamily": "IBM Plex Sans, Segoe UI, sans-serif",
+    "fontSize": "14px",
+    "primaryTextColor": "#111",
+    "lineColor": "#333",
+    "clusterBkg": "#F7F7F7",
+    "clusterBorder": "#555"
+  }
+}}%%
+%% System architecture — logistics RAG agent
+%% Color-blind safe (Okabe–Ito) + letter tags — never color alone:
+%%   [U] User / CLI     blue     #0072B2
+%%   [A] Agent / LLM    orange   #E69F00
+%%   [T] Tools          sky      #56B4E9
+%%   [D] Data / store   green    #009E73
+%%   [M] Models         purple   #CC79A7
+%%   [I] Ingest path    vermil.  #D55E00
+%%   [?] Mode choice    yellow   #F0E442
+flowchart TB
+  %% ---------- PEOPLE / ENTRY ----------
+  subgraph ENTRY["1 · ENTRY"]
+    direction TB
+    U["[U] USER<br/>Ops question in plain English"]
+    CLI["[U] app.py · CLI / REPL<br/>python app.py question · -v · --rag-only"]
+  end
+
+  %% ---------- RUNTIME MODES ----------
+  subgraph RUNTIME["2 · RUNTIME — two answer modes"]
+    direction TB
+    Mode{"[?] MODE?"}
+    Agent["[A] agent.py · ask_agent<br/>LangChain create_agent<br/>System rules: tools first · no invented numbers"]
+    RagOnly["[A] rag.py · ask<br/>RetrievalQA-style LCEL chain<br/>--rag-only · docs only"]
+  end
+
+  %% ---------- LLM + TOOL LOOP ----------
+  subgraph BRAIN["3 · AGENT BRAIN"]
+    direction TB
+    LLM["[M] ChatOllama<br/>llama3.1:8b · temperature 0<br/>Chooses tools from the question"]
+    Loop["[A] Tool-calling loop<br/>AIMessage → ToolMessage → final text"]
+  end
+
+  %% ---------- TOOLS ----------
+  subgraph TOOLS["4 · TOOLS — tools.py"]
+    direction TB
+    TInv["[T] lookup_sample_inventory<br/>SKU on-hand · ROP · lead time · REORDER/OK"]
+    TEoq["[T] eoq_calculator<br/>EOQ = √(2 · D · S / H)"]
+    TSs["[T] safety_stock_estimator<br/>SS = z · σ · √L"]
+    TDoc["[T] search_logistics_docs<br/>Retrieve top-k chunks · format with source"]
+  end
+
+  %% ---------- DATA PLANE ----------
+  subgraph DATA["5 · DATA PLANE"]
+    direction TB
+    CSV["[D] data/sample_inventory.csv<br/>Mock SKU table"]
+    Chroma["[D] chroma_db<br/>Collection: logistics_docs"]
+    PDFs["[D] data/*.pdf<br/>DeCA SOPs · EOQ papers · routing refs"]
+  end
+
+  %% ---------- INGEST (offline / setup) ----------
+  subgraph INGEST["6 · INGEST — ingest.py · run when docs change"]
+    direction TB
+    Load["[I] PyPDFLoader<br/>Load pages · set source + filename"]
+    Split["[I] RecursiveCharacterTextSplitter<br/>chunk 680 · overlap 100"]
+    Embed["[M] OllamaEmbeddings<br/>nomic-embed-text"]
+    Skip["[I] Skip already-ingested sources<br/>Safe re-run"]
+  end
+
+  %% ---------- GROUNDED DOC PATH ----------
+  subgraph GROUND["7 · GROUNDED DOC ANSWER"]
+    direction TB
+    Retriever["[D] Chroma retriever · k=4"]
+    Prompt["[A] prompts.py · GROUNDED_PROMPT<br/>Answer ONLY from context<br/>else: I don't know"]
+    Out["[U] Concise answer<br/>Cite filename when helpful"]
+  end
+
+  U --> CLI --> Mode
+  Mode -->|default: agent| Agent
+  Mode -->|--rag-only| RagOnly
+
+  Agent --> LLM --> Loop
+  Loop --> TInv & TEoq & TSs & TDoc
+
+  TInv --> CSV
+  TEoq --> Out
+  TSs --> Out
+  TInv --> Out
+
+  TDoc --> Retriever
+  RagOnly --> Retriever
+  Retriever --> Chroma
+  Retriever --> Prompt --> Out
+  Loop --> Out
+
+  PDFs --> Load --> Split --> Skip
+  Skip --> Embed --> Chroma
+  Embed -.->|same embed model at query time| Retriever
+
+  classDef user fill:#0072B2,stroke:#003D66,stroke-width:2px,color:#fff
+  classDef agent fill:#E69F00,stroke:#8A5A00,stroke-width:2px,color:#111
+  classDef tool fill:#56B4E9,stroke:#1A6A96,stroke-width:2px,color:#111
+  classDef data fill:#009E73,stroke:#005F45,stroke-width:2px,color:#fff
+  classDef model fill:#CC79A7,stroke:#7A3A5A,stroke-width:2px,color:#111
+  classDef ingest fill:#D55E00,stroke:#7A3000,stroke-width:2px,color:#fff
+  classDef decide fill:#F0E442,stroke:#8A7A00,stroke-width:2px,color:#111
+
+  class U,CLI,Out user
+  class Agent,RagOnly,Loop,Prompt agent
+  class TInv,TEoq,TSs,TDoc tool
+  class CSV,Chroma,PDFs,Retriever data
+  class LLM,Embed model
+  class Load,Split,Skip ingest
+  class Mode decide

@@ -110,3 +110,14 @@ Append-only record of wiki and workspace changes.
 
 - Echo + Pace second press stops both; Hear it / Practice it / interview Hear answer also toggle stop; speak() same-button cancel.
 - Files: `app.js`, `index.html`, verify, docs/iOS sync.
+
+## [2026-09-08] project | create | loan-defaulter
+
+- Added Home Credit loan-default PD project under `projects/loan-defaulter/` (notebook + README from standalone Loan-Defaulter work).
+- Files: `projects/loan-defaulter/*`, `wiki/projects/loan-defaulter.md`, `wiki/index.md`, `README.md`.
+
+## [2026-09-08] project | create | rag-logistics-agent
+
+- Copied Desktop `logistics-rag-agent` into `projects/rag-logistics-agent/` (excluded `rag-env`, `chroma_db`).
+- Added README, requirements.txt, .gitignore; wiki page + index/log/README entries.
+- Files: `projects/rag-logistics-agent/*`, `wiki/projects/rag-logistics-agent.md`.

@@ -23,3 +23,5 @@ See [wiki/overview.md](wiki/overview.md) for the knowledge base. The agent updat
 | FreshCart (Grocery + Logistics DE) | `projects/grocery-logistics-de/` | Runnable end-to-end data engineering project (lakehouse, batch ELT, streaming, orchestration, ML features) plus 30-day AWS curriculum |
 | Stutter Coach | `projects/stutter-coach/` | Free browser voice-practice app — Web Speech API, live coaching, Small Talk + drills, 7-day plan, 4-hour auto-improvement cycle (v1.7.0) |
 | Steady | `projects/steady-voice/` | **v2.0.0** free stuttering toolkit — guided session, Echo (DAF), pacing, Daily 50 reading + live coach, Interview Daily 10, CBT/ACT, mobile nav (port 8788) |
+| Loan Defaulter | `projects/loan-defaulter/` | Home Credit PD analysis — imbalanced classification, EXT_SOURCE features, KS/Gini/PR-AUC, cost-weighted threshold |
+| RAG Logistics Agent | `projects/rag-logistics-agent/` | Ollama + Chroma tool-calling agent over logistics SOP PDFs (EOQ, safety stock, inventory, grounded Q&A) |

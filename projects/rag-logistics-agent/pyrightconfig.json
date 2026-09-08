@@ -1,0 +1,8 @@
+{
+  "venvPath": ".",
+  "venv": "rag-env",
+  "pythonVersion": "3.10",
+  "include": ["."],
+  "exclude": ["rag-env", ".agents"],
+  "extraPaths": ["rag-env/lib/python3.10/site-packages"]
+}
