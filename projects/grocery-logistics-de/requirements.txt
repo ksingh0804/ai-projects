@@ -1,8 +1,0 @@
-# FreshCart Data Platform — local, runnable stack.
-# Everything here runs on a laptop with zero cloud cost.
-# The docs/ map each tool to its big-company production equivalent
-# (DuckDB->Snowflake/BigQuery, the micro-batch loop->Kafka+Flink, etc.).
-
-duckdb==1.5.3        # local OLAP warehouse / lakehouse query engine (stand-in for Snowflake/BigQuery/Spark SQL)
-pandas==2.3.3        # dataframe transforms + CSV/Parquet IO
-pyarrow==24.0.0      # Parquet read/write (the lake file format)

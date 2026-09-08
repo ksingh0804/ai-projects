@@ -1,7 +1,0 @@
-# Generated artifacts — reproducible via `python src/orchestrate.py`
-data/
-__pycache__/
-*.pyc
-.terraform/
-*.tfstate
-*.tfstate.backup
