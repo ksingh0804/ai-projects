@@ -121,3 +121,9 @@ Append-only record of wiki and workspace changes.
 - Copied Desktop `logistics-rag-agent` into `projects/rag-logistics-agent/` (excluded `rag-env`, `chroma_db`).
 - Added README, requirements.txt, .gitignore; wiki page + index/log/README entries.
 - Files: `projects/rag-logistics-agent/*`, `wiki/projects/rag-logistics-agent.md`.
+
+## [2026-09-26] project | create | siteflow
+
+- Added **SiteFlow**, the Project 3 construction assistant: FastAPI, LangGraph supervisor, BM25 retrieval, Project 2 EOQ and safety-stock tools, human approval, React UI, and a three-day study plan.
+- Ingested the agent guide at `raw/sources/Project3_SiteFlow_Agent_Guide.pdf` and summarized it in the wiki.
+- Files: `projects/siteflow/**`, `raw/sources/Project3_SiteFlow_Agent_Guide.pdf`, `wiki/projects/siteflow.md`, `wiki/sources/siteflow-agent-guide.md`, `wiki/index.md`, `wiki/overview.md`, `README.md`

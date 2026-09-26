@@ -1,0 +1,5 @@
+sku,description,on_hand,lead_days,unit_cost,annual_demand,order_cost
+REBAR-5,Grade 60 number 5 rebar,800,21,4.10,12000,50
+STEEL-W,W12x26 structural steel beam,40,56,180.00,400,75
+AB-34,Anchor bolt 3/4 inch,120,14,6.50,2000,40
+VB-10,Vapor barrier 10 mil roll,30,7,90.00,150,25
