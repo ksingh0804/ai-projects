@@ -14,8 +14,8 @@ You should be able to say this sentence: "The React app never calls the model or
 
 Change these if your machine is different. Do not quietly pretend they are true in an interview.
 
-- No AWS keys are required. `USE_AWS=false`. The S3 code is real and tested with a fake client.
-- No Ollama process is required. Answers are written from the retrieved text and the formula. Ollama and Bedrock implement the same `invoke(messages)` method when you want prose later.
+- No AWS keys are required to study Day 1. `USE_AWS=false`. Create the AWS account with the steps at the end of this file, and leave the keys unused until Day 3.
+- Ollama is installed on your machine. Day 1 still does not call it. The formulas and the file checks have to be true before a model is allowed to write a sentence. On Day 2 we point the answer writer at Ollama.
 - Python is the system you must be able to defend. React is the screen the interview loop expects. The screen is thin on purpose.
 - EOQ and safety stock are the Project 2 formulas, copied as plain functions. See `projects/rag-logistics-agent/tools.py`.
 - Approval stores a human decision. It does not create an RFI in Autodesk Construction Cloud, and it does not place a purchase order.
@@ -61,7 +61,20 @@ Use these words. They are enough.
 
 ## Day 1 — Make the facts true before any agent exists
 
-Day 1 is the part you can check with a calculator and a file folder. Do not start here with LangGraph, React, or AWS. If the formula is wrong, a beautiful agent will say the wrong number with confidence.
+Day 1 is the part you can check with a calculator and a file folder. LangGraph, React, Ollama, and AWS wait. If the formula is wrong, a model will say the wrong number with confidence.
+
+Create these files in this order. Stop after each one, run its test, and say out loud where that file sits in the picture above. The reference copies are already in the repo. Read the explanation, then open the file and match it to the test. Do not skip ahead to `app/main.py`.
+
+| Step | File you are learning | What it is for | Test that proves it |
+| --- | --- | --- | --- |
+| 1 | `backend/app/tools/inventory.py` | The only math in the product: EOQ, safety stock, SKU lookup | `tests/test_inventory.py` |
+| 2 | `backend/app/rag/chunking.py` | Cut a spec on paragraphs and sentences before cutting on characters | `tests/test_chunking_and_retrieval.py` (the split tests) |
+| 3 | `backend/app/rag/retriever.py` | Rank chunks for one project only | the BM25 tests in that same file |
+| 4 | `backend/app/rag/ingest.py` | Turn a PDF or text file into those chunks | `test_sample_pdf_text_survives_a_round_trip` |
+| 5 | `backend/app/storage/local.py` | Save the original file under `projects/{id}/docs/` | the upload tests in `tests/test_api.py` |
+| 6 | `backend/app/api/docs.py` with `errors.py` | The first HTTP door: upload and list. Still no chat and no agent | `test_upload_list_and_reject_bad_files` |
+
+Day 1 is finished when a PDF and a CSV can be stored, the CSV can answer 547.72, and a second project cannot see the first project's chunks. Chat, LangGraph, the React screen, and AWS are Day 2 and Day 3.
 
 ### The platform split
 
@@ -370,6 +383,22 @@ Say what the code does. Skip any sentence you cannot point at.
 **Small model or Bedrock?** Keywords for routing now. A small model is enough if you replace the cascade. A larger model only rewrites a draft that already has the numbers, behind the number guard.
 
 **Behavioral.** Use your own field story. The mapping is: incomplete information still needed a decision, so the product shows the source and the missing input instead of guessing `S`. A stakeholder wanted the agent to place the order; you put the pause before any write, and you still have not built the write. Why this industry: the work is RFIs, submittals, lead times, and holds, which is the same shape as the logistics tools you already trust, pointed at a jobsite.
+
+## AWS account, before Day 3
+
+Do this when you want the account ready. Day 1 and Day 2 stay on your laptop. Ollama stays on your laptop too. AWS is only the later place for files (S3), an optional model (Bedrock), and an optional checkpoint (DynamoDB).
+
+1. Open [https://aws.amazon.com/free/](https://aws.amazon.com/free/) and choose **Create a Free Account**.
+2. Use an email you control, a password you have not used elsewhere, and an account name such as `siteflow-YOURNAME`.
+3. Choose Personal unless this account belongs to a company. Enter a real address and phone number. AWS sends a verification code.
+4. Add a credit or debit card. Free tier still requires a card. In the billing console, after you can sign in, create a budget alarm at a few dollars so a surprise charge emails you. The SiteFlow slice in this repo does not call AWS, so the alarm should stay quiet while you study.
+5. Choose the **Basic support** plan. It is the free plan.
+6. Sign in to the console as the root user once. In the account menu, turn on multi-factor authentication for root. After that, do daily work as a separate IAM user, not as root.
+7. In IAM, create a user for this project. Attach only the policy in `infra/iam-siteflow.json` after you have created the bucket. Do not attach `AdministratorAccess`.
+8. Pick the region **US West (Oregon)**, `us-west-2`, in the console header and leave it there. The bucket, Bedrock, and the app should share that region.
+9. Stop. Do not create the S3 bucket until Day 3, when `app/aws/s3.py` is the file we are studying. Do not download access keys until that day, and do not put them in git. `backend/env.example` shows the variable names. The real values go in `backend/.env`, which is gitignored.
+
+Confirm Ollama on your machine with `ollama list`. The guide's chat model is `llama3.1:8b`. If that name is missing, run `ollama pull llama3.1:8b`. We still do not call it during Day 1.
 
 ## What this slice does not do
 
