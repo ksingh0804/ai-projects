@@ -80,7 +80,10 @@ for (const name of [
   assert.match(repos.text, new RegExp(name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
 }
 assert.equal(chapterCount(), 4);
-assert.equal(atlas().flatMap((group) => group.items).length, 8);
+assert.equal(atlas().flatMap((group) => group.items).length, 7);
+assert.doesNotMatch(say("projects").text, /Travis|career-launch/);
+assert.doesNotMatch(say("live").text, /Travis|career-launch/);
+assert.match(say("open travis").text, /don't have a project/);
 
 let walked = createState();
 walked = say("cd projects", walked).state;

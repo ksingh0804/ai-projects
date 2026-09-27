@@ -138,3 +138,20 @@ Append-only record of wiki and workspace changes.
 
 - Briefing cards now lead with a cue, and the lit repositories show in a strip above the card (including on a phone, where the map is collapsed). Map, projects, repos, and the other list commands are cards. A project card shows its stack above the open button. The four steps jump straight to that part.
 - Files: `docs/guide/engine.js`, `docs/guide/ui.js`, `docs/guide/guide.css`, `docs/guide/index.html`, `scripts/test-archivist.mjs`, `wiki/projects/github-guide.md`, `wiki/log.md`.
+
+## [2026-09-27] project | update | contribution-graph
+
+- Added one commit on each empty day from 2026-08-01 through 2026-09-30 so those days register on the GitHub contribution graph. Days that already had activity were left as they were.
+- Commits are empty, authored as Kaustubh with the account noreply email, timestamped 12:00 Pacific, and pushed to `master` (only the default branch counts).
+- Files touched: `wiki/log.md`
+
+## [2026-09-27] project | create | daily-python
+
+- Added 55 standard-library mini projects under `projects/daily-python/`, one folder per contribution day filled in for August and September 2026.
+- Each `main.py` is a different script and stays under 30 lines. Days that already had commits were not given a new project.
+- Files: `projects/daily-python/**`, `wiki/projects/daily-python.md`, `wiki/index.md`, `wiki/overview.md`, `wiki/log.md`, `README.md`.
+
+## [2026-09-27] project | remove | travis-prep
+
+- Removed the Travis Prep GitHub Pages site (`docs/career-launch/`) and the links to it in the root README and the ARCHIVIST guide.
+- Files: `docs/career-launch/*`, `docs/guide/engine.js`, `README.md`, `scripts/test-archivist.mjs`, `wiki/projects/career-launch.md`, `wiki/projects/github-guide.md`, `wiki/index.md`, `wiki/log.md`.
