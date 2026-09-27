@@ -24,9 +24,10 @@ The profile visitors see is the README of `ksingh0804/ksingh0804`. Push access f
 
 ## What a visitor can do
 
-- Press **Start the briefing** or Enter. Four chapters, one card at a time. The second chapter lights Steady, Loan Defaulter, and the logistics agent on the map.
-- Click the map: Steady, Loan Defaulter, the logistics agent, Greenleaf, Stutter Coach, Travis Prep, studies, scratch. Opening one replaces the card and puts the link first.
-- Type `help`, `open <id>`, `map`, `repos`, `live`, `skills`, `contact`, `pin`, plus `ls` / `cd` / `cat`.
+- Press **Start the briefing**, Enter, or a step (Who, Open, Map, Look). Four chapters, one card at a time. Chapter two lights Steady, Loan Defaulter, and the logistics agent amber on the map, and repeats those names in a strip above the card so a phone still shows them.
+- The open button and the stack sit above the longer notes. `map`, `projects`, `repos`, `live`, `skills`, `contact`, and `pin` are cards too.
+- Click the map: Steady, Loan Defaulter, the logistics agent, Greenleaf, Stutter Coach, Travis Prep, studies, scratch.
+- Type `help`, `open <id>`, plus `ls` / `cd` / `cat`.
 - Turn voice on. It stays off until asked.
 - Deep link with `?cmd=open%20steady`.
 

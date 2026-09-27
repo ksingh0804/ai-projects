@@ -120,9 +120,8 @@ const PROJECTS = {
     title: "Steady",
     summary: "A free, private, in-browser toolkit for people who stutter. It is on the public web.",
     paragraphs: [
-      "No account and no paid API. Echo (delayed auditory feedback, pitch shift, masking), a pacing metronome, breathing, technique drills, paced reading with a live coach, an interview practice set, picture description, conversation practice, and CBT/ACT tools for avoidance.",
-      "The public site is the thing to try. Wired headphones matter for Echo, otherwise the mic feeds back. An iOS shell wraps the same UI in WKWebView; the browser build is the one to open.",
-      "Steady is a practice tool. It is explicit that it does not replace a speech-language pathologist.",
+      "No account. Echo, pacing, reading, interview practice, and conversation. Wired headphones for Echo, or the mic feeds back.",
+      "It does not replace a speech-language pathologist. An iOS shell wraps the same UI. Open the browser build.",
     ],
     links: [
       { label: "Open the live app", href: "https://ksingh0804.github.io/ai-projects/" },
@@ -136,10 +135,9 @@ const PROJECTS = {
     title: "Loan Defaulter",
     summary: "Credit-risk analysis on Home Credit applications. The question is who is likely to miss a payment.",
     paragraphs: [
-      "About 307,511 applications and a default rate near 8.1%. A classifier that always predicts repayment is about 92% accurate and catches no defaults. The notebook is built around that fact.",
-      "It keeps external credit scores (EXT_SOURCE_2 and EXT_SOURCE_3), treats DAYS_EMPLOYED = 365243 as a sentinel for pensioners, and builds burden ratios. Gender stays in the EDA and out of the model. Fitting is leakage-safe: a sklearn Pipeline learns imputation and encoding on the training fold only.",
-      "The write-up compares a majority dummy, logistic regression with and without class weight, train-only oversampling, and histogram gradient boosting. The decision cutoff is a cost-weighted threshold, with a missed default treated as several times as expensive as a false reject.",
-      "Send people to the standalone repository. The same project also lives in the workshop at projects/loan-defaulter. The Kaggle CSV is not in git; the README says where to put it.",
+      "About 307,511 applications, default rate near 8.1%. Always predicting repayment is about 92% accurate and catches no defaults.",
+      "Keeps EXT_SOURCE_2 and EXT_SOURCE_3. DAYS_EMPLOYED = 365243 is a pensioner sentinel. Gender stays in the EDA and out of the model. A sklearn Pipeline fits on the training fold only.",
+      "The cutoff is cost-weighted: a missed default costs more than a false reject. The Kaggle CSV is not in git.",
     ],
     links: [
       { label: "Standalone repository", href: "https://github.com/ksingh0804/Loan-Defaulter" },
@@ -152,9 +150,9 @@ const PROJECTS = {
     title: "RAG Logistics Agent",
     summary: "A local tool-calling agent over logistics SOP documents, plus calculators you can check by hand.",
     paragraphs: [
-      "Ollama does chat and embeddings. Chroma stores the vectors. Streamlit is the UI. The agent chooses a tool: search the SOP PDFs, compute EOQ, estimate safety stock, or look up a sample inventory file.",
-      "Document answers have to come from retrieved text. If the context is missing, the agent says it does not know.",
-      "This one runs on your machine. It is not hosted. The folder also has architecture notes and an interview prep guide.",
+      "Ollama does chat and embeddings. Chroma stores the vectors. Streamlit is the UI.",
+      "Tools: search the SOP PDFs, compute EOQ, estimate safety stock, or look up a sample inventory file. If the context is missing, the agent says it does not know.",
+      "Runs on your machine. It is not hosted.",
     ],
     links: [
       { label: "Source in the workshop", href: `${WORKSHOP}/tree/master/projects/rag-logistics-agent` },
@@ -166,9 +164,9 @@ const PROJECTS = {
     title: "Stutter Coach",
     summary: "A browser voice-practice app with live feedback, a weekly plan, and short conversation rounds.",
     paragraphs: [
-      "It uses the Web Speech API. There is no key and no account. Exercises include live coaching, small talk, gentle onset, slow reading, and hard consonants.",
-      "Steady is the broader toolkit (echo, pacing, reading, interview practice, confidence tools). Stutter Coach is the focused practice loop: speak, get a score, continue.",
-      "Run it locally. The README starts a server on http://127.0.0.1:8787. Opening the file directly blocks the microphone.",
+      "Web Speech API. No key and no account. Speak, get a score, continue.",
+      "Steady is the broader toolkit. This is the focused practice loop.",
+      "Run it locally on http://127.0.0.1:8787. Opening the file directly blocks the microphone.",
     ],
     links: [
       { label: "Source in the workshop", href: `${WORKSHOP}/tree/master/projects/stutter-coach` },
@@ -180,9 +178,8 @@ const PROJECTS = {
     title: "Greenleaf Market",
     summary: "A grocery store demo with a catalog, cart, checkout, accounts, and an admin desk.",
     paragraphs: [
-      "The front end is Next.js 14 with TypeScript and Tailwind. The API is FastAPI with SQLAlchemy. SQLite is created and seeded on first boot. Auth is JWT. The cart lives in the browser; the server re-prices the order before checkout.",
-      "Payments go through a provider interface. The working provider is a manual fake checkout, with a slot left for Stripe. Admin routes for products, categories, and order status are gated on the server.",
-      "Run both processes locally. The README has the commands. Treat the seeded admin account as a local demo credential and change it before any real deploy.",
+      "Next.js 14 and TypeScript on the front. FastAPI, SQLite, and JWT on the API. The server re-prices the cart before checkout.",
+      "Checkout is a fake provider, with a slot left for Stripe. Treat the seeded admin account as a local demo credential.",
     ],
     links: [
       { label: "Repository", href: "https://github.com/ksingh0804/greenleaf-market" },
@@ -194,8 +191,8 @@ const PROJECTS = {
     title: "Travis Prep",
     summary: "A live interview-practice page for a library IT role at Travis AFB.",
     paragraphs: [
-      "Ten scenario questions with draft answers, quick-fire flashcards, and questions to ask the panel. It is preparation material for a Technical Information Specialist interview.",
-      "The page is already deployed next to Steady. It is a practice drill, separate from the data and product work.",
+      "Ten scenario questions, draft answers, and flashcards for a library IT interview.",
+      "Already deployed. A practice drill, separate from the data and product work.",
     ],
     links: [
       { label: "Open Travis Prep", href: "https://ksingh0804.github.io/ai-projects/career-launch/" },
@@ -333,46 +330,48 @@ function renderNotebook(notebook) {
 }
 
 function studiesLines() {
-  const lines = [
-    text("Studies", "title"),
-    text("Smaller notebook repositories. Each one is a single dataset and a single question. Read them after the builds."),
-    gap(),
+  return [
+    card({
+      kicker: "Studies",
+      title: "Seven notebooks",
+      summary: "Each one is a single dataset and a single question. Read them after the builds.",
+      rows: NOTEBOOKS.map((notebook) => ({
+        label: notebook.name,
+        detail: notebook.line,
+        href: notebook.url,
+      })),
+      points: ["Open one with open ipl, open stocks, or open cancer."],
+    }),
   ];
-  for (const notebook of NOTEBOOKS) {
-    lines.push(text(`${notebook.id.padEnd(8)} ${notebook.name}`, "label"));
-    lines.push(text(notebook.line, "dim"));
-    lines.push(linkLine(notebook.url, notebook.url));
-    lines.push(gap());
-  }
-  lines.push(text("Open one with `open ipl`, `open stocks`, `open cancer`, and so on.", "dim"));
-  return lines;
 }
 
 function mapLines() {
   return [
-    text("Map of github.com/ksingh0804", "title"),
-    text("Read the account in this order."),
-    gap(),
-    text("1  Profile", "label"),
-    text("github.com/ksingh0804 is the front door. The README there should take a minute."),
-    linkLine(PROFILE, PROFILE),
-    gap(),
-    text("2  Workshop", "label"),
-    text("ai-projects holds the newest work: Steady, Stutter Coach, the logistics agent, and the credit-risk notebook."),
-    linkLine(WORKSHOP, WORKSHOP),
-    gap(),
-    text("3  Standalone builds", "label"),
-    text("Loan-Defaulter and greenleaf-market are one idea each, in their own repositories."),
-    gap(),
-    text("4  Studies", "label"),
-    text("IPL, Stock-Sentiment, Cardiovascular-Analysis, Covid19-Analysis, Breast-Cancer-Prediction, Book-Recommendation, Forest-Fires-Prediction."),
-    gap(),
-    text("5  Scratch space", "label"),
-    text("vs_code_python_github and simpleGame. Useful to the author. Safe for a visitor to pass over."),
-    gap(),
-    text("6  This guide", "label"),
-    text("ARCHIVIST is the map. It lives on GitHub Pages next to Steady."),
-    linkLine(GUIDE, GUIDE),
+    card({
+      kicker: "Map",
+      title: "Read the account in this order",
+      summary: "Profile, then the workshop, then standalone builds. Notebooks are studies. Two repositories are scratch space.",
+      rows: [
+        { label: "1  Profile", detail: "github.com/ksingh0804 is the front door.", href: PROFILE },
+        {
+          label: "2  Workshop",
+          detail: "ai-projects holds Steady, Stutter Coach, the logistics agent, and the credit-risk notebook.",
+          href: WORKSHOP,
+        },
+        {
+          label: "3  Builds",
+          detail: "Loan-Defaulter and greenleaf-market are one idea each.",
+          href: "https://github.com/ksingh0804/Loan-Defaulter",
+        },
+        {
+          label: "4  Studies",
+          detail:
+            "IPL, Stock-Sentiment, Cardiovascular-Analysis, Covid19-Analysis, Breast-Cancer-Prediction, Book-Recommendation, Forest-Fires-Prediction.",
+        },
+        { label: "5  Scratch", detail: "vs_code_python_github and simpleGame. Safe for a visitor to pass over." },
+        { label: "6  This guide", detail: "ARCHIVIST lives on GitHub Pages next to Steady.", href: GUIDE },
+      ],
+    }),
   ];
 }
 
@@ -382,10 +381,8 @@ export function bootLines() {
       kicker: "ARCHIVIST",
       title: "I explain this GitHub.",
       summary: "Kaustubh Singh builds data analysis, machine-learning studies, and small products you can run.",
-      points: [
-        "Press Enter for a four-part briefing.",
-        "Or open a name: steady, loan, rag, greenleaf.",
-      ],
+      cue: "Press Enter. Four parts, about a minute.",
+      points: ["Or open a name: steady, loan, rag, greenleaf."],
       links: [
         { label: "Steady, live", href: "https://ksingh0804.github.io/ai-projects/", primary: true },
         { label: "Profile", href: PROFILE },
@@ -398,22 +395,21 @@ const CHAPTERS = [
   {
     title: "Who",
     summary: "Kaustubh Singh. This GitHub is a workshop for data analysis, machine learning, a document agent, and small products you can run.",
-    points: [
-      "The profile is the front door. The repository ai-projects is where the newest work lives.",
-      "The left column is the map. This window is the explanation.",
-    ],
-    links: [],
+    cue: "The left column is the map. This window is the explanation.",
+    points: ["The profile is the front door. ai-projects is where the newest work lives."],
+    links: [{ label: "Profile", href: PROFILE, primary: true }],
     highlights: [],
     speech: "Kaustubh Singh. This GitHub is a workshop for data analysis, machine learning, a document agent, and small products you can run.",
     suggestions: ["next", "projects", "contact"],
   },
   {
     title: "Open these three",
-    summary: "The map on the left is lit for these. They are the three worth a hiring read.",
+    summary: "These are the three worth a hiring read.",
+    cue: "Amber on the map marks these three.",
     points: [
-      "Steady — a live, private speech toolkit in the browser.",
-      "Loan Defaulter — about 307,000 Home Credit applications. A model that always predicts repayment is about 92% accurate and still misses every default.",
-      "RAG Logistics Agent — a local tool-calling agent over SOP documents, inside ai-projects.",
+      "Steady — a live speech toolkit. No account.",
+      "Loan Defaulter — about 307,000 applications. Always predicting repayment is about 92% accurate and still misses every default.",
+      "Logistics agent — local tool-calling over SOP documents, inside the workshop.",
     ],
     links: [
       { label: "Open Steady", href: "https://ksingh0804.github.io/ai-projects/", primary: true },
@@ -427,11 +423,11 @@ const CHAPTERS = [
   {
     title: "How the account is organized",
     summary: "Thirteen public repositories, in an order.",
+    cue: "Workshop, then builds, then studies, then scratch.",
     points: [
-      "ai-projects is the workshop: Steady, Stutter Coach, the logistics agent, and the credit notebook.",
-      "greenleaf-market and Loan-Defaulter are standalone builds.",
-      "Seven notebook repositories are studies: cricket, stock headlines, cardiovascular data, COVID-19, breast-cancer classification, books, and forest fires.",
-      "vs_code_python_github and simpleGame are scratch space.",
+      "ai-projects holds Steady, Stutter Coach, the logistics agent, and the credit notebook.",
+      "greenleaf-market and Loan-Defaulter stand alone.",
+      "Seven notebooks are studies. vs_code_python_github and simpleGame are scratch space.",
     ],
     links: [
       { label: "Workshop", href: WORKSHOP, primary: true },
@@ -443,8 +439,13 @@ const CHAPTERS = [
   },
   {
     title: "What to look for",
-    summary: "Read the first paragraph of the README. Check that a stranger can run it. Notice what the write-up left for later. That is the signal in this account.",
-    points: [],
+    summary: "That is the signal in this account.",
+    cue: "Three checks, in any repository.",
+    points: [
+      "Read the first paragraph of the README.",
+      "Check that a stranger can run it.",
+      "Notice what the write-up left for later.",
+    ],
     links: [
       { label: "Steady", href: "https://ksingh0804.github.io/ai-projects/", primary: true },
       { label: "Loan Defaulter", href: "https://github.com/ksingh0804/Loan-Defaulter" },
@@ -465,15 +466,16 @@ function showChapter(n) {
   const chapter = CHAPTERS[index - 1];
   return result(
     [
-      card({
-        kicker: `Briefing ${index} / ${CHAPTERS.length}`,
-        title: chapter.title,
-        summary: chapter.summary,
-        points: chapter.points,
-        links: chapter.links,
-        next: index < CHAPTERS.length,
-        done: index === CHAPTERS.length,
-      }),
+        card({
+          kicker: `Briefing ${index} / ${CHAPTERS.length}`,
+          title: chapter.title,
+          summary: chapter.summary,
+          cue: chapter.cue,
+          points: chapter.points,
+          links: chapter.links,
+          next: index < CHAPTERS.length,
+          done: index === CHAPTERS.length,
+        }),
     ],
     {
       chapter: index,
@@ -484,6 +486,18 @@ function showChapter(n) {
       mood: "talk",
     }
   );
+}
+
+export function labelFor(id) {
+  const item = atlas()
+    .flatMap((group) => group.items)
+    .find((entry) => entry.id === id);
+  if (item) return item.name;
+  const notebook = NOTEBOOKS.find((entry) => entry.id === id);
+  if (notebook) return notebook.name;
+  const project = PROJECTS[id];
+  if (project) return project.title;
+  return id || "";
 }
 
 export function atlas() {
@@ -511,48 +525,47 @@ export function atlas() {
 
 function contactLines() {
   return [
-    text("Contact", "title"),
-    text("Email is the direct line. The GitHub profile is the public record of the work."),
-    gap(),
-    linkLine(EMAIL, `mailto:${EMAIL}`),
-    linkLine(PROFILE, PROFILE),
-    linkLine("Interactive guide", GUIDE),
+    card({
+      kicker: "Contact",
+      title: "Email is the direct line",
+      summary: "The GitHub profile is the public record of the work.",
+      links: [
+        { label: EMAIL, href: `mailto:${EMAIL}`, primary: true },
+        { label: "Profile", href: PROFILE },
+        { label: "This guide", href: GUIDE },
+      ],
+    }),
   ];
 }
 
 function skillsLines() {
   return [
-    text("Stack", "title"),
-    text("These are the tools the public code actually uses."),
-    gap(),
-    text("Python", "label"),
-    text("pandas, NumPy, scikit-learn, Jupyter. Analysis, leakage-safe pipelines, imbalanced classification."),
-    gap(),
-    text("Agents", "label"),
-    text("LangChain, Ollama, Chroma, Streamlit. Tool routing over SOP PDFs, with calculators beside retrieval."),
-    gap(),
-    text("Web", "label"),
-    text("Browser JavaScript, HTML, CSS. FastAPI, Next.js, TypeScript, SQLite, JWT."),
-    gap(),
-    text("Product", "label"),
-    text("A public GitHub Pages app (Steady), plus a small SwiftUI shell around the same UI."),
+    card({
+      kicker: "Stack",
+      title: "What the public code uses",
+      points: [
+        "Python — pandas, NumPy, scikit-learn, Jupyter. Leakage-safe pipelines and imbalanced classification.",
+        "Agents — LangChain, Ollama, Chroma, Streamlit. Tool routing over SOP PDFs.",
+        "Web — browser JavaScript, FastAPI, Next.js, TypeScript, SQLite, JWT.",
+        "Product — Steady on GitHub Pages, plus a small SwiftUI shell around the same UI.",
+      ],
+    }),
   ];
 }
 
 function liveLines() {
   return [
-    text("Live now", "title"),
-    text("Steady, the speech toolkit.", "label"),
-    linkLine("https://ksingh0804.github.io/ai-projects/", "https://ksingh0804.github.io/ai-projects/"),
-    linkLine("iPhone frame", "https://ksingh0804.github.io/ai-projects/iphone.html"),
-    gap(),
-    text("This guide.", "label"),
-    linkLine(GUIDE, GUIDE),
-    gap(),
-    text("Travis Prep, a library IT interview drill.", "label"),
-    linkLine("https://ksingh0804.github.io/ai-projects/career-launch/", "https://ksingh0804.github.io/ai-projects/career-launch/"),
-    gap(),
-    text("The logistics agent, Stutter Coach, Greenleaf, and the notebooks run locally. Each README has the commands.", "dim"),
+    card({
+      kicker: "Live",
+      title: "Open these in a browser",
+      summary: "The logistics agent, Stutter Coach, Greenleaf, and the notebooks run locally. Each README has the commands.",
+      links: [
+        { label: "Steady", href: "https://ksingh0804.github.io/ai-projects/", primary: true },
+        { label: "iPhone frame", href: "https://ksingh0804.github.io/ai-projects/iphone.html" },
+        { label: "This guide", href: GUIDE },
+        { label: "Travis Prep", href: "https://ksingh0804.github.io/ai-projects/career-launch/" },
+      ],
+    }),
   ];
 }
 
@@ -566,69 +579,81 @@ function projectsLines() {
     ["studies", "Notebook studies: cricket, NLP, health, books, fires."],
     ["travis", "Live interview-practice page for a library IT role."],
   ];
-  const lines = [text("Projects", "title"), text("Type `open` and an id."), gap()];
-  for (const [id, line] of rows) {
-    lines.push(text(id, "label"));
-    lines.push(text(line));
-  }
-  return lines;
+  return [
+    card({
+      kicker: "Projects",
+      title: "Open one",
+      summary: "Choose a name. The card that follows has the link.",
+      rows: rows.map(([id, detail]) => ({ label: id, detail, command: `open ${id}` })),
+    }),
+  ];
 }
 
 function reposLines() {
-  const lines = [
-    text("Public repositories", "title"),
-    text("Labeled so the list has an order. Workshop and builds first. Studies next. Scratch space last."),
-    gap(),
+  return [
+    card({
+      kicker: "Repositories",
+      title: "Thirteen public repositories",
+      summary: "Workshop and builds first. Studies next. Scratch space last.",
+      rows: REPOS.map((repo) => ({
+        label: `${repo.tag}  ${repo.name}`,
+        detail: repo.line,
+        href: repo.url,
+      })),
+    }),
   ];
-  for (const repo of REPOS) {
-    lines.push(text(`${repo.tag.padEnd(10)} ${repo.name}`, "label"));
-    lines.push(text(repo.line, "dim"));
-    lines.push(linkLine(repo.url, repo.url));
-    lines.push(gap());
-  }
-  return lines;
 }
 
 function pinLines() {
   return [
-    text("Short list", "title"),
-    text("If you have a few minutes, these three are enough."),
-    gap(),
-    text("ai-projects", "label"),
-    text("The workshop. Inside it, open Steady first if you want something running, then the logistics agent."),
-    linkLine(WORKSHOP, WORKSHOP),
-    gap(),
-    text("Loan-Defaulter", "label"),
-    text("The credit-risk notebook, with the business problem in the first screen of the README."),
-    linkLine("https://github.com/ksingh0804/Loan-Defaulter", "https://github.com/ksingh0804/Loan-Defaulter"),
-    gap(),
-    text("greenleaf-market", "label"),
-    text("The full-stack demo: browse, cart, checkout, account, admin."),
-    linkLine("https://github.com/ksingh0804/greenleaf-market", "https://github.com/ksingh0804/greenleaf-market"),
+    card({
+      kicker: "Short list",
+      title: "If you only have a few minutes",
+      rows: [
+        {
+          label: "ai-projects",
+          detail: "The workshop. Open Steady first if you want something running, then the logistics agent.",
+          href: WORKSHOP,
+        },
+        {
+          label: "Loan-Defaulter",
+          detail: "The credit-risk notebook. The business problem is in the first screen of the README.",
+          href: "https://github.com/ksingh0804/Loan-Defaulter",
+        },
+        {
+          label: "greenleaf-market",
+          detail: "The full-stack demo: browse, cart, checkout, account, admin.",
+          href: "https://github.com/ksingh0804/greenleaf-market",
+        },
+      ],
+    }),
   ];
 }
 
 function whoamiLines() {
   return [
-    text("Kaustubh Singh", "title"),
-    text("I build data analysis, machine-learning studies, and small products a stranger can run."),
-    gap(),
-    text("The account is ksingh0804. This guide is the map. The code is in the repositories `map` lists."),
-    gap(),
-    linkLine(EMAIL, `mailto:${EMAIL}`),
-    linkLine(PROFILE, PROFILE),
+    card({
+      kicker: "Who",
+      title: "Kaustubh Singh",
+      summary: "I build data analysis, machine-learning studies, and small products a stranger can run.",
+      points: ["The account is ksingh0804. This guide is the map."],
+      links: [
+        { label: EMAIL, href: `mailto:${EMAIL}`, primary: true },
+        { label: "Profile", href: PROFILE },
+      ],
+    }),
   ];
 }
 
 function helpLines() {
-  const lines = [text("Commands", "title"), gap()];
-  for (const [name, blurb] of COMMANDS) {
-    lines.push(text(name.padEnd(14) + blurb));
-  }
-  lines.push(gap());
-  lines.push(text("Press Enter on an empty line to start the briefing.", "dim"));
-  lines.push(text("Tab completes. Up and down walk through recent commands.", "dim"));
-  return lines;
+  return [
+    card({
+      kicker: "Commands",
+      title: "What you can type",
+      summary: "Enter on an empty line continues the briefing. Tab completes. Up and down walk recent commands.",
+      points: COMMANDS.map(([name, blurb]) => `${name} — ${blurb}`),
+    }),
+  ];
 }
 
 function fileBody(path) {
@@ -719,8 +744,12 @@ function openThing(id) {
   if (!key) {
     return result(
       [
-        text(`I don't have a project called ${id}.`, "error"),
-        text("Try `projects` for ids, or `open studies` for the notebooks."),
+        card({
+          kicker: "Missing",
+          title: id,
+          summary: `I don't have a project called ${id}.`,
+          points: ["Try projects for ids, or open studies for the notebooks."],
+        }),
       ],
       { mood: "alert", suggestions: ["projects", "open steady", "open loan", "help"], focus: "", highlights: [] }
     );
@@ -728,11 +757,15 @@ function openThing(id) {
   if (key === "scratch") {
     return result(
       [
-        text("Scratch space", "title"),
-        text("vs_code_python_github and simpleGame are working notes. The portfolio is the builds above them."),
-        gap(),
-        linkLine("vs_code_python_github", "https://github.com/ksingh0804/vs_code_python_github"),
-        linkLine("simpleGame", "https://github.com/ksingh0804/simpleGame"),
+        card({
+          kicker: "Scratch",
+          title: "Working notes",
+          summary: "vs_code_python_github and simpleGame are working notes. The portfolio is the builds above them.",
+          links: [
+            { label: "vs_code_python_github", href: "https://github.com/ksingh0804/vs_code_python_github" },
+            { label: "simpleGame", href: "https://github.com/ksingh0804/simpleGame", primary: true },
+          ],
+        }),
       ],
       {
         focus: "scratch",
@@ -777,7 +810,18 @@ export function run(raw, state = createState()) {
     if (chapter >= 1 && chapter < CHAPTERS.length) return showChapter(chapter + 1);
     if (chapter >= CHAPTERS.length) {
       return result(
-        [text("Briefing complete. Type projects, or tour to start again.", "dim")],
+        [
+          card({
+            kicker: "Done",
+            title: "Briefing complete",
+            summary: "Type projects, or tour to start again.",
+            links: [
+              { label: "Email", href: `mailto:${EMAIL}`, primary: true },
+              { label: "Steady", href: "https://ksingh0804.github.io/ai-projects/" },
+              { label: "Loan Defaulter", href: "https://github.com/ksingh0804/Loan-Defaulter" },
+            ],
+          }),
+        ],
         { mood: "idle", suggestions: ["projects", "open steady", "tour", "contact"], speech: "" }
       );
     }
@@ -807,6 +851,7 @@ export function run(raw, state = createState()) {
               kicker: `Briefing ${index + 1} / ${CHAPTERS.length}`,
               title: chapter.title,
               summary: chapter.summary,
+              cue: chapter.cue,
               points: chapter.points,
               links: chapter.links,
             })
@@ -823,6 +868,13 @@ export function run(raw, state = createState()) {
       return showChapter(Math.min((state.chapter || 0) + 1, CHAPTERS.length) || 1);
     case "back":
       return showChapter(Math.max((state.chapter || 1) - 1, 1));
+    case "chapter": {
+      const n = Number(args[0]);
+      if (!Number.isInteger(n) || n < 1 || n > CHAPTERS.length) {
+        return result([text("Usage: chapter 1, chapter 2, chapter 3, or chapter 4.", "error")], { mood: "alert" });
+      }
+      return showChapter(n);
+    }
     case "whoami":
     case "about":
       return result(whoamiLines(), {
@@ -992,8 +1044,9 @@ export function plainText(lines) {
       if (line.type === "gap") return "";
       if (line.type === "actions") return (line.items || []).map((item) => item.label).join(" ");
       if (line.type === "card") {
-        const bits = [line.kicker, line.title, line.summary, ...(line.points || [])];
+        const bits = [line.kicker, line.title, line.summary, line.cue, ...(line.points || [])];
         for (const link of line.links || []) bits.push(link.label, link.href);
+        for (const row of line.rows || []) bits.push(row.label, row.detail, row.href);
         if (line.meta) bits.push(line.meta);
         if (line.files) bits.push(line.files);
         if (line.done) bits.push("Briefing complete");

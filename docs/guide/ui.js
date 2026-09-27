@@ -4,6 +4,7 @@ import {
   chapterCount,
   complete,
   createState,
+  labelFor,
   plainText,
   run,
 } from "./engine.js";
@@ -23,6 +24,8 @@ const atlasRoot = document.querySelector("#atlas");
 const sr = document.querySelector("#sr-status");
 const start = document.querySelector("#start");
 const mapToggle = document.querySelector("#map-toggle");
+const spotlight = document.querySelector("#spotlight");
+const atlasNote = document.querySelector("#atlas-note");
 
 const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 let state = createState();
@@ -38,6 +41,11 @@ syncVoiceButton();
 setChips(["tour", "projects", "map", "live", "contact"]);
 
 start.addEventListener("click", () => execute("tour"));
+for (const step of steps.querySelectorAll("li")) {
+  step.querySelector("button").addEventListener("click", () => {
+    execute(`chapter ${step.dataset.step}`, false);
+  });
+}
 mapToggle.addEventListener("click", () => {
   const open = atlasRoot.classList.toggle("open");
   mapToggle.setAttribute("aria-expanded", open ? "true" : "false");
@@ -153,14 +161,43 @@ function updateChrome() {
   }
   start.textContent = state.chapter ? "Replay the briefing" : "Start the briefing";
   const lit = new Set(state.highlights || []);
-  if (state.focus) status.textContent = "Project open";
+  if (state.focus) status.textContent = labelFor(state.focus);
+  else if (state.chapter === 2) status.textContent = "Open these three";
   else if (state.chapter > 0 && state.chapter < total) status.textContent = `Briefing ${state.chapter} of ${total}`;
   else if (state.chapter >= total && state.chapter > 0) status.textContent = "Briefing complete";
   else status.textContent = "Ready";
+  let anyLit = false;
   for (const button of atlasRoot.querySelectorAll("button")) {
     const id = button.dataset.id;
-    button.classList.toggle("active", id === state.focus);
-    button.classList.toggle("lit", lit.has(id) && id !== state.focus);
+    const active = id === state.focus;
+    const marked = lit.has(id) && !active;
+    button.classList.toggle("active", active);
+    button.classList.toggle("lit", marked);
+    if (marked) anyLit = true;
+  }
+  atlasNote.hidden = !anyLit;
+  renderSpotlight(lit);
+}
+
+function renderSpotlight(lit) {
+  const ids = [];
+  if (state.focus) ids.push(state.focus);
+  for (const id of lit) {
+    if (!ids.includes(id)) ids.push(id);
+  }
+  spotlight.replaceChildren();
+  if (!ids.length) {
+    spotlight.hidden = true;
+    return;
+  }
+  spotlight.hidden = false;
+  for (const id of ids) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = labelFor(id);
+    button.classList.toggle("current", id === state.focus);
+    button.addEventListener("click", () => execute(`open ${id}`));
+    spotlight.appendChild(button);
   }
 }
 
@@ -219,8 +256,7 @@ function setMood(mood) {
 async function printBlock(response, echo, gen = generation) {
   skipButton.hidden = true;
   setMood(response.mood || "talk");
-  const replaces = response.clear || response.lines.some((line) => line.type === "card");
-  if (replaces) output.replaceChildren();
+  output.replaceChildren();
   if (echo) {
     const row = document.createElement("div");
     row.className = "line echo";
@@ -308,6 +344,18 @@ function revealCard(line) {
     summary.textContent = line.summary;
     sheet.appendChild(summary);
   }
+  if (line.cue) {
+    const cue = document.createElement("p");
+    cue.className = "cue";
+    cue.textContent = line.cue;
+    sheet.appendChild(cue);
+  }
+  if (line.meta) {
+    const stack = document.createElement("p");
+    stack.className = "stack";
+    stack.textContent = line.meta;
+    sheet.appendChild(stack);
+  }
   appendLinks(sheet, line.links);
   if (line.next) {
     const button = document.createElement("button");
@@ -317,6 +365,7 @@ function revealCard(line) {
     button.addEventListener("click", () => execute("next"));
     sheet.appendChild(button);
   }
+  appendRows(sheet, line.rows);
   if (line.points && line.points.length) {
     const list = document.createElement("ul");
     for (const point of line.points) {
@@ -326,13 +375,10 @@ function revealCard(line) {
     }
     sheet.appendChild(list);
   }
-  if (line.meta || line.files) {
+  if (line.files) {
     const meta = document.createElement("p");
     meta.className = "meta";
-    const bits = [];
-    if (line.meta) bits.push(line.meta);
-    if (line.files) bits.push(line.files);
-    meta.textContent = bits.join("   ·   ");
+    meta.textContent = line.files;
     sheet.appendChild(meta);
   }
   if (line.done) {
@@ -344,6 +390,30 @@ function revealCard(line) {
   output.appendChild(sheet);
   output.scrollTop = Math.max(0, sheet.offsetTop - 8);
   return Promise.resolve();
+}
+
+function appendRows(sheet, rows) {
+  if (!rows || !rows.length) return;
+  const list = document.createElement("div");
+  list.className = "rows";
+  for (const row of rows) {
+    const node = row.href ? document.createElement("a") : document.createElement("button");
+    if (row.href) {
+      node.href = row.href;
+      node.target = "_blank";
+      node.rel = "noopener noreferrer";
+    } else {
+      node.type = "button";
+      if (row.command) node.addEventListener("click", () => execute(row.command));
+    }
+    const strong = document.createElement("strong");
+    strong.textContent = row.label || "";
+    const span = document.createElement("span");
+    span.textContent = row.detail || "";
+    node.append(strong, span);
+    list.appendChild(node);
+  }
+  sheet.appendChild(list);
 }
 
 function appendLinks(sheet, links) {
