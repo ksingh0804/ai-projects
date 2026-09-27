@@ -140,3 +140,8 @@ Append-only record of wiki and workspace changes.
 - Added 55 standard-library mini projects under `projects/daily-python/`, one folder per contribution day filled in for August and September 2026.
 - Each `main.py` is a different script and stays under 30 lines. Days that already had commits were not given a new project.
 - Files: `projects/daily-python/**`, `wiki/projects/daily-python.md`, `wiki/index.md`, `wiki/overview.md`, `wiki/log.md`, `README.md`.
+
+## [2026-09-27] project | remove | travis-prep
+
+- Removed the Travis Prep GitHub Pages site (`docs/career-launch/`) and the links to it in the root README and the ARCHIVIST guide.
+- Files: `docs/career-launch/*`, `docs/guide/engine.js`, `README.md`, `scripts/test-archivist.mjs`, `wiki/projects/career-launch.md`, `wiki/projects/github-guide.md`, `wiki/index.md`, `wiki/log.md`.

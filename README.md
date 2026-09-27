@@ -12,8 +12,6 @@ This is the workshop. Newest work lives in `projects/`. An interactive guide exp
 | [Stutter Coach](projects/stutter-coach/) | Browser voice practice with live feedback |
 | [Greenleaf Market](https://github.com/ksingh0804/greenleaf-market) | Grocery demo: Next.js 14, FastAPI, SQLite, JWT |
 
-[Travis Prep](https://ksingh0804.github.io/ai-projects/career-launch/) is a live interview-practice page for a library IT role. It sits next to Steady on this site.
-
 The profile README source for `github.com/ksingh0804` is in [`profile/README.md`](profile/README.md).
 
 ## Workspace

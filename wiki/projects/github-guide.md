@@ -25,7 +25,7 @@ The profile visitors see is the README of `ksingh0804/ksingh0804`. Push access f
 ## What a visitor can do
 
 - Press **Start the briefing** or Enter. Four chapters: who, what to open, how the account is organized, what to look for.
-- Click the map: Steady, Loan Defaulter, the logistics agent, Greenleaf, Stutter Coach, Travis Prep, studies, scratch.
+- Click the map: Steady, Loan Defaulter, the logistics agent, Greenleaf, Stutter Coach, studies, scratch.
 - Type `help`, `open <id>`, `map`, `repos`, `live`, `skills`, `contact`, `pin`, plus `ls` / `cd` / `cat`.
 - Turn voice on. It stays off until asked.
 - Deep link with `?cmd=open%20steady`.

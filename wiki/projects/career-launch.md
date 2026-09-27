@@ -3,7 +3,7 @@ title: Career Launch — Job search, resume, LinkedIn
 type: project
 tags: [careers, data-engineering, ai-agents, linkedin, resume]
 created: 2026-07-11
-updated: 2026-07-24
+updated: 2026-09-27
 ---
 
 # Career Launch
@@ -23,8 +23,8 @@ Project path: `projects/career-launch/`
 | Posting workflow | `linkedin/posting-workflow.md` |
 | Target roles | `jobs/target-roles.md` |
 | Application tracker | `jobs/applications-tracker.md` |
-| Travis AFB Library interview | `jobs/travis-afb-library-tis-interview.md` — Technical Information Specialist Q&A scenarios |
-| Live practice site (GitHub Pages) | https://ksingh0804.github.io/ai-projects/career-launch/ |
+
+Travis Prep, the GitHub Pages interview drill at `docs/career-launch/`, was removed on 2026-09-27. The page is no longer part of this repository.
 
 ## Resume status (2026-07-12)
 

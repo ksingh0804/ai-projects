@@ -187,19 +187,6 @@ const PROJECTS = {
     openFirst: ["README.md", "backend/", "frontend/"],
     stack: "Next.js 14, TypeScript, Tailwind, FastAPI, SQLite, JWT",
   },
-  travis: {
-    title: "Travis Prep",
-    summary: "A live interview-practice page for a library IT role at Travis AFB.",
-    paragraphs: [
-      "Ten scenario questions with draft answers, quick-fire flashcards, and questions to ask the panel. It is preparation material for a Technical Information Specialist interview.",
-      "The page is already deployed next to Steady. It is a practice drill, separate from the data and product work.",
-    ],
-    links: [
-      { label: "Open Travis Prep", href: "https://ksingh0804.github.io/ai-projects/career-launch/" },
-    ],
-    openFirst: ["docs/career-launch/index.html", "docs/career-launch/app.js"],
-    stack: "HTML, CSS, JavaScript",
-  },
 };
 
 const ALIASES = {
@@ -219,8 +206,6 @@ const ALIASES = {
   greenleaf: "greenleaf",
   market: "greenleaf",
   "greenleaf-market": "greenleaf",
-  travis: "travis",
-  career: "travis",
   studies: "studies",
   study: "studies",
   notebooks: "studies",
@@ -269,7 +254,7 @@ export function createState() {
 }
 
 export function projectIds() {
-  return ["steady", "loan", "rag", "coach", "greenleaf", "studies", "travis", "scratch", ...NOTEBOOKS.map((n) => n.id)];
+  return ["steady", "loan", "rag", "coach", "greenleaf", "studies", "scratch", ...NOTEBOOKS.map((n) => n.id)];
 }
 
 export function commandNames() {
@@ -488,7 +473,6 @@ export function atlas() {
       label: "Also here",
       items: [
         { id: "coach", name: "Stutter Coach", note: "Voice practice" },
-        { id: "travis", name: "Travis Prep", note: "Live drill" },
         { id: "studies", name: "Studies", note: "7 notebooks" },
         { id: "scratch", name: "Scratch", note: "Working notes" },
       ],
@@ -536,9 +520,6 @@ function liveLines() {
     text("This guide.", "label"),
     linkLine(GUIDE, GUIDE),
     gap(),
-    text("Travis Prep, a library IT interview drill.", "label"),
-    linkLine("https://ksingh0804.github.io/ai-projects/career-launch/", "https://ksingh0804.github.io/ai-projects/career-launch/"),
-    gap(),
     text("The logistics agent, Stutter Coach, Greenleaf, and the notebooks run locally. Each README has the commands.", "dim"),
   ];
 }
@@ -551,7 +532,6 @@ function projectsLines() {
     ["coach", "Browser voice practice with live feedback."],
     ["greenleaf", "Grocery demo. Next.js, FastAPI, JWT, admin."],
     ["studies", "Notebook studies: cricket, NLP, health, books, fires."],
-    ["travis", "Live interview-practice page for a library IT role."],
   ];
   const lines = [text("Projects", "title"), text("Type `open` and an id."), gap()];
   for (const [id, line] of rows) {
@@ -628,7 +608,6 @@ function fileBody(path) {
   if (path === "/projects/rag.md") return renderProject(PROJECTS.rag);
   if (path === "/projects/coach.md") return renderProject(PROJECTS.coach);
   if (path === "/projects/greenleaf.md") return renderProject(PROJECTS.greenleaf);
-  if (path === "/projects/travis.md") return renderProject(PROJECTS.travis);
   if (path === "/projects/studies.md") return studiesLines();
   for (const notebook of NOTEBOOKS) {
     if (path === `/projects/${notebook.id}.md`) return renderNotebook(notebook);
@@ -646,7 +625,6 @@ const FILE_PATHS = [
   "/projects/rag.md",
   "/projects/coach.md",
   "/projects/greenleaf.md",
-  "/projects/travis.md",
   "/projects/studies.md",
   ...NOTEBOOKS.map((n) => `/projects/${n.id}.md`),
 ];
@@ -813,7 +791,7 @@ export function run(raw, state = createState()) {
     case "projects":
     case "ls-projects":
       return result(projectsLines(), {
-        speech: "The projects are Steady, loan defaulter, the logistics agent, Stutter Coach, Greenleaf, the notebook studies, and Travis Prep.",
+        speech: "The projects are Steady, loan defaulter, the logistics agent, Stutter Coach, Greenleaf, and the notebook studies.",
         suggestions: ["open steady", "open loan", "open rag", "open greenleaf"],
       });
     case "open":
@@ -826,8 +804,8 @@ export function run(raw, state = createState()) {
       return openThing(args[0]);
     case "live":
       return result(liveLines(), {
-        speech: "Steady is live on GitHub Pages, and so is this guide. Travis Prep is a live interview drill.",
-        suggestions: ["open steady", "open travis", "projects"],
+        speech: "Steady is live on GitHub Pages, and so is this guide.",
+        suggestions: ["open steady", "projects"],
       });
     case "repos":
       return result(reposLines(), {
