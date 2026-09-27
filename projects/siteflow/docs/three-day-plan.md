@@ -2,6 +2,8 @@
 
 You are learning a small construction assistant well enough to build it, test it, and explain it in an Autodesk-style interview. The code in this folder is the reference slice. Study it in the order below. Each day has one job: make one layer obviously correct before you add the next layer.
 
+The same order, with an explanation after every step, is [SiteFlow_start_to_end.pdf](SiteFlow_start_to_end.pdf). Open that when you want Step 1 through Step 27 in one document. This markdown file is the day-by-day companion. Rebuild the PDF from `projects/siteflow` with `../backend/.venv/bin/python docs/build_step_by_step_pdf.py` after `pip install -r backend/requirements-dev.txt`.
+
 The original guide is a seven-day build. Three days is enough for the thin slice that guide ends on: one PDF path, one CSV, one chat path, one tool, one approval, local mode first. AWS is an interface you can explain, with tests that never need a real account.
 
 ## What you are building

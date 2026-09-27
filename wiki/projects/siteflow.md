@@ -3,7 +3,7 @@ title: SiteFlow Agent Platform
 type: project
 tags: [siteflow, fastapi, langgraph, rag, construction, aws]
 created: 2026-09-26
-updated: 2026-09-26
+updated: 2026-09-27
 ---
 
 # SiteFlow Agent Platform
@@ -15,6 +15,8 @@ Construction project-controls assistant for one job: spec and RFI questions, EOQ
 `projects/siteflow/`
 
 Study plan: [three-day plan](../../projects/siteflow/docs/three-day-plan.md).
+
+Start-to-end PDF (27 steps, explanation after each): [SiteFlow_start_to_end.pdf](../../projects/siteflow/docs/SiteFlow_start_to_end.pdf).
 
 Source guide (immutable): [SiteFlow agent guide](../sources/siteflow-agent-guide.md).
 

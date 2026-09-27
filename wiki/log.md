@@ -127,3 +127,8 @@ Append-only record of wiki and workspace changes.
 - Added **SiteFlow**, the Project 3 construction assistant: FastAPI, LangGraph supervisor, BM25 retrieval, Project 2 EOQ and safety-stock tools, human approval, React UI, and a three-day study plan.
 - Ingested the agent guide at `raw/sources/Project3_SiteFlow_Agent_Guide.pdf` and summarized it in the wiki.
 - Files: `projects/siteflow/**`, `raw/sources/Project3_SiteFlow_Agent_Guide.pdf`, `wiki/projects/siteflow.md`, `wiki/sources/siteflow-agent-guide.md`, `wiki/index.md`, `wiki/overview.md`, `README.md`
+
+## [2026-09-27] project | document | siteflow
+
+- Added a 27-step start-to-end study PDF. Each step says what to do, then explains where it sits, why, and the tradeoff.
+- Files: `projects/siteflow/docs/build_step_by_step_pdf.py`, `projects/siteflow/docs/SiteFlow_start_to_end.pdf`, `projects/siteflow/backend/tests/test_study_pdf.py`, `projects/siteflow/backend/requirements-dev.txt`, `projects/siteflow/README.md`, `projects/siteflow/docs/three-day-plan.md`, `wiki/projects/siteflow.md`, `wiki/index.md`
