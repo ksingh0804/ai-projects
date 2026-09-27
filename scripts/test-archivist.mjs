@@ -36,6 +36,7 @@ assert.match(say("", state).text, /Briefing complete/);
 const second = say("next", say("tour").state);
 assert.match(second.text, /Open these three/);
 assert.match(second.text, /ksingh0804.github.io\/ai-projects/);
+assert.deepEqual(second.response.highlights, ["steady", "loan", "rag"]);
 assert.doesNotMatch(plainText(run("tour all").lines), /FreshCart|grocery-logistics/);
 
 const steady = say("open steady");

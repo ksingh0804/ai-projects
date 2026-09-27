@@ -21,6 +21,9 @@ export function gap() {
 export function actions(items) {
   return { type: "actions", items };
 }
+export function card(data) {
+  return { type: "card", ...data };
+}
 
 const NOTEBOOKS = [
   {
@@ -265,7 +268,7 @@ const COMMANDS = [
 ];
 
 export function createState() {
-  return { cwd: "/", chapter: 0, focus: "" };
+  return { cwd: "/", chapter: 0, focus: "", highlights: [] };
 }
 
 export function projectIds() {
@@ -304,34 +307,28 @@ export function commandNames() {
 }
 
 function renderProject(project) {
-  const lines = [
-    text(project.title, "title"),
-    text(project.summary),
-    gap(),
-    text("Open", "label"),
+  return [
+    card({
+      kicker: "Project",
+      title: project.title,
+      summary: project.summary,
+      points: project.paragraphs,
+      links: project.links.map((item, index) => ({ ...item, primary: index === 0 })),
+      meta: project.stack,
+      files: project.openFirst.join("  ·  "),
+    }),
   ];
-  for (const item of project.links) {
-    lines.push(text(item.label, "label"));
-    lines.push(linkLine(item.href, item.href));
-  }
-  lines.push(gap());
-  for (const paragraph of project.paragraphs) {
-    lines.push(text(paragraph));
-    lines.push(gap());
-  }
-  lines.push(text("First files", "label"));
-  lines.push(text(project.openFirst.join("   ")));
-  lines.push(text(`Stack    ${project.stack}`, "dim"));
-  return lines;
 }
 
 function renderNotebook(notebook) {
   return [
-    text(notebook.name, "title"),
-    text(notebook.line),
-    gap(),
-    linkLine("Repository", notebook.url),
-    text("These are study notebooks: one dataset, one question, a README.", "dim"),
+    card({
+      kicker: "Study",
+      title: notebook.name,
+      summary: notebook.line,
+      points: ["One dataset, one question, a README. Read it after the builds."],
+      links: [{ label: "Repository", href: notebook.url, primary: true }],
+    }),
   ];
 }
 
@@ -381,77 +378,81 @@ function mapLines() {
 
 export function bootLines() {
   return [
-    text("ARCHIVIST 1.0", "title"),
-    text("guide to github.com/ksingh0804", "dim"),
-    gap(),
-    text("public repositories .............. 13"),
-    text("live apps ......................... Steady, this guide"),
-    gap(),
-    text("I explain this GitHub."),
-    text("Press Enter for a four-part briefing, or type help.", "dim"),
+    card({
+      kicker: "ARCHIVIST",
+      title: "I explain this GitHub.",
+      summary: "Kaustubh Singh builds data analysis, machine-learning studies, and small products you can run.",
+      points: [
+        "Press Enter for a four-part briefing.",
+        "Or open a name: steady, loan, rag, greenleaf.",
+      ],
+      links: [
+        { label: "Steady, live", href: "https://ksingh0804.github.io/ai-projects/", primary: true },
+        { label: "Profile", href: PROFILE },
+      ],
+    }),
   ];
 }
 
 const CHAPTERS = [
   {
+    title: "Who",
+    summary: "Kaustubh Singh. This GitHub is a workshop for data analysis, machine learning, a document agent, and small products you can run.",
+    points: [
+      "The profile is the front door. The repository ai-projects is where the newest work lives.",
+      "The left column is the map. This window is the explanation.",
+    ],
+    links: [],
+    highlights: [],
     speech: "Kaustubh Singh. This GitHub is a workshop for data analysis, machine learning, a document agent, and small products you can run.",
     suggestions: ["next", "projects", "contact"],
-    lines() {
-      return [
-        text("Who", "title"),
-        text("Kaustubh Singh. This GitHub is a workshop for data analysis, machine learning, a document agent, and small products you can run."),
-        gap(),
-        text("The profile is the front door. The repository ai-projects is where the newest work lives."),
-        gap(),
-        text("The left column is the map. This window is the explanation. Press Enter and I will name the three things worth opening."),
-      ];
-    },
   },
   {
+    title: "Open these three",
+    summary: "The map on the left is lit for these. They are the three worth a hiring read.",
+    points: [
+      "Steady — a live, private speech toolkit in the browser.",
+      "Loan Defaulter — about 307,000 Home Credit applications. A model that always predicts repayment is about 92% accurate and still misses every default.",
+      "RAG Logistics Agent — a local tool-calling agent over SOP documents, inside ai-projects.",
+    ],
+    links: [
+      { label: "Open Steady", href: "https://ksingh0804.github.io/ai-projects/", primary: true },
+      { label: "Loan Defaulter", href: "https://github.com/ksingh0804/Loan-Defaulter" },
+      { label: "Logistics agent", href: `${WORKSHOP}/tree/master/projects/rag-logistics-agent` },
+    ],
+    highlights: ["steady", "loan", "rag"],
     speech: "If you open three things, open Steady, the loan default analysis, and the logistics agent.",
     suggestions: ["open steady", "open loan", "open rag", "next"],
-    lines() {
-      return [
-        text("Open these three", "title"),
-        text("Steady — a live, private speech toolkit in the browser."),
-        linkLine("https://ksingh0804.github.io/ai-projects/", "https://ksingh0804.github.io/ai-projects/"),
-        text("Loan Defaulter — credit risk on about 307,000 Home Credit applications. A model that always predicts repayment is about 92% accurate and still misses every default."),
-        linkLine("https://github.com/ksingh0804/Loan-Defaulter", "https://github.com/ksingh0804/Loan-Defaulter"),
-        text("RAG Logistics Agent — a local tool-calling agent over SOP documents, inside ai-projects."),
-        linkLine(`${WORKSHOP}/tree/master/projects/rag-logistics-agent`, `${WORKSHOP}/tree/master/projects/rag-logistics-agent`),
-      ];
-    },
   },
   {
+    title: "How the account is organized",
+    summary: "Thirteen public repositories, in an order.",
+    points: [
+      "ai-projects is the workshop: Steady, Stutter Coach, the logistics agent, and the credit notebook.",
+      "greenleaf-market and Loan-Defaulter are standalone builds.",
+      "Seven notebook repositories are studies: cricket, stock headlines, cardiovascular data, COVID-19, breast-cancer classification, books, and forest fires.",
+      "vs_code_python_github and simpleGame are scratch space.",
+    ],
+    links: [
+      { label: "Workshop", href: WORKSHOP, primary: true },
+      { label: "Greenleaf", href: "https://github.com/ksingh0804/greenleaf-market" },
+    ],
+    highlights: ["greenleaf", "coach", "studies", "scratch"],
     speech: "ai-projects is the workshop. Greenleaf and Loan Defaulter stand alone. The notebooks are studies. Two repositories are scratch space.",
     suggestions: ["next", "map", "repos", "open greenleaf"],
-    lines() {
-      return [
-        text("How the account is organized", "title"),
-        text("ai-projects is the workshop: Steady, Stutter Coach, the logistics agent, and the credit notebook."),
-        text("greenleaf-market and Loan-Defaulter are standalone builds."),
-        text("Seven notebook repositories are studies: cricket, stock headlines, cardiovascular data, COVID-19, breast-cancer classification, books, and forest fires."),
-        text("vs_code_python_github and simpleGame are scratch space."),
-      ];
-    },
   },
   {
+    title: "What to look for",
+    summary: "Read the first paragraph of the README. Check that a stranger can run it. Notice what the write-up left for later. That is the signal in this account.",
+    points: [],
+    links: [
+      { label: "Steady", href: "https://ksingh0804.github.io/ai-projects/", primary: true },
+      { label: "Loan Defaulter", href: "https://github.com/ksingh0804/Loan-Defaulter" },
+      { label: "Workshop", href: WORKSHOP },
+    ],
+    highlights: ["steady", "loan"],
     speech: "In any repository, read the first paragraph, check that a stranger can run it, and notice what the write-up left for later.",
     suggestions: ["projects", "open steady", "contact", "pin"],
-    lines() {
-      return [
-        text("What to look for", "title"),
-        text("Read the first paragraph of the README. Check that a stranger can run it. Notice what the write-up left for later. That is the signal in this account."),
-        gap(),
-        actions([
-          { label: "Steady", href: "https://ksingh0804.github.io/ai-projects/" },
-          { label: "Loan Defaulter", href: "https://github.com/ksingh0804/Loan-Defaulter" },
-          { label: "Workshop", href: WORKSHOP },
-          { label: "All projects", command: "projects" },
-          { label: "Contact", command: "contact" },
-        ]),
-      ];
-    },
   },
 ];
 
@@ -462,15 +463,27 @@ export function chapterCount() {
 function showChapter(n) {
   const index = Math.min(Math.max(n, 1), CHAPTERS.length);
   const chapter = CHAPTERS[index - 1];
-  const lines = [text(`Briefing  ${index} / ${CHAPTERS.length}`, "dim"), ...chapter.lines(), gap()];
-  if (index < CHAPTERS.length) lines.push(text("Press Enter to continue. Type back to return.", "dim"));
-  else lines.push(text("Briefing complete. Type projects, or open a name.", "dim"));
-  return result(lines, {
-    chapter: index,
-    speech: chapter.speech,
-    suggestions: chapter.suggestions,
-    mood: "talk",
-  });
+  return result(
+    [
+      card({
+        kicker: `Briefing ${index} / ${CHAPTERS.length}`,
+        title: chapter.title,
+        summary: chapter.summary,
+        points: chapter.points,
+        links: chapter.links,
+        next: index < CHAPTERS.length,
+        done: index === CHAPTERS.length,
+      }),
+    ],
+    {
+      chapter: index,
+      focus: "",
+      highlights: chapter.highlights,
+      speech: chapter.speech,
+      suggestions: chapter.suggestions,
+      mood: "talk",
+    }
+  );
 }
 
 export function atlas() {
@@ -697,6 +710,7 @@ function result(lines, extra = {}) {
     voice: extra.voice,
     chapter: extra.chapter,
     focus: extra.focus,
+    highlights: extra.highlights,
   };
 }
 
@@ -708,7 +722,7 @@ function openThing(id) {
         text(`I don't have a project called ${id}.`, "error"),
         text("Try `projects` for ids, or `open studies` for the notebooks."),
       ],
-      { mood: "alert", suggestions: ["projects", "open steady", "open loan", "help"], focus: "" }
+      { mood: "alert", suggestions: ["projects", "open steady", "open loan", "help"], focus: "", highlights: [] }
     );
   }
   if (key === "scratch") {
@@ -722,6 +736,7 @@ function openThing(id) {
       ],
       {
         focus: "scratch",
+        highlights: ["scratch"],
         mood: "idle",
         speech: "Two repositories are scratch space. The portfolio is the builds above them.",
         suggestions: ["projects", "pin", "map"],
@@ -731,6 +746,7 @@ function openThing(id) {
   if (key === "studies") {
     return result(studiesLines(), {
       focus: "studies",
+      highlights: ["studies"],
       speech: "The notebook repositories are studies. Open one by name, or read the list.",
       suggestions: ["open ipl", "open loan", "open steady", "map"],
     });
@@ -739,6 +755,7 @@ function openThing(id) {
   if (notebook) {
     return result(renderNotebook(notebook), {
       focus: notebook.id,
+      highlights: ["studies"],
       speech: notebook.line,
       suggestions: ["studies", "projects", "map"],
     });
@@ -746,6 +763,7 @@ function openThing(id) {
   const project = PROJECTS[key];
   return result(renderProject(project), {
     focus: key,
+    highlights: [key],
     speech: `${project.title}. ${project.summary}`,
     suggestions: ["projects", "live", "map", "contact"],
   });
@@ -784,11 +802,15 @@ export function run(raw, state = createState()) {
     case "interview":
       if ((args[0] || "").toLowerCase() === "all") {
         return result(
-          CHAPTERS.flatMap((chapter, index) => [
-            text(`Briefing  ${index + 1} / ${CHAPTERS.length}`, "dim"),
-            ...chapter.lines(),
-            gap(),
-          ]),
+          CHAPTERS.map((chapter, index) =>
+            card({
+              kicker: `Briefing ${index + 1} / ${CHAPTERS.length}`,
+              title: chapter.title,
+              summary: chapter.summary,
+              points: chapter.points,
+              links: chapter.links,
+            })
+          ),
           {
             chapter: CHAPTERS.length,
             speech: CHAPTERS[0].speech,
@@ -888,6 +910,9 @@ export function run(raw, state = createState()) {
         clear: true,
         mood: "idle",
         speech: "",
+        chapter: 0,
+        focus: "",
+        highlights: [],
         suggestions: ["tour", "projects", "map", "help"],
       });
     case "voice": {
@@ -966,6 +991,14 @@ export function plainText(lines) {
     .map((line) => {
       if (line.type === "gap") return "";
       if (line.type === "actions") return (line.items || []).map((item) => item.label).join(" ");
+      if (line.type === "card") {
+        const bits = [line.kicker, line.title, line.summary, ...(line.points || [])];
+        for (const link of line.links || []) bits.push(link.label, link.href);
+        if (line.meta) bits.push(line.meta);
+        if (line.files) bits.push(line.files);
+        if (line.done) bits.push("Briefing complete");
+        return bits.filter(Boolean).join("\n");
+      }
       return line.text || "";
     })
     .join("\n");

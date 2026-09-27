@@ -127,6 +127,7 @@ function execute(raw, echo = true) {
   if (response.cwd) state.cwd = response.cwd;
   if (response.chapter != null) state.chapter = response.chapter;
   if (response.focus != null) state.focus = response.focus;
+  if (Array.isArray(response.highlights)) state.highlights = response.highlights;
   if (response.voice) {
     voiceOn = response.voice === "on";
     localStorage.setItem("archivist-voice", voiceOn ? "on" : "off");
@@ -151,8 +152,15 @@ function updateChrome() {
     else step.removeAttribute("aria-current");
   }
   start.textContent = state.chapter ? "Replay the briefing" : "Start the briefing";
+  const lit = new Set(state.highlights || []);
+  if (state.focus) status.textContent = "Project open";
+  else if (state.chapter > 0 && state.chapter < total) status.textContent = `Briefing ${state.chapter} of ${total}`;
+  else if (state.chapter >= total && state.chapter > 0) status.textContent = "Briefing complete";
+  else status.textContent = "Ready";
   for (const button of atlasRoot.querySelectorAll("button")) {
-    button.classList.toggle("active", button.dataset.id === state.focus);
+    const id = button.dataset.id;
+    button.classList.toggle("active", id === state.focus);
+    button.classList.toggle("lit", lit.has(id) && id !== state.focus);
   }
 }
 
@@ -199,19 +207,20 @@ function syncVoiceButton() {
 
 function setMood(mood) {
   robot.dataset.mood = mood || "idle";
-  status.textContent = mood === "talk" ? "Speaking" : mood === "alert" ? "Try another command" : "Ready";
   window.clearTimeout(moodTimer);
+  if (mood === "alert") status.textContent = "Try another command";
   if (mood && mood !== "idle") {
     moodTimer = window.setTimeout(() => {
       robot.dataset.mood = "idle";
-      status.textContent = "Ready";
-    }, 1400);
+    }, 1600);
   }
 }
 
 async function printBlock(response, echo, gen = generation) {
-  skipButton.hidden = reduced;
+  skipButton.hidden = true;
   setMood(response.mood || "talk");
+  const replaces = response.clear || response.lines.some((line) => line.type === "card");
+  if (replaces) output.replaceChildren();
   if (echo) {
     const row = document.createElement("div");
     row.className = "line echo";
@@ -243,6 +252,7 @@ function reveal(line, gen) {
     output.appendChild(gap);
     return Promise.resolve();
   }
+  if (line.type === "card") return revealCard(line);
   if (line.type === "actions") {
     const row = document.createElement("div");
     row.className = "actions";
@@ -280,29 +290,81 @@ function reveal(line, gen) {
   return typeInto(el, full, gen);
 }
 
-function typeInto(node, full, gen) {
-  if (reduced || skipTyping || full.length < 2) {
-    node.textContent = full;
-    return Promise.resolve();
+function revealCard(line) {
+  const sheet = document.createElement("article");
+  sheet.className = "sheet";
+  if (line.kicker) {
+    const kicker = document.createElement("p");
+    kicker.className = "kicker";
+    kicker.textContent = line.kicker;
+    sheet.appendChild(kicker);
   }
-  const step = full.length > 80 ? 4 : 1;
-  const delay = full.length > 80 ? 5 : 8;
-  return new Promise((resolve) => {
-    let index = 0;
-    const tick = () => {
-      if (gen !== generation) return resolve();
-      if (skipTyping) {
-        node.textContent = full;
-        return resolve();
-      }
-      index = Math.min(full.length, index + step);
-      node.textContent = full.slice(0, index);
-      output.scrollTop = output.scrollHeight;
-      if (index >= full.length) resolve();
-      else window.setTimeout(tick, delay);
-    };
-    tick();
-  });
+  const heading = document.createElement("h2");
+  heading.textContent = line.title || "";
+  sheet.appendChild(heading);
+  if (line.summary) {
+    const summary = document.createElement("p");
+    summary.className = "summary";
+    summary.textContent = line.summary;
+    sheet.appendChild(summary);
+  }
+  appendLinks(sheet, line.links);
+  if (line.next) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "continue";
+    button.textContent = "Continue";
+    button.addEventListener("click", () => execute("next"));
+    sheet.appendChild(button);
+  }
+  if (line.points && line.points.length) {
+    const list = document.createElement("ul");
+    for (const point of line.points) {
+      const item = document.createElement("li");
+      item.textContent = point;
+      list.appendChild(item);
+    }
+    sheet.appendChild(list);
+  }
+  if (line.meta || line.files) {
+    const meta = document.createElement("p");
+    meta.className = "meta";
+    const bits = [];
+    if (line.meta) bits.push(line.meta);
+    if (line.files) bits.push(line.files);
+    meta.textContent = bits.join("   ·   ");
+    sheet.appendChild(meta);
+  }
+  if (line.done) {
+    const note = document.createElement("p");
+    note.className = "meta";
+    note.textContent = "Briefing complete. Open a project, or type projects.";
+    sheet.appendChild(note);
+  }
+  output.appendChild(sheet);
+  output.scrollTop = Math.max(0, sheet.offsetTop - 8);
+  return Promise.resolve();
+}
+
+function appendLinks(sheet, links) {
+  if (!links || !links.length) return;
+  const row = document.createElement("div");
+  row.className = "sheet-links";
+  for (const item of links) {
+    const link = document.createElement("a");
+    link.href = item.href;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.className = item.primary ? "go" : "go quiet";
+    link.textContent = item.label;
+    row.appendChild(link);
+  }
+  sheet.appendChild(row);
+}
+
+function typeInto(node, full) {
+  node.textContent = full;
+  return Promise.resolve();
 }
 
 function speak(value) {

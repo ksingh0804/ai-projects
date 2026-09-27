@@ -128,3 +128,8 @@ Append-only record of wiki and workspace changes.
 - Wrote the profile README source at `profile/README.md` for the special `ksingh0804/ksingh0804` repo. This environment cannot push to that repo.
 - Root README now leads with the guide and lists only work that is still in the tree. FreshCart stays in the wiki as a historical design record.
 - Files: `docs/guide/*`, `profile/README.md`, `README.md`, `scripts/test-archivist.mjs`, `wiki/projects/github-guide.md`, `wiki/index.md`, `wiki/overview.md`, `wiki/log.md`, `wiki/projects/grocery-logistics-de.md`.
+
+## [2026-09-27] project | enhance | github-guide
+
+- Replaced the scrolling terminal log with one card at a time. The briefing lights the matching repositories on the map, and the open button sits above the detail.
+- Files: `docs/guide/engine.js`, `docs/guide/ui.js`, `docs/guide/guide.css`, `docs/guide/index.html`, `scripts/test-archivist.mjs`, `wiki/projects/github-guide.md`, `wiki/log.md`.
