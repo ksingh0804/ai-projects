@@ -41,3 +41,4 @@ Catalog of all wiki pages. Updated by the agent on every change.
 | [projects/career-launch.md](projects/career-launch.md) | Job search toolkit — resume, LinkedIn, target roles; includes Travis AFB Library TIS interview prep. |
 | [projects/loan-defaulter.md](projects/loan-defaulter.md) | **Loan Defaulter** — Home Credit PD analysis; leakage-safe pipeline, EXT_SOURCE, KS/Gini/PR-AUC, cost-weighted threshold. |
 | [projects/rag-logistics-agent.md](projects/rag-logistics-agent.md) | **RAG Logistics Agent** — Ollama + Chroma tool-calling agent over SOP PDFs (EOQ, safety stock, inventory, grounded Q&A). |
+| [projects/daily-python.md](projects/daily-python.md) | **Daily Python** — 55 stdlib scripts, one per filled August–September 2026 contribution day, each under 30 lines. |

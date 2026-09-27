@@ -45,3 +45,4 @@ See [wiki/overview.md](wiki/overview.md) for the knowledge base. The agent updat
 | Steady | `projects/steady-voice/` | **v2.0.0** free stuttering toolkit — guided session, Echo (DAF), pacing, Daily 50 reading + live coach, Interview Daily 10, CBT/ACT, mobile nav (port 8788). Public site is the Pages root. |
 | Loan Defaulter | `projects/loan-defaulter/` | Home Credit PD analysis — imbalanced classification, EXT_SOURCE features, KS/Gini/PR-AUC, cost-weighted threshold. Also published as [Loan-Defaulter](https://github.com/ksingh0804/Loan-Defaulter). |
 | RAG Logistics Agent | `projects/rag-logistics-agent/` | Ollama + Chroma tool-calling agent over logistics SOP PDFs (EOQ, safety stock, inventory, grounded Q&A) |
+| Daily Python | `projects/daily-python/` | 55 stdlib mini scripts, one per filled August–September 2026 contribution day, each under 30 lines |

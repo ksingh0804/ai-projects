@@ -17,7 +17,7 @@ A monorepo-style workspace where each project lives in `projects/<name>/`. An [L
 ## Current state
 
 - **Created:** 2026-05-20
-- **Active code:** Steady, Stutter Coach, Loan Defaulter, RAG Logistics Agent, and the ARCHIVIST guide (`docs/guide/`)
+- **Active code:** Steady, Stutter Coach, Loan Defaulter, RAG Logistics Agent, Daily Python, and the ARCHIVIST guide (`docs/guide/`)
 - **Wiki pages:** See [index.md](index.md)
 
 ## Key links
