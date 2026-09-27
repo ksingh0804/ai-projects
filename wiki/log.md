@@ -129,6 +129,16 @@ Append-only record of wiki and workspace changes.
 - Root README now leads with the guide and lists only work that is still in the tree. FreshCart stays in the wiki as a historical design record.
 - Files: `docs/guide/*`, `profile/README.md`, `README.md`, `scripts/test-archivist.mjs`, `wiki/projects/github-guide.md`, `wiki/index.md`, `wiki/overview.md`, `wiki/log.md`, `wiki/projects/grocery-logistics-de.md`.
 
+## [2026-09-27] project | enhance | github-guide
+
+- Replaced the scrolling terminal log with one card at a time. The briefing lights the matching repositories on the map, and the open button sits above the detail.
+- Files: `docs/guide/engine.js`, `docs/guide/ui.js`, `docs/guide/guide.css`, `docs/guide/index.html`, `scripts/test-archivist.mjs`, `wiki/projects/github-guide.md`, `wiki/log.md`.
+
+## [2026-09-27] project | enhance | github-guide
+
+- Briefing cards now lead with a cue, and the lit repositories show in a strip above the card (including on a phone, where the map is collapsed). Map, projects, repos, and the other list commands are cards. A project card shows its stack above the open button. The four steps jump straight to that part.
+- Files: `docs/guide/engine.js`, `docs/guide/ui.js`, `docs/guide/guide.css`, `docs/guide/index.html`, `scripts/test-archivist.mjs`, `wiki/projects/github-guide.md`, `wiki/log.md`.
+
 ## [2026-09-27] project | update | contribution-graph
 
 - Added one commit on each empty day from 2026-08-01 through 2026-09-30 so those days register on the GitHub contribution graph. Days that already had activity were left as they were.
@@ -140,6 +150,11 @@ Append-only record of wiki and workspace changes.
 - Added 55 standard-library mini projects under `projects/daily-python/`, one folder per contribution day filled in for August and September 2026.
 - Each `main.py` is a different script and stays under 30 lines. Days that already had commits were not given a new project.
 - Files: `projects/daily-python/**`, `wiki/projects/daily-python.md`, `wiki/index.md`, `wiki/overview.md`, `wiki/log.md`, `README.md`.
+
+## [2026-09-27] project | enhance | github-guide
+
+- The first card is now the hiring brief: Steady, Loan Defaulter, the logistics agent, and email. Daily Python is labeled as practice scripts. `profile/README.md` matches that brief for the GitHub profile.
+- Files: `docs/guide/engine.js`, `profile/README.md`, `scripts/test-archivist.mjs`, `wiki/projects/github-guide.md`, `wiki/log.md`.
 
 ## [2026-09-27] project | remove | travis-prep
 

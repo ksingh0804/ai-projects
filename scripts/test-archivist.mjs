@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import {
   atlas,
+  bootLines,
   chapterCount,
   complete,
   createState,
@@ -36,6 +37,12 @@ assert.match(say("", state).text, /Briefing complete/);
 const second = say("next", say("tour").state);
 assert.match(second.text, /Open these three/);
 assert.match(second.text, /ksingh0804.github.io\/ai-projects/);
+assert.deepEqual(second.response.highlights, ["steady", "loan", "rag"]);
+assert.match(second.text, /Amber on the map/);
+assert.equal(say("map").response.lines[0].type, "card");
+assert.match(say("map").text, /Profile/);
+assert.match(say("projects").text, /steady/);
+assert.match(say("chapter 3").text, /How the account is organized/);
 assert.doesNotMatch(plainText(run("tour all").lines), /FreshCart|grocery-logistics/);
 
 const steady = say("open steady");
@@ -90,6 +97,15 @@ assert.equal(say("cd ..", walked).state.cwd, "/");
 const tab = complete("op", createState());
 assert.ok(tab.matches.includes("open"));
 assert.match(complete("open ste", createState()).replacement, /^open steady/);
+
+const boot = plainText(bootLines());
+assert.match(boot, /Open these three/);
+assert.match(boot, /Loan-Defaulter/);
+assert.match(boot, /singhkaustubh85@gmail.com/);
+assert.doesNotMatch(boot, /Travis|career-launch|FreshCart/);
+assert.match(say("open daily").text, /practice/);
+assert.match(say("pin").text, /Steady/);
+assert.doesNotMatch(say("pin").text, /greenleaf/);
 
 assert.match(say("contact").text, /singhkaustubh85@gmail.com/);
 assert.match(say("skills").text, /scikit-learn/);

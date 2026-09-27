@@ -4,6 +4,7 @@ import {
   chapterCount,
   complete,
   createState,
+  labelFor,
   plainText,
   run,
 } from "./engine.js";
@@ -23,6 +24,8 @@ const atlasRoot = document.querySelector("#atlas");
 const sr = document.querySelector("#sr-status");
 const start = document.querySelector("#start");
 const mapToggle = document.querySelector("#map-toggle");
+const spotlight = document.querySelector("#spotlight");
+const atlasNote = document.querySelector("#atlas-note");
 
 const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 let state = createState();
@@ -38,6 +41,11 @@ syncVoiceButton();
 setChips(["tour", "projects", "map", "live", "contact"]);
 
 start.addEventListener("click", () => execute("tour"));
+for (const step of steps.querySelectorAll("li")) {
+  step.querySelector("button").addEventListener("click", () => {
+    execute(`chapter ${step.dataset.step}`, false);
+  });
+}
 mapToggle.addEventListener("click", () => {
   const open = atlasRoot.classList.toggle("open");
   mapToggle.setAttribute("aria-expanded", open ? "true" : "false");
@@ -127,6 +135,7 @@ function execute(raw, echo = true) {
   if (response.cwd) state.cwd = response.cwd;
   if (response.chapter != null) state.chapter = response.chapter;
   if (response.focus != null) state.focus = response.focus;
+  if (Array.isArray(response.highlights)) state.highlights = response.highlights;
   if (response.voice) {
     voiceOn = response.voice === "on";
     localStorage.setItem("archivist-voice", voiceOn ? "on" : "off");
@@ -151,8 +160,44 @@ function updateChrome() {
     else step.removeAttribute("aria-current");
   }
   start.textContent = state.chapter ? "Replay the briefing" : "Start the briefing";
+  const lit = new Set(state.highlights || []);
+  if (state.focus) status.textContent = labelFor(state.focus);
+  else if (state.chapter === 2) status.textContent = "Open these three";
+  else if (state.chapter > 0 && state.chapter < total) status.textContent = `Briefing ${state.chapter} of ${total}`;
+  else if (state.chapter >= total && state.chapter > 0) status.textContent = "Briefing complete";
+  else status.textContent = "Ready";
+  let anyLit = false;
   for (const button of atlasRoot.querySelectorAll("button")) {
-    button.classList.toggle("active", button.dataset.id === state.focus);
+    const id = button.dataset.id;
+    const active = id === state.focus;
+    const marked = lit.has(id) && !active;
+    button.classList.toggle("active", active);
+    button.classList.toggle("lit", marked);
+    if (marked) anyLit = true;
+  }
+  atlasNote.hidden = !anyLit;
+  renderSpotlight(lit);
+}
+
+function renderSpotlight(lit) {
+  const ids = [];
+  if (state.focus) ids.push(state.focus);
+  for (const id of lit) {
+    if (!ids.includes(id)) ids.push(id);
+  }
+  spotlight.replaceChildren();
+  if (!ids.length) {
+    spotlight.hidden = true;
+    return;
+  }
+  spotlight.hidden = false;
+  for (const id of ids) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = labelFor(id);
+    button.classList.toggle("current", id === state.focus);
+    button.addEventListener("click", () => execute(`open ${id}`));
+    spotlight.appendChild(button);
   }
 }
 
@@ -199,19 +244,19 @@ function syncVoiceButton() {
 
 function setMood(mood) {
   robot.dataset.mood = mood || "idle";
-  status.textContent = mood === "talk" ? "Speaking" : mood === "alert" ? "Try another command" : "Ready";
   window.clearTimeout(moodTimer);
+  if (mood === "alert") status.textContent = "Try another command";
   if (mood && mood !== "idle") {
     moodTimer = window.setTimeout(() => {
       robot.dataset.mood = "idle";
-      status.textContent = "Ready";
-    }, 1400);
+    }, 1600);
   }
 }
 
 async function printBlock(response, echo, gen = generation) {
-  skipButton.hidden = reduced;
+  skipButton.hidden = true;
   setMood(response.mood || "talk");
+  output.replaceChildren();
   if (echo) {
     const row = document.createElement("div");
     row.className = "line echo";
@@ -243,6 +288,7 @@ function reveal(line, gen) {
     output.appendChild(gap);
     return Promise.resolve();
   }
+  if (line.type === "card") return revealCard(line);
   if (line.type === "actions") {
     const row = document.createElement("div");
     row.className = "actions";
@@ -280,29 +326,115 @@ function reveal(line, gen) {
   return typeInto(el, full, gen);
 }
 
-function typeInto(node, full, gen) {
-  if (reduced || skipTyping || full.length < 2) {
-    node.textContent = full;
-    return Promise.resolve();
+function revealCard(line) {
+  const sheet = document.createElement("article");
+  sheet.className = "sheet";
+  if (line.kicker) {
+    const kicker = document.createElement("p");
+    kicker.className = "kicker";
+    kicker.textContent = line.kicker;
+    sheet.appendChild(kicker);
   }
-  const step = full.length > 80 ? 4 : 1;
-  const delay = full.length > 80 ? 5 : 8;
-  return new Promise((resolve) => {
-    let index = 0;
-    const tick = () => {
-      if (gen !== generation) return resolve();
-      if (skipTyping) {
-        node.textContent = full;
-        return resolve();
-      }
-      index = Math.min(full.length, index + step);
-      node.textContent = full.slice(0, index);
-      output.scrollTop = output.scrollHeight;
-      if (index >= full.length) resolve();
-      else window.setTimeout(tick, delay);
-    };
-    tick();
-  });
+  const heading = document.createElement("h2");
+  heading.textContent = line.title || "";
+  sheet.appendChild(heading);
+  if (line.summary) {
+    const summary = document.createElement("p");
+    summary.className = "summary";
+    summary.textContent = line.summary;
+    sheet.appendChild(summary);
+  }
+  if (line.cue) {
+    const cue = document.createElement("p");
+    cue.className = "cue";
+    cue.textContent = line.cue;
+    sheet.appendChild(cue);
+  }
+  if (line.meta) {
+    const stack = document.createElement("p");
+    stack.className = "stack";
+    stack.textContent = line.meta;
+    sheet.appendChild(stack);
+  }
+  appendLinks(sheet, line.links);
+  if (line.next) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "continue";
+    button.textContent = "Continue";
+    button.addEventListener("click", () => execute("next"));
+    sheet.appendChild(button);
+  }
+  appendRows(sheet, line.rows);
+  if (line.points && line.points.length) {
+    const list = document.createElement("ul");
+    for (const point of line.points) {
+      const item = document.createElement("li");
+      item.textContent = point;
+      list.appendChild(item);
+    }
+    sheet.appendChild(list);
+  }
+  if (line.files) {
+    const meta = document.createElement("p");
+    meta.className = "meta";
+    meta.textContent = line.files;
+    sheet.appendChild(meta);
+  }
+  if (line.done) {
+    const note = document.createElement("p");
+    note.className = "meta";
+    note.textContent = "Briefing complete. Open a project, or type projects.";
+    sheet.appendChild(note);
+  }
+  output.appendChild(sheet);
+  output.scrollTop = Math.max(0, sheet.offsetTop - 8);
+  return Promise.resolve();
+}
+
+function appendRows(sheet, rows) {
+  if (!rows || !rows.length) return;
+  const list = document.createElement("div");
+  list.className = "rows";
+  for (const row of rows) {
+    const node = row.href ? document.createElement("a") : document.createElement("button");
+    if (row.href) {
+      node.href = row.href;
+      node.target = "_blank";
+      node.rel = "noopener noreferrer";
+    } else {
+      node.type = "button";
+      if (row.command) node.addEventListener("click", () => execute(row.command));
+    }
+    const strong = document.createElement("strong");
+    strong.textContent = row.label || "";
+    const span = document.createElement("span");
+    span.textContent = row.detail || "";
+    node.append(strong, span);
+    list.appendChild(node);
+  }
+  sheet.appendChild(list);
+}
+
+function appendLinks(sheet, links) {
+  if (!links || !links.length) return;
+  const row = document.createElement("div");
+  row.className = "sheet-links";
+  for (const item of links) {
+    const link = document.createElement("a");
+    link.href = item.href;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.className = item.primary ? "go" : "go quiet";
+    link.textContent = item.label;
+    row.appendChild(link);
+  }
+  sheet.appendChild(row);
+}
+
+function typeInto(node, full) {
+  node.textContent = full;
+  return Promise.resolve();
 }
 
 function speak(value) {

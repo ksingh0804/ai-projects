@@ -43,10 +43,10 @@
 
         <button class="start" id="start" type="button">Start the briefing</button>
         <ol class="steps" id="steps">
-          <li data-step="1">Who</li>
-          <li data-step="2">Open</li>
-          <li data-step="3">Map</li>
-          <li data-step="4">Look</li>
+          <li data-step="1"><button type="button">Who</button></li>
+          <li data-step="2"><button type="button">Open</button></li>
+          <li data-step="3"><button type="button">Map</button></li>
+          <li data-step="4"><button type="button">Look</button></li>
         </ol>
 
         <p class="jump">
@@ -59,6 +59,7 @@
         </p>
 
         <button type="button" id="map-toggle" class="map-toggle" aria-expanded="false">Show the repository map</button>
+        <p id="atlas-note" class="atlas-note" hidden>Amber means open these.</p>
         <div id="atlas" class="atlas"></div>
       </aside>
 
@@ -68,6 +69,7 @@
           <span class="term-title" id="term-title">visitor@ksingh0804</span>
           <button type="button" id="voice" class="voice" aria-pressed="false">Voice off</button>
         </div>
+        <div id="spotlight" class="spotlight" hidden></div>
         <div id="output" class="output" role="log" aria-relevant="additions"></div>
         <div id="sr-status" class="sr-only" aria-live="polite"></div>
         <div id="chips" class="chips"></div>
@@ -76,7 +78,7 @@
           <span class="prompt" id="prompt" aria-hidden="true">visitor@ksingh0804:~$</span>
           <input id="command" name="command" type="text" spellcheck="false" autocapitalize="off" autocorrect="off" enterkeyhint="go" />
         </form>
-        <p class="hint"><span>Enter runs</span><span>Tab completes</span><span>↑↓ history</span><button type="button" id="skip" class="skip-typing" hidden>Show the rest</button></p>
+        <p class="hint"><span>Enter continues</span><span>Tab completes</span><span>↑↓ history</span><button type="button" id="skip" class="skip-typing" hidden>Show the rest</button></p>
       </section>
     </div>
   </div>
