@@ -1,0 +1,3 @@
+id,identifier,title,status,issueType,locationDetails,description,rootCause,assignedTo,openedAt,dueDate
+00000000-0000-4000-8000-000000000008,ISS-008,North slab edge spall,open,Quality,north edge of the existing equipment pad,A spall about 2 feet long. Left uncovered for review. This note does not authorize slab placement.,,architect of record (practice role),2026-04-11,2026-04-18
+00000000-0000-4000-8000-000000000003,ISS-003,South gate sign missing,closed,Safety,south gate,The practice gate sign was missing for one morning and was replaced the same day.,sign removed during a delivery,superintendent (practice role),2026-03-30,2026-03-30

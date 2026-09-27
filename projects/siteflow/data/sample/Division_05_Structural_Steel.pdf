@@ -12,16 +12,34 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 5 0 R /Resources << /Font << /F1 3 0 R >> >> >>
 endobj
 5 0 obj
-<< /Length 347 >>
+<< /Length 1453 >>
 stream
 BT
 /F1 11 Tf
 14 TL
 72 740 Td
 (Division 05 Structural Steel) Tj
-T* (Lead time language: mill lead time for structural steel is 8 to 12 weeks after approved shop drawings.) Tj
+T* (Practice file: Cedarline Training Hall, job SYNTH-HALL-01.) Tj
+T* (Original text. Not a real project and not a platform export.) Tj
+T* (Section 05 12 00.) Tj
+T* (Lead time language: mill lead time for structural steel is 8 to 12 weeks after approved shop) Tj
+T* (drawings.) Tj
 T* (Mill certs: submit mill test reports for steel shapes before erection.) Tj
 T* (Bolt spec: field bolts are ASTM F3125 Grade A325 unless the drawings say otherwise.) Tj
+T* (Scope: columns, beams, and the roof joists shown on sheets S-201 and S-202 for this practice) Tj
+T* (hall.) Tj
+T* (Shop drawings: send erection drawings and piece marks before fabrication. The clock for mill) Tj
+T* (time starts at approval, not at the purchase order.) Tj
+T* (Coatings: shop primer only. Field paint is Section 09 90 00 and is outside this file.) Tj
+T* (Tolerances: plumb columns within 1 in 500. Shim with steel plates, not with wood.) Tj
+T* (Connections: shop welds follow the practice weld procedure WPS-CH-1. Field welds are listed) Tj
+T* (on the piece drawing.) Tj
+T* (Delivery: tag each piece with the piece mark and the heat number that matches the mill) Tj
+T* (report.) Tj
+T* (Laydown: the north yard, as the site logistics plan describes. Do not unload onto the south) Tj
+T* (drive.) Tj
+T* (Erection: do not start erection until the mill reports for the shapes on that sequence are) Tj
+T* (in the file.) Tj
 ET
 endstream
 endobj
@@ -35,5 +53,5 @@ xref
 0000000311 00000 n 
 trailer << /Size 6 /Root 1 0 R >>
 startxref
-709
+1816
 %%EOF

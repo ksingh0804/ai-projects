@@ -26,6 +26,7 @@ Source guide (immutable): [SiteFlow agent guide](../sources/siteflow-agent-guide
 - EOQ and safety stock match [RAG Logistics Agent](rag-logistics-agent.md) formulas. Order cost is taken from the materials CSV only when one SKU matches, and the answer says so. Holding cost is never copied from unit cost.
 - Retrieval is BM25 scoped by `project_id`. No embedding model is shipped in this slice.
 - Human approval uses LangGraph `interrupt()` and a SQLite checkpointer. Approval records a decision. It does not place an order or create an RFI.
+- Practice files are original and fictional (Cedarline Training Hall, `SYNTH-HALL-01`). `data/sample` is what search reads. `data/artifacts` holds the RFI, submittal, issue, cost, and schedule registers in JSON and CSV. Those registers are not an Autodesk export.
 
 ## Related
 

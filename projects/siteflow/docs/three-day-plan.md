@@ -128,7 +128,7 @@ Uploads go to `data/runtime/projects/{id}/docs/{filename}`. The project id is a 
 
 Allowed types are PDF, CSV, and text. The cap is 10 MB, checked while the bytes are still being read, so a huge body is refused before it is stored. A PDF with no text is refused. Scanned drawings need OCR. Saying "I cannot read this" is the correct product behavior. Pretending the drawing was understood is how you get a made-up spec in front of a superintendent.
 
-CSV files are the materials table, not search passages. `materials.csv` wins if several CSVs exist. Otherwise the newest CSV wins.
+CSV files are the materials table, not search passages. `materials.csv` wins if several CSVs exist. Otherwise the newest CSV wins. The demo job is fictional (Cedarline Training Hall, `SYNTH-HALL-01`). Its searchable files are in `data/sample`. Matching RFI, submittal, issue, cost, and schedule registers are in `data/artifacts` and are not uploaded, because a second CSV in the sample folder would be rejected as a bad materials table.
 
 Tests: `test_upload_list_and_reject_bad_files`, `test_upload_size_limit_is_enforced_while_reading`, `test_bad_csv_is_rejected`, `test_replacing_a_file_drops_the_old_sentence`.
 

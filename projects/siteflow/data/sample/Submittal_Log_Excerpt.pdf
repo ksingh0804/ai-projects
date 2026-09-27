@@ -12,16 +12,31 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 5 0 R /Resources << /Font << /F1 3 0 R >> >> >>
 endobj
 5 0 obj
-<< /Length 230 >>
+<< /Length 1342 >>
 stream
 BT
 /F1 11 Tf
 14 TL
 72 740 Td
 (Submittal Log Excerpt) Tj
+T* (Practice file: Cedarline Training Hall, job SYNTH-HALL-01.) Tj
+T* (Original text. Not a real project and not a platform export.) Tj
+T* (Register for Cedarline Training Hall. Status words are the practice set: approved, pending,) Tj
+T* (submitted, revise and resubmit.) Tj
 T* (Rebar: submittal SB-12, status approved.) Tj
 T* (Anchor bolts: submittal SB-18, status pending.) Tj
 T* (Vapor barrier: submittal SB-21, status revise and resubmit.) Tj
+T* (Concrete mix CH-4000: submittal SB-07, spec 03 30 00, status approved.) Tj
+T* (Steel shop drawings: submittal SB-16, spec 05 12 00, status submitted.) Tj
+T* (Steel mill reports: submittal SB-30, spec 05 12 00, status submitted.) Tj
+T* (Formwork layout: submittal SB-04, spec 03 11 00, status approved.) Tj
+T* (Earthwork compaction report: submittal SB-02, spec 31 20 00, status approved.) Tj
+T* (How to read a row: the number \(SB-21\) is the register id. The spec section is where the) Tj
+T* (product is specified. The status is the review answer.) Tj
+T* (SB-21 note: the reviewer asked for the seam tape data sheet and the penetration detail.) Tj
+T* (Those pages were missing.) Tj
+T* (Use: the assistant should cite this log when the question is about a submittal status. The) Tj
+T* (product rules live in the division files.) Tj
 ET
 endstream
 endobj
@@ -35,5 +50,5 @@ xref
 0000000311 00000 n 
 trailer << /Size 6 /Root 1 0 R >>
 startxref
-592
+1705
 %%EOF

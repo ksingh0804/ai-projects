@@ -12,17 +12,36 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 5 0 R /Resources << /Font << /F1 3 0 R >> >> >>
 endobj
 5 0 obj
-<< /Length 396 >>
+<< /Length 1605 >>
 stream
 BT
 /F1 11 Tf
 14 TL
 72 740 Td
 (Division 03 Cast-in-Place Concrete) Tj
+T* (Practice file: Cedarline Training Hall, job SYNTH-HALL-01.) Tj
+T* (Original text. Not a real project and not a platform export.) Tj
 T* (Section 03 30 00.) Tj
 T* (Curing: keep cast-in-place concrete wet for 7 days when the daily low stays above 40 F.) Tj
 T* (Weather limit: do not place concrete when the air temperature is below 40 F or above 95 F.) Tj
-T* (Strength: do not load the slab until test cylinders reach 75 percent of the specified strength.) Tj
+T* (Strength: do not load the slab until test cylinders reach 75 percent of the specified) Tj
+T* (strength.) Tj
+T* (Project: Cedarline Training Hall, a one-story practice hall. This section covers the slab) Tj
+T* (and the grade beams only.) Tj
+T* (Mix: the practice mix is called CH-4000. Design strength is 4000 psi at 28 days. Water added) Tj
+T* (on site is not allowed.) Tj
+T* (Joints: saw cut control joints the morning after placement, at the spacing on sheet S-101.) Tj
+T* (Finish: light broom finish on walking surfaces. Do not add a shake-on hardener.) Tj
+T* (Cylinders: cast one set of three cylinders for every 50 cubic yards, and one set on the last) Tj
+T* (truck of the day.) Tj
+T* (Hot weather: shade the forms and start curing the same day. The temperature cap above is the) Tj
+T* (placement rule.) Tj
+T* (Cold weather: if the forecast low is under the temperature floor above, wait. Do not use a) Tj
+T* (different number.) Tj
+T* (Repair: honeycombing deeper than 1 inch is written up as an issue. It is not patched in) Tj
+T* (secret.) Tj
+T* (Related file: the vapor-barrier product sheet is Division 07. The open question about) Tj
+T* (placement is RFI-014.) Tj
 ET
 endstream
 endobj
@@ -36,5 +55,5 @@ xref
 0000000311 00000 n 
 trailer << /Size 6 /Root 1 0 R >>
 startxref
-758
+1968
 %%EOF

@@ -1,0 +1,42 @@
+{
+  "artifact": {
+    "kind": "synthetic",
+    "projectCode": "SYNTH-HALL-01",
+    "projectName": "Cedarline Training Hall",
+    "notice": "Original practice data for the SiteFlow demo. Not a real construction job, not a copy of a customer file, and not an export from any construction platform."
+  },
+  "costItems": [
+    {
+      "code": "03 30 00",
+      "name": "Cast-in-place concrete",
+      "originalBudget": "186000.00",
+      "approvedChanges": "0.00",
+      "projectedCost": "186000.00",
+      "currency": "USD"
+    },
+    {
+      "code": "05 12 00",
+      "name": "Structural steel",
+      "originalBudget": "240000.00",
+      "approvedChanges": "0.00",
+      "projectedCost": "240000.00",
+      "currency": "USD"
+    },
+    {
+      "code": "07 26 00",
+      "name": "Vapor barrier",
+      "originalBudget": "14500.00",
+      "approvedChanges": "0.00",
+      "projectedCost": "14500.00",
+      "currency": "USD"
+    },
+    {
+      "code": "31 20 00",
+      "name": "Earthwork",
+      "originalBudget": "62000.00",
+      "approvedChanges": "0.00",
+      "projectedCost": "62000.00",
+      "currency": "USD"
+    }
+  ]
+}
