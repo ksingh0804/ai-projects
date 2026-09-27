@@ -8,6 +8,8 @@ updated: 2026-06-15
 
 # FreshCart Data Platform
 
+**Status (2026-09-27):** the code directory `projects/grocery-logistics-de/` was removed on 2026-09-07. This page is a historical design record. It is not a live portfolio piece, and ARCHIVIST does not send visitors here.
+
 A **runnable, portfolio-grade** end-to-end data engineering project in the **grocery + last-mile logistics** domain (an Instacart / Amazon Fresh / DoorDash / Gopuff analog), built to land a data-engineering job. Runs locally for $0 on Python + DuckDB; every component maps 1:1 to a production tool. Follows the "build real work, not just interview" idea from [grad-jobs-research](grad-jobs-research.md).
 
 Project files: `projects/grocery-logistics-de/` (code in `src/`, narrative in `docs/00..07`).

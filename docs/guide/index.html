@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ARCHIVIST — a guide to Kaustubh Singh’s GitHub</title>
+  <meta name="description" content="An interactive guide to Kaustubh Singh’s GitHub. It tells an interviewer what to open, what to skip, and where the work lives." />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="guide.css" />
+</head>
+<body>
+  <a class="skip" href="#command">Skip to the terminal</a>
+  <div class="app">
+    <header class="top">
+      <div class="brand">
+        <span class="led" aria-hidden="true"></span>
+        <span class="brand-name">ARCHIVIST</span>
+        <span class="brand-kicker">guide</span>
+      </div>
+      <p class="top-line">Explains <a href="https://github.com/ksingh0804">github.com/ksingh0804</a></p>
+    </header>
+
+    <div class="layout">
+      <aside class="dossier">
+        <div class="robot" id="robot" data-mood="idle" aria-hidden="true">
+          <div class="antenna"><i></i></div>
+          <div class="head">
+            <div class="eyes"><span></span><span></span></div>
+            <div class="mouth"><i></i><i></i><i></i><i></i><i></i></div>
+          </div>
+          <div class="torso">ARC</div>
+        </div>
+        <p class="status" id="status">Ready</p>
+
+        <div class="identity">
+          <p class="kicker">GitHub guide</p>
+          <h1>Kaustubh Singh</h1>
+          <p class="lede">Data analysis, machine learning, and small products a stranger can run.</p>
+        </div>
+
+        <button class="start" id="start" type="button">Start the briefing</button>
+        <ol class="steps" id="steps">
+          <li data-step="1">Who</li>
+          <li data-step="2">Open</li>
+          <li data-step="3">Map</li>
+          <li data-step="4">Look</li>
+        </ol>
+
+        <p class="jump">
+          <a href="https://ksingh0804.github.io/ai-projects/">Steady live</a>
+          <a href="https://github.com/ksingh0804/Loan-Defaulter">Loan Defaulter</a>
+          <a href="https://github.com/ksingh0804/ai-projects">Workshop</a>
+        </p>
+        <p class="contact">
+          <a href="mailto:singhkaustubh85@gmail.com">singhkaustubh85@gmail.com</a>
+        </p>
+
+        <button type="button" id="map-toggle" class="map-toggle" aria-expanded="false">Show the repository map</button>
+        <div id="atlas" class="atlas"></div>
+      </aside>
+
+      <section class="terminal" aria-label="Guide terminal">
+        <div class="term-bar">
+          <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="term-title" id="term-title">visitor@ksingh0804</span>
+          <button type="button" id="voice" class="voice" aria-pressed="false">Voice off</button>
+        </div>
+        <div id="output" class="output" role="log" aria-relevant="additions"></div>
+        <div id="sr-status" class="sr-only" aria-live="polite"></div>
+        <div id="chips" class="chips"></div>
+        <form id="form" class="prompt-row" autocomplete="off">
+          <label class="sr-only" for="command">Command</label>
+          <span class="prompt" id="prompt" aria-hidden="true">visitor@ksingh0804:~$</span>
+          <input id="command" name="command" type="text" spellcheck="false" autocapitalize="off" autocorrect="off" enterkeyhint="go" />
+        </form>
+        <p class="hint"><span>Enter runs</span><span>Tab completes</span><span>↑↓ history</span><button type="button" id="skip" class="skip-typing" hidden>Show the rest</button></p>
+      </section>
+    </div>
+  </div>
+  <noscript>
+    <p>ARCHIVIST needs JavaScript. The same map is in the repository README, and Steady is at https://ksingh0804.github.io/ai-projects/</p>
+  </noscript>
+  <script type="module" src="ui.js"></script>
+</body>
+</html>
