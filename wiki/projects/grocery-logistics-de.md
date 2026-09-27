@@ -3,14 +3,14 @@ title: FreshCart — End-to-End Grocery + Logistics Data Engineering Project
 type: project
 tags: [data-engineering, portfolio, lakehouse, streaming, dbt, kimball, careers]
 created: 2026-06-08
-updated: 2026-06-15
+updated: 2026-09-27
 ---
 
 # FreshCart Data Platform
 
-A **runnable, portfolio-grade** end-to-end data engineering project in the **grocery + last-mile logistics** domain (an Instacart / Amazon Fresh / DoorDash / Gopuff analog), built to land a data-engineering job. Runs locally for $0 on Python + DuckDB; every component maps 1:1 to a production tool. Follows the "build real work, not just interview" idea from [grad-jobs-research](grad-jobs-research.md).
+**Status (2026-09-27):** the code directory `projects/grocery-logistics-de/` was removed on 2026-09-07. This page is a historical design record. It is not a live portfolio piece, and ARCHIVIST does not send visitors here.
 
-Project files: `projects/grocery-logistics-de/` (code in `src/`, narrative in `docs/00..07`).
+This page records a portfolio-grade data engineering design in the grocery and last-mile logistics domain (an Instacart / Amazon Fresh / DoorDash / Gopuff analog). The design mapped each local piece onto a production tool. The source tree is gone, so the steps below are the record of what that directory contained.
 
 ## What it covers (every DE layer)
 - **Medallion lakehouse** bronze -> silver -> gold (Parquet + DuckDB).
@@ -32,7 +32,10 @@ Project files: `projects/grocery-logistics-de/` (code in `src/`, narrative in `d
 ## Build process
 Built in **5 iterations** per the user's request (foundation -> batch -> streaming -> orchestration/observability -> productionization). Tooling installed: `duckdb`, `pandas`, `pyarrow`. Everything reproduced end-to-end via `python src/orchestrate.py`.
 
-## How to run
+## How it was run
+
+These commands applied while the directory was in the tree.
+
 ```
 cd projects/grocery-logistics-de
 pip install -r requirements.txt
