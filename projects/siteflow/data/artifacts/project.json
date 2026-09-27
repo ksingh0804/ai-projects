@@ -1,0 +1,19 @@
+{
+  "artifact": {
+    "kind": "synthetic",
+    "projectCode": "SYNTH-HALL-01",
+    "projectName": "Cedarline Training Hall",
+    "notice": "Original practice data for the SiteFlow demo. Not a real construction job, not a copy of a customer file, and not an export from any construction platform."
+  },
+  "project": {
+    "code": "SYNTH-HALL-01",
+    "name": "Cedarline Training Hall",
+    "description": "One-story practice hall used only as SiteFlow sample data.",
+    "address": "100 Practice Yard, Millford",
+    "owner": "Cedarline Practice Authority",
+    "phase": "foundations and structure",
+    "currency": "USD",
+    "searchFolder": "data/sample",
+    "registerFolder": "data/artifacts"
+  }
+}

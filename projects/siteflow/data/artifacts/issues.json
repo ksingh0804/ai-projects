@@ -1,0 +1,36 @@
+{
+  "artifact": {
+    "kind": "synthetic",
+    "projectCode": "SYNTH-HALL-01",
+    "projectName": "Cedarline Training Hall",
+    "notice": "Original practice data for the SiteFlow demo. Not a real construction job, not a copy of a customer file, and not an export from any construction platform."
+  },
+  "issues": [
+    {
+      "id": "00000000-0000-4000-8000-000000000008",
+      "identifier": "ISS-008",
+      "title": "North slab edge spall",
+      "status": "open",
+      "issueType": "Quality",
+      "locationDetails": "north edge of the existing equipment pad",
+      "description": "A spall about 2 feet long. Left uncovered for review. This note does not authorize slab placement.",
+      "rootCause": "",
+      "assignedTo": "architect of record (practice role)",
+      "openedAt": "2026-04-11",
+      "dueDate": "2026-04-18"
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "identifier": "ISS-003",
+      "title": "South gate sign missing",
+      "status": "closed",
+      "issueType": "Safety",
+      "locationDetails": "south gate",
+      "description": "The practice gate sign was missing for one morning and was replaced the same day.",
+      "rootCause": "sign removed during a delivery",
+      "assignedTo": "superintendent (practice role)",
+      "openedAt": "2026-03-30",
+      "dueDate": "2026-03-30"
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "artifact": {
+    "kind": "synthetic",
+    "projectCode": "SYNTH-HALL-01",
+    "projectName": "Cedarline Training Hall",
+    "notice": "Original practice data for the SiteFlow demo. Not a real construction job, not a copy of a customer file, and not an export from any construction platform."
+  },
+  "rfis": [
+    {
+      "id": "00000000-0000-4000-8000-000000000014",
+      "customIdentifier": "RFI-014",
+      "title": "Foundation pour hold",
+      "status": "open",
+      "discipline": "concrete",
+      "specSection": "03 30 00",
+      "locationDescription": "slab on grade, grids A-D and 1-4",
+      "question": "Can the slab on grade be poured before the vapor barrier submittal is approved?",
+      "officialResponse": "No. The pour stays on hold.",
+      "officialResponseStatus": "answered",
+      "blockedActivity": "slab on grade foundation pour",
+      "reason": "open RFI-014 until the vapor barrier submittal is approved.",
+      "linkedSubmittal": "SB-21",
+      "createdAt": "2026-04-02",
+      "dueDate": "2026-04-18",
+      "assignedTo": "architect of record (practice role)",
+      "createdBy": "project engineer (practice role)"
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000009",
+      "customIdentifier": "RFI-009",
+      "title": "Rebar chair height at the north edge",
+      "status": "closed",
+      "discipline": "concrete",
+      "specSection": "03 20 00",
+      "locationDescription": "north edge of the pad",
+      "question": "What chair height keeps the top bar at 2 inches of cover at the north edge?",
+      "officialResponse": "Use 4 inch chairs at that edge, matching approved submittal SB-12.",
+      "officialResponseStatus": "answered",
+      "blockedActivity": "",
+      "reason": "",
+      "linkedSubmittal": "SB-12",
+      "createdAt": "2026-03-18",
+      "dueDate": "2026-03-25",
+      "assignedTo": "architect of record (practice role)",
+      "createdBy": "project engineer (practice role)"
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000021",
+      "customIdentifier": "RFI-021",
+      "title": "Clip angle weld at column C4",
+      "status": "open",
+      "discipline": "structural",
+      "specSection": "05 12 00",
+      "locationDescription": "column C4, roof",
+      "question": "Is the clip angle weld at column C4 a 3/16 inch fillet on both sides?",
+      "officialResponse": "",
+      "officialResponseStatus": "pending",
+      "blockedActivity": "",
+      "reason": "",
+      "linkedSubmittal": "SB-16",
+      "createdAt": "2026-04-08",
+      "dueDate": "2026-04-22",
+      "assignedTo": "structural reviewer (practice role)",
+      "createdBy": "project engineer (practice role)"
+    }
+  ]
+}

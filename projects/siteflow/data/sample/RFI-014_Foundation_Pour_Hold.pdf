@@ -12,18 +12,33 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 5 0 R /Resources << /Font << /F1 3 0 R >> >> >>
 endobj
 5 0 obj
-<< /Length 362 >>
+<< /Length 1155 >>
 stream
 BT
 /F1 11 Tf
 14 TL
 72 740 Td
 (RFI-014 Foundation Pour Hold) Tj
+T* (Practice file: Cedarline Training Hall, job SYNTH-HALL-01.) Tj
+T* (Original text. Not a real project and not a platform export.) Tj
+T* (Number: RFI-014) Tj
 T* (Status: Open) Tj
+T* (Discipline: concrete) Tj
+T* (Spec section: 03 30 00 and 07 26 00) Tj
+T* (Location: slab on grade, grids A-D and 1-4) Tj
+T* (From: project engineer \(practice role\)) Tj
+T* (To: architect of record \(practice role\)) Tj
 T* (Question: Can the slab on grade be poured before the vapor barrier submittal is approved?) Tj
 T* (Response: No. The pour stays on hold.) Tj
 T* (Blocked activity: slab on grade foundation pour) Tj
 T* (Reason: open RFI-014 until the vapor barrier submittal is approved.) Tj
+T* (Official response status: answered, and the work stays waiting.) Tj
+T* (Due: 2026-04-18) Tj
+T* (Opened: 2026-04-02) Tj
+T* (Linked submittal: SB-21, vapor barrier, revise and resubmit.) Tj
+T* (What this file is not: it is not a change order, and it does not authorize a purchase.) Tj
+T* (Clearing it: a later revision of SB-21 marked approved is what removes this block. A verbal) Tj
+T* (note does not.) Tj
 ET
 endstream
 endobj
@@ -37,5 +52,5 @@ xref
 0000000311 00000 n 
 trailer << /Size 6 /Root 1 0 R >>
 startxref
-724
+1518
 %%EOF

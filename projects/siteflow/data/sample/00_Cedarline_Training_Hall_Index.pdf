@@ -1,0 +1,57 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [4 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 5 0 R /Resources << /Font << /F1 3 0 R >> >> >>
+endobj
+5 0 obj
+<< /Length 1546 >>
+stream
+BT
+/F1 11 Tf
+14 TL
+72 740 Td
+(Cedarline Training Hall Document Index) Tj
+T* (Practice file: Cedarline Training Hall, job SYNTH-HALL-01.) Tj
+T* (Original text. Not a real project and not a platform export.) Tj
+T* (Job SYNTH-HALL-01. One-story practice hall. Owner: Cedarline Practice Authority. Address:) Tj
+T* (100 Practice Yard, Millford.) Tj
+T* (These files were written for the SiteFlow demo. They are synthetic. Do not treat them as a) Tj
+T* (bid set or as a record set.) Tj
+T* (Searchable PDFs in this folder:) Tj
+T* (Division 01 general requirements. How RFIs and submittals are numbered on this job.) Tj
+T* (Division 03 cast-in-place concrete. Placement, curing, and the temperature rule.) Tj
+T* (Division 05 structural steel. Mill time, mill reports, and field bolts.) Tj
+T* (Division 07 vapor barrier. The product sheet linked from submittal SB-21.) Tj
+T* (Division 31 earthwork. Excavation and compaction for this pad.) Tj
+T* (RFI-014. The open question about the slab.) Tj
+T* (Submittal log excerpt. The register of SB numbers and review status.) Tj
+T* (Site logistics plan. Gates, hours, and the north laydown.) Tj
+T* (Daily report 2026-04-14. What the crew did that day.) Tj
+T* (OAC minutes 12. The practice coordination meeting.) Tj
+T* (Issue ISS-008. A quality note at the north edge.) Tj
+T* (materials.csv. SKU table used for order quantity and stock lookups.) Tj
+T* (Structured twins of this set \(not uploaded as the SKU table\) are in data/artifacts: RFI) Tj
+T* (register, submittal register, issues, cost, and schedule.) Tj
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000185 00000 n 
+0000000311 00000 n 
+trailer << /Size 6 /Root 1 0 R >>
+startxref
+1909
+%%EOF

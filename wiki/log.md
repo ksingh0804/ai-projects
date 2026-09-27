@@ -132,3 +132,9 @@ Append-only record of wiki and workspace changes.
 
 - Added a 27-step start-to-end study PDF. Each step says what to do, then explains where it sits, why, and the tradeoff.
 - Files: `projects/siteflow/docs/build_step_by_step_pdf.py`, `projects/siteflow/docs/SiteFlow_start_to_end.pdf`, `projects/siteflow/backend/tests/test_study_pdf.py`, `projects/siteflow/backend/requirements-dev.txt`, `projects/siteflow/README.md`, `projects/siteflow/docs/three-day-plan.md`, `wiki/projects/siteflow.md`, `wiki/index.md`
+
+## [2026-09-27] project | document | siteflow
+
+- Added a fictional practice job, Cedarline Training Hall (`SYNTH-HALL-01`): searchable spec, RFI, submittal, daily, minutes, and issue PDFs plus `materials.csv`, and matching JSON/CSV registers for RFIs, submittals, issues, cost, and schedule.
+- The registers are original. They are not a customer export and are not read by search. Search still uses `data/sample` only.
+- Files: `projects/siteflow/data/sample/**`, `projects/siteflow/data/artifacts/**`, `projects/siteflow/backend/app/rag/sample_docs.py`, `projects/siteflow/backend/app/rag/artifacts.py`, `projects/siteflow/backend/tests/test_project_files.py`, `projects/siteflow/README.md`, `projects/siteflow/docs/three-day-plan.md`, `wiki/projects/siteflow.md`, `wiki/index.md`

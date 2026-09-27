@@ -6,6 +6,23 @@ This is the reference build for the three-day study plan in [docs/three-day-plan
 
 Local mode needs no AWS account and no language model. The math matches Project 2 (`projects/rag-logistics-agent/tools.py`).
 
+## Practice files
+
+The job in the demo is fictional: **Cedarline Training Hall**, code `SYNTH-HALL-01`. Every sentence was written for this repo. Nothing here is a customer file, a stamped drawing, or an export from Autodesk Construction Cloud.
+
+`data/sample/` is what the demo project uploads and searches:
+
+- Specs for Divisions 01, 03, 05, 07, and 31
+- `RFI-014_Foundation_Pour_Hold.pdf`
+- Submittal log, site logistics plan, a daily report, meeting minutes, and issue ISS-008
+- `materials.csv` (the only CSV in that folder, because every uploaded CSV is checked as a SKU table)
+
+`data/artifacts/` is the structured twin of that set: project, RFI, submittal, issue, cost, and schedule records as JSON and CSV. Field names follow the shape of those construction records (number, status, official response, spec section, cost code, activity id). The running search does not read this folder. Rebuild both folders from `backend/` with:
+
+```bash
+python -c "from pathlib import Path; from app.config import SITEFLOW_ROOT; from app.rag.sample_docs import write_sample_pack; from app.rag.artifacts import write_artifact_pack; write_sample_pack(SITEFLOW_ROOT/'data'/'sample'); write_artifact_pack(SITEFLOW_ROOT/'data'/'artifacts')"
+```
+
 ## Run
 
 ```bash
@@ -45,5 +62,7 @@ backend/app/api/                   documents, chat, approvals
 backend/tests/                     pytest for each of those blocks
 frontend/src/                      React UI, talks only to FastAPI
 eval/questions.json                12 gold questions
+data/sample/                       searchable PDFs and materials.csv
+data/artifacts/                    synthetic RFI, submittal, issue, cost, schedule registers
 infra/iam-siteflow.json            least-privilege S3 policy
 ```
