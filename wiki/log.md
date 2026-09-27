@@ -121,3 +121,9 @@ Append-only record of wiki and workspace changes.
 - Copied Desktop `logistics-rag-agent` into `projects/rag-logistics-agent/` (excluded `rag-env`, `chroma_db`).
 - Added README, requirements.txt, .gitignore; wiki page + index/log/README entries.
 - Files: `projects/rag-logistics-agent/*`, `wiki/projects/rag-logistics-agent.md`.
+
+## [2026-09-27] project | add | career-launch (Bay Area junior interview playbook)
+
+- Added a 39-page PDF that separates recruiter questions from interviewer questions for junior software, AI, data engineering, and data science roles in the Bay Area.
+- Answers include how to respond, first-person examples from the RAG agent, loan-default model, and Steady, and labeled production patterns for pipeline, experiment, and incident questions.
+- Files: `projects/career-launch/interview-playbook/`, `wiki/projects/career-launch.md`, `wiki/sources/bay-area-junior-interviews-2026.md`, `wiki/index.md`, `README.md`

@@ -25,3 +25,4 @@ See [wiki/overview.md](wiki/overview.md) for the knowledge base. The agent updat
 | Steady | `projects/steady-voice/` | **v2.0.0** free stuttering toolkit — guided session, Echo (DAF), pacing, Daily 50 reading + live coach, Interview Daily 10, CBT/ACT, mobile nav (port 8788) |
 | Loan Defaulter | `projects/loan-defaulter/` | Home Credit PD analysis — imbalanced classification, EXT_SOURCE features, KS/Gini/PR-AUC, cost-weighted threshold |
 | RAG Logistics Agent | `projects/rag-logistics-agent/` | Ollama + Chroma tool-calling agent over logistics SOP PDFs (EOQ, safety stock, inventory, grounded Q&A) |
+| Career Launch | `projects/career-launch/` | Bay Area junior interview playbook (PDF) — recruiter screens and interviewer loops for SWE, AI engineer, data engineer, and data scientist |

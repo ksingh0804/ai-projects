@@ -1,14 +1,14 @@
 ---
-title: Career Launch — Job search, resume, LinkedIn
+title: Career Launch — Bay Area junior interview playbook
 type: project
-tags: [careers, data-engineering, ai-agents, linkedin, resume]
+tags: [careers, interviews, bay-area, software-engineer, ai-engineer, data-engineer, data-scientist]
 created: 2026-07-11
-updated: 2026-07-24
+updated: 2026-09-27
 ---
 
 # Career Launch
 
-Job-search toolkit for **Kaustubh Singh** targeting **Data Engineer**, **Analytics Engineer**, and **AI/ML Platform** roles (mid-level, 3+ years).
+Job-search prep for **Kaustubh Singh** (East Bay). The asset in this tree is a printable interview playbook for junior **software engineer**, **AI engineer**, **data engineer**, and **data scientist** roles in the San Francisco Bay Area.
 
 Project path: `projects/career-launch/`
 
@@ -16,37 +16,28 @@ Project path: `projects/career-launch/`
 
 | Asset | Path |
 |-------|------|
-| Resume (markdown) | `resume.md` — ATS-friendly; portfolio + GitHub experience |
-| Resume (printable) | `resume.html` — one-page style, print to PDF |
-| LinkedIn merge notes | `resume-linkedin-notes.md` — profile verification status |
-| LinkedIn week 1 posts | `linkedin/content-bank-week1.md` — 21 posts (3/day × 7 days) |
-| Posting workflow | `linkedin/posting-workflow.md` |
-| Target roles | `jobs/target-roles.md` |
-| Application tracker | `jobs/applications-tracker.md` |
-| Travis AFB Library interview | `jobs/travis-afb-library-tis-interview.md` — Technical Information Specialist Q&A scenarios |
-| Live practice site (GitHub Pages) | https://ksingh0804.github.io/ai-projects/career-launch/ |
+| Playbook PDF | `interview-playbook/Bay-Area-Junior-Interview-Playbook.pdf` |
+| Source | `interview-playbook/playbook.html` |
+| Rebuild | `python3 interview-playbook/build_pdf.py` (needs WeasyPrint) |
 
-## Resume status (2026-07-12)
+Earlier resume, LinkedIn, and Travis AFB notes were removed from the tree before this playbook. Do not link to those paths as if they are still present.
 
-- **Merged two source PDFs:** portfolio DE resume + logistics resume (`LogisticResumeKaustubh.pdf`).
-- **Removed:** Order Filler Manager — Oriental Trading Company (2008–2011).
-- **Added:** M.S. Data Science (Bellevue, 4.0 GPA), B.S. CS, phone, Antioch CA; Mango Consulting intern; Travis AFB Commissary; Senior Supply Sergeant (reframed for data).
-- **Target titles:** Data Engineer, AI/ML Engineer, Analytics Engineer.
-- PDF: `projects/career-launch/Kaustubh-Singh-Resume.pdf`
+## How the playbook is organized
 
-## Portfolio anchors (resume + posts)
+Recruiter screens and interviewer loops are separate parts. Recruiter answers stay short: motivation, work authorization, East Bay hybrid logistics, and a total-compensation range. Interviewer answers use STAR-style stories plus a production example.
 
-- [FreshCart / grocery-logistics-de](grocery-logistics-de.md) — lakehouse, streaming, DQ, ML features
-- [Learn GenAI](learn-genai.md) — RAG, agent loops, GenAI education
-- [Grad jobs research](grad-jobs-research.md) — labor market + build-real-work rationale
-- GitHub: https://github.com/ksingh0804/ai-projects
+First-person examples are only the projects that are actually in this repo:
 
-## LinkedIn constraint
+- [RAG Logistics Agent](rag-logistics-agent.md) — tool calling, SOP grounding, refusal, flour 48 vs empty shelf
+- [Loan Defaulter](loan-defaulter.md) — 307,511 applications, 8.07% default, dummy ~92% accuracy with zero default recall
+- [Steady](steady-voice.md) — private browser practice, no accounts, Echo headphone constraint
 
-Posting requires user login in browser; no unattended auto-post (LinkedIn ToS). Daily content bank + optional Cursor Automation reminder for drafting.
+Scenarios marked **production pattern** in the PDF are industry-shaped (idempotent loads, checkout experiments, metric drops). They are for “here is how I would build it,” not invented employment.
+
+Research notes: [Bay Area junior interviews, 2026](../sources/bay-area-junior-interviews-2026.md).
 
 ## Related
 
-- [grocery-logistics-de](grocery-logistics-de.md)
-- [learn-genai](learn-genai.md)
-- [grad-jobs-research](grad-jobs-research.md)
+- [RAG Logistics Agent](rag-logistics-agent.md)
+- [Loan Defaulter](loan-defaulter.md)
+- [Steady](steady-voice.md)
