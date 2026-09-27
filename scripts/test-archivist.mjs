@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import {
   atlas,
+  bootLines,
   chapterCount,
   complete,
   createState,
@@ -96,6 +97,15 @@ assert.equal(say("cd ..", walked).state.cwd, "/");
 const tab = complete("op", createState());
 assert.ok(tab.matches.includes("open"));
 assert.match(complete("open ste", createState()).replacement, /^open steady/);
+
+const boot = plainText(bootLines());
+assert.match(boot, /Open these three/);
+assert.match(boot, /Loan-Defaulter/);
+assert.match(boot, /singhkaustubh85@gmail.com/);
+assert.doesNotMatch(boot, /Travis|career-launch|FreshCart/);
+assert.match(say("open daily").text, /practice/);
+assert.match(say("pin").text, /Steady/);
+assert.doesNotMatch(say("pin").text, /greenleaf/);
 
 assert.match(say("contact").text, /singhkaustubh85@gmail.com/);
 assert.match(say("skills").text, /scikit-learn/);

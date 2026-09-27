@@ -20,11 +20,11 @@ An interactive guide to [github.com/ksingh0804](https://github.com/ksingh0804). 
 | Tests | `scripts/test-archivist.mjs` |
 | Profile README source | `profile/README.md` |
 
-The profile visitors see is the README of `ksingh0804/ksingh0804`. Push access from this workspace is limited to `ai-projects`, so `profile/README.md` is the file to publish into that special repo.
+The profile visitors see is the README of `ksingh0804/ksingh0804`. `profile/README.md` is that file: name, email, and the same three links as the guide. Push access from this workspace is limited to `ai-projects`, so publishing it means writing that README on the profile repository.
 
 ## What a visitor can do
 
-- Press **Start the briefing**, Enter, or a step (Who, Open, Map, Look). Four chapters, one card at a time. Chapter two lights Steady, Loan Defaulter, and the logistics agent amber on the map, and repeats those names in a strip above the card so a phone still shows them.
+- The first card is the hiring brief: Steady, Loan Defaulter, the logistics agent, and email. Press **Start the briefing**, Enter, or a step (Who, Open, Map, Look) for four chapters. Chapter two lights those three repositories amber on the map, and repeats the names in a strip above the card so a phone still shows them.
 - The open button and the stack sit above the longer notes. `map`, `projects`, `repos`, `live`, `skills`, `contact`, and `pin` are cards too.
 - Click the map: Steady, Loan Defaulter, the logistics agent, Greenleaf, Stutter Coach, studies, scratch.
 - Type `help`, `open <id>`, plus `ls` / `cd` / `cat`.

@@ -206,6 +206,8 @@ const ALIASES = {
   greenleaf: "greenleaf",
   market: "greenleaf",
   "greenleaf-market": "greenleaf",
+  daily: "daily",
+  "daily-python": "daily",
   studies: "studies",
   study: "studies",
   notebooks: "studies",
@@ -254,7 +256,7 @@ export function createState() {
 }
 
 export function projectIds() {
-  return ["steady", "loan", "rag", "coach", "greenleaf", "studies", "scratch", ...NOTEBOOKS.map((n) => n.id)];
+  return ["steady", "loan", "rag", "coach", "greenleaf", "studies", "daily", "scratch", ...NOTEBOOKS.map((n) => n.id)];
 }
 
 export function commandNames() {
@@ -340,7 +342,8 @@ function mapLines() {
         { label: "1  Profile", detail: "github.com/ksingh0804 is the front door.", href: PROFILE },
         {
           label: "2  Workshop",
-          detail: "ai-projects holds Steady, Stutter Coach, the logistics agent, and the credit-risk notebook.",
+          detail:
+            "ai-projects holds Steady, Stutter Coach, the logistics agent, the credit notebook, and Daily Python practice scripts.",
           href: WORKSHOP,
         },
         {
@@ -363,14 +366,15 @@ function mapLines() {
 export function bootLines() {
   return [
     card({
-      kicker: "ARCHIVIST",
-      title: "I explain this GitHub.",
-      summary: "Kaustubh Singh builds data analysis, machine-learning studies, and small products you can run.",
-      cue: "Press Enter. Four parts, about a minute.",
-      points: ["Or open a name: steady, loan, rag, greenleaf."],
+      kicker: "Kaustubh Singh",
+      title: "Open these three.",
+      summary: "Data analysis, machine-learning studies, and small products a stranger can run.",
+      cue: "Email is below. Enter walks the rest of the account in four steps.",
       links: [
         { label: "Steady, live", href: "https://ksingh0804.github.io/ai-projects/", primary: true },
-        { label: "Profile", href: PROFILE },
+        { label: "Loan Defaulter", href: "https://github.com/ksingh0804/Loan-Defaulter" },
+        { label: "Logistics agent", href: `${WORKSHOP}/tree/master/projects/rag-logistics-agent` },
+        { label: "Email", href: `mailto:${EMAIL}` },
       ],
     }),
   ];
@@ -382,7 +386,10 @@ const CHAPTERS = [
     summary: "Kaustubh Singh. This GitHub is a workshop for data analysis, machine learning, a document agent, and small products you can run.",
     cue: "The left column is the map. This window is the explanation.",
     points: ["The profile is the front door. ai-projects is where the newest work lives."],
-    links: [{ label: "Profile", href: PROFILE, primary: true }],
+    links: [
+      { label: "Email", href: `mailto:${EMAIL}`, primary: true },
+      { label: "Profile", href: PROFILE },
+    ],
     highlights: [],
     speech: "Kaustubh Singh. This GitHub is a workshop for data analysis, machine learning, a document agent, and small products you can run.",
     suggestions: ["next", "projects", "contact"],
@@ -411,6 +418,7 @@ const CHAPTERS = [
     cue: "Workshop, then builds, then studies, then scratch.",
     points: [
       "ai-projects holds Steady, Stutter Coach, the logistics agent, and the credit notebook.",
+      "Daily Python, in that same repo, is short practice scripts. Read it after the builds.",
       "greenleaf-market and Loan-Defaulter stand alone.",
       "Seven notebooks are studies. vs_code_python_github and simpleGame are scratch space.",
     ],
@@ -560,6 +568,7 @@ function projectsLines() {
     ["coach", "Browser voice practice with live feedback."],
     ["greenleaf", "Grocery demo. Next.js, FastAPI, JWT, admin."],
     ["studies", "Notebook studies: cricket, NLP, health, books, fires."],
+    ["daily", "Short practice scripts in the workshop. Read them after the builds."],
   ];
   return [
     card({
@@ -593,19 +602,19 @@ function pinLines() {
       title: "If you only have a few minutes",
       rows: [
         {
-          label: "ai-projects",
-          detail: "The workshop. Open Steady first if you want something running, then the logistics agent.",
-          href: WORKSHOP,
+          label: "Steady",
+          detail: "Live speech toolkit. No account. Wired headphones for Echo.",
+          href: "https://ksingh0804.github.io/ai-projects/",
         },
         {
-          label: "Loan-Defaulter",
-          detail: "The credit-risk notebook. The business problem is in the first screen of the README.",
+          label: "Loan Defaulter",
+          detail: "About 307,000 applications. Always predicting repayment is about 92% accurate and still misses every default.",
           href: "https://github.com/ksingh0804/Loan-Defaulter",
         },
         {
-          label: "greenleaf-market",
-          detail: "The full-stack demo: browse, cart, checkout, account, admin.",
-          href: "https://github.com/ksingh0804/greenleaf-market",
+          label: "Logistics agent",
+          detail: "Local tool-calling over SOP documents. If the context is missing, it says it does not know.",
+          href: `${WORKSHOP}/tree/master/projects/rag-logistics-agent`,
         },
       ],
     }),
@@ -756,6 +765,30 @@ function openThing(id) {
       }
     );
   }
+  if (key === "daily") {
+    return result(
+      [
+        card({
+          kicker: "Practice",
+          title: "Daily Python",
+          summary: "Short standard-library scripts inside the workshop, one per practice day. The portfolio is the builds above them.",
+          links: [
+            {
+              label: "Open the folder",
+              href: `${WORKSHOP}/tree/master/projects/daily-python`,
+              primary: true,
+            },
+          ],
+        }),
+      ],
+      {
+        focus: "",
+        highlights: [],
+        speech: "Daily Python is practice scripts in the workshop. Read them after the builds.",
+        suggestions: ["open steady", "open loan", "projects"],
+      }
+    );
+  }
   if (key === "studies") {
     return result(studiesLines(), {
       focus: "studies",
@@ -901,7 +934,7 @@ export function run(raw, state = createState()) {
     case "pin":
     case "shortlist":
       return result(pinLines(), {
-        speech: "The short list is ai-projects, Loan-Defaulter, and greenleaf-market.",
+        speech: "The short list is Steady, Loan Defaulter, and the logistics agent.",
         suggestions: ["open steady", "open loan", "open greenleaf"],
       });
     case "pwd":

@@ -151,6 +151,11 @@ Append-only record of wiki and workspace changes.
 - Each `main.py` is a different script and stays under 30 lines. Days that already had commits were not given a new project.
 - Files: `projects/daily-python/**`, `wiki/projects/daily-python.md`, `wiki/index.md`, `wiki/overview.md`, `wiki/log.md`, `README.md`.
 
+## [2026-09-27] project | enhance | github-guide
+
+- The first card is now the hiring brief: Steady, Loan Defaulter, the logistics agent, and email. Daily Python is labeled as practice scripts. `profile/README.md` matches that brief for the GitHub profile.
+- Files: `docs/guide/engine.js`, `profile/README.md`, `scripts/test-archivist.mjs`, `wiki/projects/github-guide.md`, `wiki/log.md`.
+
 ## [2026-09-27] project | remove | travis-prep
 
 - Removed the Travis Prep GitHub Pages site (`docs/career-launch/`) and the links to it in the root README and the ARCHIVIST guide.
