@@ -3,7 +3,7 @@ title: Wiki Index
 type: overview
 tags: [index, meta]
 created: 2026-05-20
-updated: 2026-09-08
+updated: 2026-09-27
 ---
 
 # Wiki Index
@@ -29,6 +29,7 @@ Catalog of all wiki pages. Updated by the agent on every change.
 |------|---------|
 | [sources/karpathy-llm-wiki.md](sources/karpathy-llm-wiki.md) | Original LLM Wiki idea document by Andrej Karpathy |
 | [sources/stuttering-research.md](sources/stuttering-research.md) | Evidence synthesis on stuttering — therapy approaches, rhythm/pacing, altered auditory feedback (DAF/FAF/MAF/AAF), CBT/ACT — driving the Steady app design. |
+| [sources/siteflow-agent-guide.md](sources/siteflow-agent-guide.md) | Project 3 capstone guide: SiteFlow multi-agent construction assistant (React, FastAPI, LangGraph, AWS). |
 
 ## Projects
 
@@ -40,3 +41,4 @@ Catalog of all wiki pages. Updated by the agent on every change.
 | [projects/career-launch.md](projects/career-launch.md) | Job search toolkit — resume, LinkedIn, target roles; includes Travis AFB Library TIS interview prep. |
 | [projects/loan-defaulter.md](projects/loan-defaulter.md) | **Loan Defaulter** — Home Credit PD analysis; leakage-safe pipeline, EXT_SOURCE, KS/Gini/PR-AUC, cost-weighted threshold. |
 | [projects/rag-logistics-agent.md](projects/rag-logistics-agent.md) | **RAG Logistics Agent** — Ollama + Chroma tool-calling agent over SOP PDFs (EOQ, safety stock, inventory, grounded Q&A). |
+| [projects/siteflow.md](projects/siteflow.md) | **SiteFlow** — construction project-controls assistant. FastAPI, LangGraph supervisor, BM25 specs, EOQ tools, approval pause, React UI. Local mode. Start-to-end study PDF is `projects/siteflow/docs/SiteFlow_start_to_end.pdf`. |
