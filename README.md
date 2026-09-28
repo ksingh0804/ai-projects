@@ -26,3 +26,4 @@ See [wiki/overview.md](wiki/overview.md) for the knowledge base. The agent updat
 | Loan Defaulter | `projects/loan-defaulter/` | Home Credit PD analysis — imbalanced classification, EXT_SOURCE features, KS/Gini/PR-AUC, cost-weighted threshold |
 | RAG Logistics Agent | `projects/rag-logistics-agent/` | Ollama + Chroma tool-calling agent over logistics SOP PDFs (EOQ, safety stock, inventory, grounded Q&A) |
 | SiteFlow | `projects/siteflow/` | Construction project-controls assistant — FastAPI, LangGraph, BM25 over specs, EOQ tools, approval pause, React UI. Study plan in `docs/three-day-plan.md` |
+| SiteFlow empty skeleton | `projects/siteflow-empty/` | Empty file tree for local practice. Zip: `projects/siteflow-empty/siteflow-empty-skeleton.zip` → unzip to `~/Desktop` |

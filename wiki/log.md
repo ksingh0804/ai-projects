@@ -138,3 +138,8 @@ Append-only record of wiki and workspace changes.
 - Added a fictional practice job, Cedarline Training Hall (`SYNTH-HALL-01`): searchable spec, RFI, submittal, daily, minutes, and issue PDFs plus `materials.csv`, and matching JSON/CSV registers for RFIs, submittals, issues, cost, and schedule.
 - The registers are original. They are not a customer export and are not read by search. Search still uses `data/sample` only.
 - Files: `projects/siteflow/data/sample/**`, `projects/siteflow/data/artifacts/**`, `projects/siteflow/backend/app/rag/sample_docs.py`, `projects/siteflow/backend/app/rag/artifacts.py`, `projects/siteflow/backend/tests/test_project_files.py`, `projects/siteflow/README.md`, `projects/siteflow/docs/three-day-plan.md`, `wiki/projects/siteflow.md`, `wiki/index.md`
+
+## [2026-09-28] project | document | siteflow-empty
+
+- Added an empty SiteFlow file tree and Mac-openable zip/tar.gz so the skeleton can be unzipped to a local Desktop.
+- Files: `projects/siteflow-empty/**`, `README.md`, `wiki/projects/siteflow.md`, `wiki/log.md`
