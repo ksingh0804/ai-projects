@@ -1,0 +1,20 @@
+RFI-014 — Foundation Pour Hold
+Project: Harbor School Gym Addition
+Status: OPEN
+From: Project engineer
+To: Structural engineer
+Date: 2026-03-02
+
+Question
+The vapor barrier seams at column grid C are not detailed on sheet S-101.
+The spec says seams are lapped 6 inches and taped.
+The drawing shows no lap at grid C.
+
+Hold
+RFI-014 is an open RFI.
+This RFI blocks the foundation pour.
+This RFI blocks the slab on grade.
+Do not pour the slab on grade until RFI-014 is closed.
+
+Answer
+No answer has been posted. The RFI remains open.

@@ -1,0 +1,19 @@
+Harbor School Gym — Division 05 Structural Steel
+Project: Harbor School Gym Addition
+Section: 05 12 00
+
+Lead time
+Structural steel lead time is 14 to 16 weeks after approved shop drawings.
+The clock starts on the day the engineer returns the shop drawings marked Approved.
+
+Mill certificates
+Mill certificates are required before any steel is erected.
+Steel without a mill certificate stays in the laydown yard.
+
+Bolts
+Primary connections use ASTM A325 bolts.
+ASTM A307 bolts are not allowed on primary connections.
+Anchor bolts are submitted 4 weeks before the steel delivery date.
+
+Shop drawings
+No mill order is placed before shop drawings are approved.
