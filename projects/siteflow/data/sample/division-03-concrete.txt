@@ -1,0 +1,20 @@
+Harbor School Gym — Division 03 Cast-in-Place Concrete
+Project: Harbor School Gym Addition
+Section: 03 30 00
+
+Curing
+Keep cast-in-place concrete continuously moist for 7 days after placement.
+Do not let the surface dry during those 7 days.
+
+Strength
+The slab on grade shall reach 4,000 psi at 28 days.
+Test cylinders are taken from the same truck as the slab pour.
+
+Weather limits
+Do not place concrete when the air temperature is below 40 F.
+Do not place concrete when rain is forecast within 4 hours of the pour.
+If the temperature is below 40 F, delay the pour until the next approved weather window.
+
+Foundation slab
+The foundation pour is the slab on grade at grid lines A to D.
+Vapor barrier seams must be lapped 6 inches and taped before the pour.

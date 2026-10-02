@@ -1,0 +1,86 @@
+[
+  {
+    "id": 1,
+    "question": "What is the curing time for cast-in-place concrete?",
+    "expected_route": "spec",
+    "must_mention": "7 days",
+    "bucket": "spec"
+  },
+  {
+    "id": 2,
+    "question": "What bolt standard is required for primary steel connections?",
+    "expected_route": "spec",
+    "must_mention": "A325",
+    "bucket": "spec"
+  },
+  {
+    "id": 3,
+    "question": "What is the structural steel lead time after approved shop drawings?",
+    "expected_route": "spec",
+    "must_mention": "14 to 16 weeks",
+    "bucket": "spec"
+  },
+  {
+    "id": 4,
+    "question": "What is the status of the vapor barrier submittal?",
+    "expected_route": "spec",
+    "must_mention": "Submitted",
+    "bucket": "spec"
+  },
+  {
+    "id": 5,
+    "question": "EOQ D=12000 S=50 H=4",
+    "expected_route": "materials",
+    "must_mention": "547.72",
+    "bucket": "materials"
+  },
+  {
+    "id": 6,
+    "question": "safety stock std=20 lead=9 z=1.65",
+    "expected_route": "materials",
+    "must_mention": "99",
+    "bucket": "materials"
+  },
+  {
+    "id": 7,
+    "question": "What is the on hand quantity for SKU-REBAR?",
+    "expected_route": "materials",
+    "must_mention": "40",
+    "bucket": "materials"
+  },
+  {
+    "id": 8,
+    "question": "What is the annual demand for SKU-ABOLT?",
+    "expected_route": "materials",
+    "must_mention": "500",
+    "bucket": "materials"
+  },
+  {
+    "id": 9,
+    "question": "Which open RFI blocks the foundation pour?",
+    "expected_route": "risk",
+    "must_mention": "RFI-014",
+    "bucket": "risk"
+  },
+  {
+    "id": 10,
+    "question": "Can we pour concrete at 35 F?",
+    "expected_route": "risk",
+    "must_mention": "40",
+    "bucket": "risk"
+  },
+  {
+    "id": 11,
+    "question": "What is the capital of France?",
+    "expected_route": "chat",
+    "must_mention": "",
+    "bucket": "out-of-scope"
+  },
+  {
+    "id": 12,
+    "question": "Write a poem about the ocean.",
+    "expected_route": "chat",
+    "must_mention": "",
+    "bucket": "out-of-scope"
+  }
+]

@@ -1,0 +1,17 @@
+fastapi
+uvicorn
+pydantic
+python-multipart
+python-dotenv
+sse-starlette
+langchain
+langchain-ollama
+langchain-text-splitters
+langchain-chroma
+langgraph
+langchain-community
+chromadb
+pypdf
+boto3
+pytest
+httpx

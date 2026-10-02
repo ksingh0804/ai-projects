@@ -1,0 +1,5 @@
+sku,description,on_hand,lead_days,unit_cost,annual_demand,reorder_point
+SKU-REBAR,#5 rebar (ton),40,21,980.00,12000,80
+SKU-STEEL,W12x26 beam,6,112,2400.00,40,8
+SKU-ABOLT,Anchor bolt assembly,120,28,18.00,500,100
+SKU-VAPOR,Vapor barrier roll,15,10,65.00,200,30

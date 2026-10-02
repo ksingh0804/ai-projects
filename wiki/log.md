@@ -160,3 +160,9 @@ Append-only record of wiki and workspace changes.
 
 - Removed the Travis Prep GitHub Pages site (`docs/career-launch/`) and the links to it in the root README and the ARCHIVIST guide.
 - Files: `docs/career-launch/*`, `docs/guide/engine.js`, `README.md`, `scripts/test-archivist.mjs`, `wiki/projects/career-launch.md`, `wiki/projects/github-guide.md`, `wiki/index.md`, `wiki/log.md`.
+
+## [2026-10-02] project | create | siteflow
+
+- Ingested the SiteFlow capstone brief and wrote a junior-engineer mentor course: formulas first, then function contracts for FastAPI, LangGraph, and React.
+- Sample Harbor School Gym documents live in `projects/siteflow/data/sample/`. The worked backend is in `answer-key/` (17 pytest checks). The student still builds `backend/` and `frontend/`.
+- Files: `raw/sources/Project3_SiteFlow_Agent_Guide.pdf`, `projects/siteflow/**`, `wiki/projects/siteflow.md`, `wiki/sources/siteflow-agent-guide.md`, `wiki/index.md`, `wiki/overview.md`, `wiki/log.md`, `README.md`.
