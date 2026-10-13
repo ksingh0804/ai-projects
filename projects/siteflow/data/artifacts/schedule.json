@@ -1,0 +1,46 @@
+{
+  "artifact": {
+    "kind": "synthetic",
+    "projectCode": "SYNTH-HALL-01",
+    "projectName": "Cedarline Training Hall",
+    "notice": "Original practice data for the SiteFlow demo. Not a real construction job, not a copy of a customer file, and not an export from any construction platform."
+  },
+  "activities": [
+    {
+      "activityId": "A1000",
+      "name": "Mobilize and install the south gate",
+      "wbs": "1.1",
+      "plannedStart": "2026-03-16",
+      "plannedFinish": "2026-03-20",
+      "status": "finished",
+      "constraint": ""
+    },
+    {
+      "activityId": "A1020",
+      "name": "Excavate and compact the pad",
+      "wbs": "1.2",
+      "plannedStart": "2026-03-23",
+      "plannedFinish": "2026-04-10",
+      "status": "finished",
+      "constraint": ""
+    },
+    {
+      "activityId": "A1040",
+      "name": "Slab on grade foundation pour",
+      "wbs": "1.3",
+      "plannedStart": "2026-04-20",
+      "plannedFinish": "2026-04-22",
+      "status": "not started",
+      "constraint": "Waiting on RFI-014 and submittal SB-21."
+    },
+    {
+      "activityId": "A1100",
+      "name": "Structural steel erection",
+      "wbs": "1.4",
+      "plannedStart": "2026-06-15",
+      "plannedFinish": "2026-07-10",
+      "status": "not started",
+      "constraint": "Mill time in Division 05 starts after shop drawings are approved."
+    }
+  ]
+}

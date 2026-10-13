@@ -1,0 +1,10 @@
+data/runtime/
+backend/.venv/
+frontend/node_modules/
+frontend/dist/
+
+# Keep editor interpreter defaults tracked (root .gitignore ignores .vscode/).
+!.vscode/
+!.vscode/**
+!backend/.vscode/
+!backend/.vscode/**

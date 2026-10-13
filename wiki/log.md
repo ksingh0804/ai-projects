@@ -160,3 +160,14 @@ Append-only record of wiki and workspace changes.
 
 - Removed the Travis Prep GitHub Pages site (`docs/career-launch/`) and the links to it in the root README and the ARCHIVIST guide.
 - Files: `docs/career-launch/*`, `docs/guide/engine.js`, `README.md`, `scripts/test-archivist.mjs`, `wiki/projects/career-launch.md`, `wiki/projects/github-guide.md`, `wiki/index.md`, `wiki/log.md`.
+
+## [2026-10-13] project | fix | siteflow
+
+- Fixed `ModuleNotFoundError: No module named 'fastapi'` by installing `backend/requirements.txt` into a virtualenv (FastAPI was already declared; the system Python had no packages).
+- Brought `projects/siteflow/` onto this branch with Cedarline sample files; documented the venv install gotcha in the project README and wiki.
+- Files: `projects/siteflow/**`, `raw/sources/Project3_SiteFlow_Agent_Guide.pdf`, `wiki/projects/siteflow.md`, `wiki/sources/siteflow-agent-guide.md`, `wiki/index.md`, `wiki/overview.md`, `wiki/log.md`, `README.md`.
+
+## [2026-10-13] project | fix | siteflow
+
+- VS Code / Cursor was still reporting missing FastAPI while the terminal venv worked: editor used system Python. Added `.vscode/settings.json`, launch config, and `backend/pyrightconfig.json` so the default interpreter is `backend/.venv`.
+- Files: `projects/siteflow/.vscode/*`, `projects/siteflow/backend/.vscode/settings.json`, `projects/siteflow/backend/pyrightconfig.json`, `projects/siteflow/README.md`, `wiki/projects/siteflow.md`, `wiki/log.md`.

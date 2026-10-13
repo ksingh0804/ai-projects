@@ -10,4 +10,8 @@ venv/
 *.pyc
 .idea/
 .vscode/
+!projects/siteflow/.vscode/
+!projects/siteflow/.vscode/**
+!projects/siteflow/backend/.vscode/
+!projects/siteflow/backend/.vscode/**
 *.log

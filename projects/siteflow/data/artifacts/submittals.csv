@@ -1,0 +1,9 @@
+id,identifier,specIdentifier,title,type,status,response,dueDate,ballInCourt,reviewerNote
+00000000-0000-4000-8000-000000000112,SB-12,03 20 00,Rebar shop drawings,shop drawing,closed,approved,2026-03-12,project engineer (practice role),
+00000000-0000-4000-8000-000000000118,SB-18,05 12 00,Anchor bolts,product data,open,pending,2026-04-20,architect of record (practice role),
+00000000-0000-4000-8000-000000000121,SB-21,07 26 00,Vapor barrier,product data,open,revise and resubmit,2026-04-16,project engineer (practice role),Send the seam tape data sheet and the penetration detail.
+00000000-0000-4000-8000-000000000107,SB-07,03 30 00,Concrete mix CH-4000,mix design,closed,approved,2026-03-06,project engineer (practice role),
+00000000-0000-4000-8000-000000000116,SB-16,05 12 00,Steel shop drawings,shop drawing,open,submitted,2026-04-24,structural reviewer (practice role),
+00000000-0000-4000-8000-000000000130,SB-30,05 12 00,Steel mill reports,test report,open,submitted,2026-04-24,structural reviewer (practice role),
+00000000-0000-4000-8000-000000000104,SB-04,03 11 00,Formwork layout,shop drawing,closed,approved,2026-03-02,project engineer (practice role),
+00000000-0000-4000-8000-000000000102,SB-02,31 20 00,Earthwork compaction report,test report,closed,approved,2026-04-01,project engineer (practice role),
