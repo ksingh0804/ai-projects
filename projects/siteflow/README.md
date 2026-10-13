@@ -36,6 +36,17 @@ pytest
 uvicorn app.main:app --reload --port 8000
 ```
 
+### VS Code / Cursor still shows `No module named 'fastapi'`
+
+The terminal can use `.venv` while the editor still runs (or analyzes) with system Python. Point the workspace at the venv:
+
+1. Create and install into `.venv` with the commands above.
+2. Open the `siteflow` folder (or `siteflow/backend`) as the workspace.
+3. Command Palette → **Python: Select Interpreter** → pick `backend/.venv/bin/python` (Windows: `backend\.venv\Scripts\python.exe`).
+4. Reload the window if the red squiggle remains.
+
+This repo ships `.vscode/settings.json` and `backend/pyrightconfig.json` so new windows default to that interpreter. Status bar should show something like `.venv (Python 3.x)` — not `/usr/bin/python3` or a Homebrew system install.
+
 The API seeds project `demo` from `data/sample` the first time it starts.
 
 ```bash

@@ -24,6 +24,8 @@ Source guide (immutable): [SiteFlow agent guide](../sources/siteflow-agent-guide
 
 `ModuleNotFoundError: No module named 'fastapi'` means the backend venv was not created or activated, or `pip install -r requirements.txt` was skipped. FastAPI is listed in `backend/requirements.txt` (`fastapi==0.141.1`). Create `.venv`, activate it, install, then run `uvicorn app.main:app`.
 
+If the terminal works but VS Code / Cursor still shows the error, the editor is using a different interpreter. Select `backend/.venv/bin/python` via **Python: Select Interpreter**. Workspace defaults live in `projects/siteflow/.vscode/settings.json` and `backend/pyrightconfig.json`.
+
 ## Decisions
 
 - Local mode is the default. S3, Bedrock, and DynamoDB are interfaces tested with fakes. `USE_AWS=true` refuses to open a real client by accident.
