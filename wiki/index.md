@@ -3,7 +3,7 @@ title: Wiki Index
 type: overview
 tags: [index, meta]
 created: 2026-05-20
-updated: 2026-09-27
+updated: 2026-10-13
 ---
 
 # Wiki Index
@@ -29,6 +29,7 @@ Catalog of all wiki pages. Updated by the agent on every change.
 |------|---------|
 | [sources/karpathy-llm-wiki.md](sources/karpathy-llm-wiki.md) | Original LLM Wiki idea document by Andrej Karpathy |
 | [sources/stuttering-research.md](sources/stuttering-research.md) | Evidence synthesis on stuttering — therapy approaches, rhythm/pacing, altered auditory feedback (DAF/FAF/MAF/AAF), CBT/ACT — driving the Steady app design. |
+| [sources/siteflow-agent-guide.md](sources/siteflow-agent-guide.md) | Summary of the SiteFlow agent platform guide (raw PDF under `raw/sources/`). |
 
 ## Projects
 
@@ -42,3 +43,4 @@ Catalog of all wiki pages. Updated by the agent on every change.
 | [projects/loan-defaulter.md](projects/loan-defaulter.md) | **Loan Defaulter** — Home Credit PD analysis; leakage-safe pipeline, EXT_SOURCE, KS/Gini/PR-AUC, cost-weighted threshold. |
 | [projects/rag-logistics-agent.md](projects/rag-logistics-agent.md) | **RAG Logistics Agent** — Ollama + Chroma tool-calling agent over SOP PDFs (EOQ, safety stock, inventory, grounded Q&A). |
 | [projects/daily-python.md](projects/daily-python.md) | **Daily Python** — 55 stdlib scripts, one per filled August–September 2026 contribution day, each under 30 lines. |
+| [projects/siteflow.md](projects/siteflow.md) | **SiteFlow** — construction project-controls agent (FastAPI + LangGraph + RAG); install `backend/requirements.txt` before running. |

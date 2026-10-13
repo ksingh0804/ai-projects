@@ -1,0 +1,75 @@
+{
+  "artifact": {
+    "kind": "synthetic",
+    "projectCode": "SYNTH-HALL-01",
+    "projectName": "Cedarline Training Hall",
+    "notice": "Original practice data for the SiteFlow demo. Not a real construction job, not a copy of a customer file, and not an export from any construction platform."
+  },
+  "documents": [
+    {
+      "fileName": "00_Cedarline_Training_Hall_Index.pdf",
+      "title": "Document index",
+      "specSection": ""
+    },
+    {
+      "fileName": "Division_01_General_Requirements.pdf",
+      "title": "General requirements",
+      "specSection": "01 33 00"
+    },
+    {
+      "fileName": "Division_03_Cast_in_Place_Concrete.pdf",
+      "title": "Cast-in-place concrete",
+      "specSection": "03 30 00"
+    },
+    {
+      "fileName": "Division_05_Structural_Steel.pdf",
+      "title": "Structural steel",
+      "specSection": "05 12 00"
+    },
+    {
+      "fileName": "Division_07_Vapor_Barrier.pdf",
+      "title": "Vapor barrier",
+      "specSection": "07 26 00"
+    },
+    {
+      "fileName": "Division_31_Earthwork.pdf",
+      "title": "Earthwork",
+      "specSection": "31 20 00"
+    },
+    {
+      "fileName": "RFI-014_Foundation_Pour_Hold.pdf",
+      "title": "RFI-014 Foundation pour hold",
+      "specSection": "03 30 00"
+    },
+    {
+      "fileName": "Submittal_Log_Excerpt.pdf",
+      "title": "Submittal log excerpt",
+      "specSection": ""
+    },
+    {
+      "fileName": "Site_Logistics_Plan.pdf",
+      "title": "Site logistics plan",
+      "specSection": ""
+    },
+    {
+      "fileName": "Daily_Report_2026-04-14.pdf",
+      "title": "Daily report 2026-04-14",
+      "specSection": ""
+    },
+    {
+      "fileName": "OAC_Minutes_12.pdf",
+      "title": "OAC meeting minutes 12",
+      "specSection": ""
+    },
+    {
+      "fileName": "Issue_ISS-008_North_Slab_Edge.pdf",
+      "title": "Issue ISS-008",
+      "specSection": ""
+    },
+    {
+      "fileName": "materials.csv",
+      "title": "Materials SKU table",
+      "specSection": ""
+    }
+  ]
+}

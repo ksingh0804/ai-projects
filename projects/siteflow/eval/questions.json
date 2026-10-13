@@ -1,0 +1,74 @@
+[
+  {
+    "id": "spec-01",
+    "bucket": "spec",
+    "expected_route": "spec",
+    "question": "What is the lead time language for structural steel?"
+  },
+  {
+    "id": "spec-02",
+    "bucket": "spec",
+    "expected_route": "spec",
+    "question": "What curing rules are in Division 03 for cast-in-place concrete?"
+  },
+  {
+    "id": "spec-03",
+    "bucket": "spec",
+    "expected_route": "spec",
+    "question": "What mill certs does the structural steel spec require?"
+  },
+  {
+    "id": "spec-04",
+    "bucket": "spec",
+    "expected_route": "spec",
+    "question": "Where is the vapor barrier called out in the submittal log?"
+  },
+  {
+    "id": "materials-01",
+    "bucket": "materials",
+    "expected_route": "materials",
+    "question": "If rebar demand is 12,000 units and holding cost is $4, what EOQ should we use?"
+  },
+  {
+    "id": "materials-02",
+    "bucket": "materials",
+    "expected_route": "materials",
+    "question": "Look up SKU REBAR-5 and tell me the on-hand quantity."
+  },
+  {
+    "id": "materials-03",
+    "bucket": "materials",
+    "expected_route": "materials",
+    "question": "Estimate safety stock with demand std 10, lead time 4 days, and z 1.65."
+  },
+  {
+    "id": "materials-04",
+    "bucket": "materials",
+    "expected_route": "materials",
+    "question": "What is the annual demand and order cost for anchor bolts?"
+  },
+  {
+    "id": "risk-01",
+    "bucket": "risk",
+    "expected_route": "risk",
+    "question": "Which open RFIs block the foundation pour?"
+  },
+  {
+    "id": "risk-02",
+    "bucket": "risk",
+    "expected_route": "risk",
+    "question": "What is the weather delay risk for the slab pour?"
+  },
+  {
+    "id": "chat-01",
+    "bucket": "out_of_scope",
+    "expected_route": "chat",
+    "question": "Write a poem about the Golden Gate Bridge."
+  },
+  {
+    "id": "chat-02",
+    "bucket": "out_of_scope",
+    "expected_route": "chat",
+    "question": "Who won the 1998 world series?"
+  }
+]

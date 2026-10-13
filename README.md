@@ -11,6 +11,7 @@ This is the workshop. Newest work lives in `projects/`. An interactive guide exp
 | [RAG Logistics Agent](projects/rag-logistics-agent/) | Local tool-calling agent over SOP documents |
 | [Stutter Coach](projects/stutter-coach/) | Browser voice practice with live feedback |
 | [Greenleaf Market](https://github.com/ksingh0804/greenleaf-market) | Grocery demo: Next.js 14, FastAPI, SQLite, JWT |
+| [SiteFlow](projects/siteflow/) | Construction project-controls agent (FastAPI + LangGraph) |
 
 The profile README source for `github.com/ksingh0804` is in [`profile/README.md`](profile/README.md).
 
@@ -44,3 +45,4 @@ See [wiki/overview.md](wiki/overview.md) for the knowledge base. The agent updat
 | Loan Defaulter | `projects/loan-defaulter/` | Home Credit PD analysis — imbalanced classification, EXT_SOURCE features, KS/Gini/PR-AUC, cost-weighted threshold. Also published as [Loan-Defaulter](https://github.com/ksingh0804/Loan-Defaulter). |
 | RAG Logistics Agent | `projects/rag-logistics-agent/` | Ollama + Chroma tool-calling agent over logistics SOP PDFs (EOQ, safety stock, inventory, grounded Q&A) |
 | Daily Python | `projects/daily-python/` | 55 stdlib mini scripts, one per filled August–September 2026 contribution day, each under 30 lines |
+| SiteFlow | `projects/siteflow/` | Construction project-controls agent — FastAPI + LangGraph + BM25 RAG; create `backend/.venv` and `pip install -r requirements.txt` before running |

@@ -1,0 +1,99 @@
+{
+  "artifact": {
+    "kind": "synthetic",
+    "projectCode": "SYNTH-HALL-01",
+    "projectName": "Cedarline Training Hall",
+    "notice": "Original practice data for the SiteFlow demo. Not a real construction job, not a copy of a customer file, and not an export from any construction platform."
+  },
+  "submittals": [
+    {
+      "id": "00000000-0000-4000-8000-000000000112",
+      "identifier": "SB-12",
+      "specIdentifier": "03 20 00",
+      "title": "Rebar shop drawings",
+      "type": "shop drawing",
+      "status": "closed",
+      "response": "approved",
+      "dueDate": "2026-03-12",
+      "ballInCourt": "project engineer (practice role)"
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000118",
+      "identifier": "SB-18",
+      "specIdentifier": "05 12 00",
+      "title": "Anchor bolts",
+      "type": "product data",
+      "status": "open",
+      "response": "pending",
+      "dueDate": "2026-04-20",
+      "ballInCourt": "architect of record (practice role)"
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000121",
+      "identifier": "SB-21",
+      "specIdentifier": "07 26 00",
+      "title": "Vapor barrier",
+      "type": "product data",
+      "status": "open",
+      "response": "revise and resubmit",
+      "dueDate": "2026-04-16",
+      "ballInCourt": "project engineer (practice role)",
+      "reviewerNote": "Send the seam tape data sheet and the penetration detail."
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000107",
+      "identifier": "SB-07",
+      "specIdentifier": "03 30 00",
+      "title": "Concrete mix CH-4000",
+      "type": "mix design",
+      "status": "closed",
+      "response": "approved",
+      "dueDate": "2026-03-06",
+      "ballInCourt": "project engineer (practice role)"
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000116",
+      "identifier": "SB-16",
+      "specIdentifier": "05 12 00",
+      "title": "Steel shop drawings",
+      "type": "shop drawing",
+      "status": "open",
+      "response": "submitted",
+      "dueDate": "2026-04-24",
+      "ballInCourt": "structural reviewer (practice role)"
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000130",
+      "identifier": "SB-30",
+      "specIdentifier": "05 12 00",
+      "title": "Steel mill reports",
+      "type": "test report",
+      "status": "open",
+      "response": "submitted",
+      "dueDate": "2026-04-24",
+      "ballInCourt": "structural reviewer (practice role)"
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000104",
+      "identifier": "SB-04",
+      "specIdentifier": "03 11 00",
+      "title": "Formwork layout",
+      "type": "shop drawing",
+      "status": "closed",
+      "response": "approved",
+      "dueDate": "2026-03-02",
+      "ballInCourt": "project engineer (practice role)"
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000102",
+      "identifier": "SB-02",
+      "specIdentifier": "31 20 00",
+      "title": "Earthwork compaction report",
+      "type": "test report",
+      "status": "closed",
+      "response": "approved",
+      "dueDate": "2026-04-01",
+      "ballInCourt": "project engineer (practice role)"
+    }
+  ]
+}
